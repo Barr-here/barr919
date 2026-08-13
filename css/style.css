@@ -1551,3 +1551,54 @@
         grid-template-columns: repeat(3, 1fr);
       }
     }
+
+/* ============================================================
+   SKELETON LOADING (banner, produk, testimoni saat data Supabase belum masuk)
+   ============================================================ */
+
+@keyframes skeleton-shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: 200px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface2) 25%,
+    var(--border) 50%,
+    var(--surface2) 75%
+  );
+  background-size: 400px 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+  border-radius: 10px;
+}
+
+/* Banner skeleton */
+.banner-skeleton {
+  flex: 0 0 240px;
+  height: 130px;
+  margin-right: 12px;
+}
+
+/* Produk / card skeleton */
+.card-skeleton {
+  height: 90px;
+  border: 1px solid var(--border);
+}
+
+/* Testimoni skeleton */
+.testi-skeleton {
+  flex: 0 0 200px;
+  height: 160px;
+  margin-right: 12px;
+}
+
+/* Pesan kosong/gagal (fallback) */
+.load-empty-msg {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--subtext);
+  text-align: center;
+  padding: 20px 12px;
+  width: 100%;
+}
