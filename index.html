@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta property="og:title" content="𝐁𝐚𝐫𝐫 𝐒𝐭𝐨𝐫𝐞">
+  <meta property="og:description" content="☕︎ Tempat kebutuhan digital favoritmu. Fast respon, trusted, dan no ribet. ようこそ!">
+  <meta property="og:image" content="https://barastoree.vercel.app/media/thumbnail.jpg">
+  <meta property="og:url" content="https://barastoree.vercel.app">
+  <meta property="og:type" content="website">
+  <title>Barr Store</title>
+  <link rel="icon" type="image/png" href="media/icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <img class="avatar" src="https://c.termai.cc/i180/IUA.jpg" alt="Barr Store">
+      <div>
+        <div class="brand-name">Barr Store</div>
+        <div class="brand-tag">⌗ Selamat datang...</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="status-dot"></div>
+      <div class="status-text">online</div>
+      <button class="theme-btn" id="musicBtn">🎵</button>
+      <button class="theme-btn" id="themeBtn">🌙</button>
+    </div>
+  </div>
+  
+  <div class="theme-popup" id="themePopup">
+    ℹ️ Klik tombol ini untuk mengganti tema gelap
+  </div>
+
+  <!-- BANNER -->
+  <div class="banner-slider">
+    <div class="banner-track" id="bannerTrack"></div>
+  </div>
+  
+  <!-- BANNER POPUP -->
+  <div class="banner-popup-overlay" id="bannerPopupOverlay">
+    <div class="banner-popup" id="bannerPopup">
+      <div class="banner-popup-title" id="popupTitle">
+        Barr Store
+      </div>
+  
+      <div class="banner-popup-buttons">
+        <a
+          href="#"
+          target="_blank"
+          class="popup-btn wa"
+          id="popupWa"
+        >
+          WhatsApp
+        </a>
+
+        <a
+          href="#"
+          target="_blank"
+          class="popup-btn tele"
+          id="popupTele"
+        >
+          Telegram
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input
+      class="search-input"
+      id="searchInput"
+      type="text"
+      placeholder="Search categories..."
+      autocomplete="off"
+    />
+  </div>
+
+  <!-- CATEGORY -->
+  <div class="category-header" id="openTags">
+    <div>
+      <div class="category-label">Selected Category</div>
+      <div class="category-name" id="greetingText"></div>
+    </div>
+    <div class="endpoint-badge" id="countBadge">Kategori</div>
+  </div>
+  
+  <!-- TESTIMONI SECTION -->
+  <div class="mini-grid">
+
+    <!-- TESTIMONI -->
+    <div class="mini-card testi-highlight" id="openTesti">
+      <div style="display:flex; align-items:flex-end; gap:8px; margin-bottom:4px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 6 Q4 4 6 4 L26 4 Q28 4 28 6 L28 20 Q28 22 26 22 L12 22 L6 28 L6 22 Q4 22 4 20 Z"/>
+          <line x1="10" y1="11" x2="22" y2="11"/>
+          <line x1="10" y1="16" x2="18" y2="16"/>
+        </svg>
+        <div class="mini-title">Testimoni</div>
+      </div>
+      <div class="mini-desc">
+        Lihat bukti transaksi...
+      </div>
+    </div>
+
+    <!-- DONASI -->
+    <div class="mini-card" id="openDonasi">
+      <div style="display:flex; align-items:flex-end; gap:8px; margin-bottom:4px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="16" cy="16" r="14"/>
+          <circle cx="16" cy="16" r="9"/>
+          <text x="16" y="21" text-anchor="middle" font-size="13" font-weight="700" font-family="serif" fill="currentColor" stroke="none">$</text>
+        </svg>
+        <div class="mini-title">DONASI</div>
+      </div>
+      <div class="mini-desc">
+        Silahkan donasi seikhlasnya...
+      </div>
+    </div>
+  </div>
+
+  <!-- CARDS -->
+  <div class="endpoints" id="endpointList">
+
+    <a class="card copy-card"
+      href="javascript:void(0)"
+      data-copy="https://whatsapp.com/channel/0029Vb6ntRrJZg45rtr1O82c"
+      data-name="saluran animelyrics anime lyrics channel whatsapp">
+
+      <div class="card-top">
+        <div class="methods">
+          <span class="method-tag get">CHANNEL</span>
+        </div>
+        <span class="chevron">›</span>
+      </div>
+
+      <div class="endpoint-path">Saluran anime lyrics</div>
+      <div class="endpoint-desc">
+        Klik untuk menyalin link channel
+      </div>
+    </a>
+
+    <a class="card copy-card"
+      href="javascript:void(0)"
+      data-copy="https://chat.whatsapp.com/LS1a49PhD8p7GpYGMPMXUz?mode=gi_t"
+      data-name="group whatsapp komunitas bot">
+
+      <div class="card-top">
+        <div class="methods">
+          <span class="method-tag get">GROUP</span>
+        </div>
+        <span class="chevron">›</span>
+      </div>
+
+      <div class="endpoint-path">Grup bot Elaina</div>
+      <div class="endpoint-desc">
+        Klik untuk menyalin link grup
+      </div>
+    </a>
+
+  </div>
+  
+  <!-- TESTI POPUP -->
+  <div class="testi-overlay" id="testiOverlay">
+
+    <div class="testi-popup">
+
+      <div class="testi-header">
+
+        <div>
+          <div class="testi-title">
+            Testimoni Customer
+          </div>
+
+          <div class="testi-sub">
+            Nihh bukti transaksi biar ga ragu :)
+          </div>
+        </div>
+
+        <button
+          class="testi-close"
+          id="closeTesti"
+        >
+          ✕
+        </button>
+
+      </div>
+
+      <div
+        class="testi-slider"
+        id="testiSlider"
+      ></div>
+
+    </div>
+
+  </div>
+
+  <!-- QRIS POPUP -->
+  <div class="qris-popup-overlay" id="qrisPopup">
+
+    <div class="qris-popup">
+
+      <img
+        src="https://c.termai.cc/i113/nWNoqg.jpg"
+        alt="QRIS"
+        class="qris-image"
+        draggable="false"
+      >
+
+      <div class="qris-buttons">
+
+        <a
+          href="https://c.termai.cc/i113/nWNoqg.jpg"
+          download
+          target="_blank"
+          class="donation-btn"
+        >
+          Unduh Qris
+        </a>
+
+        <button
+          class="donation-btn qris-close"
+          id="closeQris"
+        >
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- DONASI POPUP -->
+  <div class="banner-popup-overlay" id="donasiPopup">
+    <div class="banner-popup">
+      <div class="banner-popup-title">Donasi Seikhlasnya</div>
+      <div class="banner-popup-buttons">
+        <a href="https://saweria.co/BaraStore918" target="_blank" class="popup-btn wa">
+          Saweria
+        </a>
+        <button class="popup-btn tele" id="openQrisFromDonasi">
+          Qris
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer">© 2026 Barr Store</div>
+  
+  <audio id="bgMusic" src="media/audio.mp3" loop></audio>
+
+  <div class="tags-overlay" id="tagsOverlay"></div>
+
+  <div class="tags-popup" id="tagsPopup">
+    <div class="tags-title">
+      Pilih Tag Pencarian
+    </div>
+    <div class="tags-list" id="tagsList"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
