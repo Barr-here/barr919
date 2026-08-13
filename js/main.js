@@ -45,7 +45,6 @@ donasiPopup.onclick = (e) => {
 document.getElementById('openQrisFromDonasi').onclick = () => {
   donasiPopup.classList.remove('show');
   qrisPopup.classList.add('show');
-  document.body.style.overflow = '';
 };
 
 // ============================================================
@@ -91,12 +90,12 @@ supabaseClient
 
     if (error) {
       console.error('Gagal ambil testimoni:', error);
-      testiSlider.innerHTML = '<div class="load-empty-msg"><span class="empty-icon">❗</span>Gagal memuat testimoni. Coba refresh halaman</div>';
+      testiSlider.innerHTML = '<div class="load-empty-msg"><span class="empty-icon">⚠️</span>Gagal memuat testimoni. Coba refresh halaman.</div>';
       return;
     }
 
     if (!testimonials || testimonials.length === 0) {
-      testiSlider.innerHTML = '<div class="load-empty-msg"><span class="empty-icon">💬</span>Belum ada testimoni</div>';
+      testiSlider.innerHTML = '<div class="load-empty-msg"><span class="empty-icon">💬</span>Belum ada testimoni.</div>';
       return;
     }
 
@@ -197,12 +196,12 @@ supabaseClient
 
     if (error) {
       console.error('Gagal ambil banner:', error);
-      bannerTrack.innerHTML = '<div class="load-empty-msg"><span class="empty-icon">❗</span>Gagal memuat banner. Coba refresh halaman</div>';
+      bannerTrack.innerHTML = '<div class="load-empty-msg"><span class="empty-icon">⚠️</span>Gagal memuat banner. Coba refresh halaman.</div>';
       return;
     }
 
     if (!banners || banners.length === 0) {
-      bannerTrack.innerHTML = '<div class="load-empty-msg"><span class="empty-icon">🖼️</span>Belum ada banner</div>';
+      bannerTrack.innerHTML = '<div class="load-empty-msg"><span class="empty-icon">🖼️</span>Belum ada banner.</div>';
       return;
     }
 
@@ -341,7 +340,7 @@ supabaseClient
       console.error('Gagal ambil products:', error);
       document.getElementById('endpointList').insertAdjacentHTML(
         'beforeend',
-        '<div class="load-empty-msg"><span class="empty-icon">❗</span>Gagal memuat produk. Coba refresh halaman</div>'
+        '<div class="load-empty-msg"><span class="empty-icon">⚠️</span>Gagal memuat produk. Coba refresh halaman.</div>'
       );
       return;
     }
@@ -657,3 +656,44 @@ function updateGreeting() {
 updateGreeting();
 
 setInterval(updateGreeting, 1000);
+
+// ============================================================
+// DOCK BAR — support tap di HP (bukan cuma hover)
+// ============================================================
+
+document.querySelectorAll('.dock-item').forEach(item => {
+  item.addEventListener('click', (e) => {
+    const isAlreadyActive = item.classList.contains('dock-active');
+
+    // Tutup dock lain yang mungkin lagi terbuka
+    document.querySelectorAll('.dock-item').forEach(el => el.classList.remove('dock-active'));
+
+    if (!isAlreadyActive) {
+      item.classList.add('dock-active');
+    } else if (item.tagName === 'A') {
+      // Kalau ini link (Admin) dan sudah aktif, biarkan link jalan normal
+      return;
+    }
+
+    // Kalau elemen ini bukan link (misal "Bantuan"), cegah reload & hanya toggle
+    if (item.tagName !== 'A') {
+      e.preventDefault();
+    }
+  });
+});
+
+// Klik Bantuan — placeholder, nanti diisi tutorial auto order
+document.getElementById('dockBantuan').addEventListener('click', () => {
+  Swal.fire({
+    icon: 'info',
+    title: 'Segera Hadir',
+    text: 'Tutorial auto order akan tersedia di sini.',
+  });
+});
+
+// Tutup dock item aktif kalau tap di luar dock
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.dock-bar')) {
+    document.querySelectorAll('.dock-item').forEach(el => el.classList.remove('dock-active'));
+  }
+});
