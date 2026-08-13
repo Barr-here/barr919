@@ -119,7 +119,7 @@ supabaseClient
             </div>
 
             <div class="testi-desc">
-              ${item.desc}
+              ${item.description}
             </div>
 
           </div>
@@ -217,7 +217,7 @@ supabaseClient
             </div>
 
             <div class="banner-desc">
-              ${item.desc}
+              ${item.description}
             </div>
           </div>
         </div>
@@ -335,7 +335,7 @@ supabaseClient
         <div class="endpoint-path">${item.title}</div>
 
         <div class="endpoint-desc">
-          ${item.desc}
+          ${item.description}
         </div>
 
         <div class="expand-content">

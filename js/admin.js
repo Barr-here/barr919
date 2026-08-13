@@ -102,7 +102,7 @@ async function loadProducts() {
 function editProduct(item) {
   document.getElementById('p_type').value = item.type;
   document.getElementById('p_title').value = item.title;
-  document.getElementById('p_desc').value = item.desc;
+  document.getElementById('p_desc').value = item.description;
   document.getElementById('p_wa').value = item.wa || '';
   document.getElementById('p_tele').value = item.tele || '';
   document.getElementById('p_content').value = item.content || '';
@@ -119,7 +119,7 @@ document.getElementById('p_add').onclick = async () => {
   const payload = {
     type: document.getElementById('p_type').value.trim(),
     title: document.getElementById('p_title').value.trim(),
-    desc: document.getElementById('p_desc').value.trim(),
+    description: document.getElementById('p_desc').value.trim(),
     wa: document.getElementById('p_wa').value.trim(),
     tele: document.getElementById('p_tele').value.trim(),
     content: document.getElementById('p_content').value,
@@ -190,7 +190,7 @@ async function loadBanners() {
 function editBanner(item) {
   document.getElementById('b_image').value = item.image;
   document.getElementById('b_title').value = item.title;
-  document.getElementById('b_desc').value = item.desc;
+  document.getElementById('b_desc').value = item.description;
   document.getElementById('b_wa').value = item.wa || '';
   document.getElementById('b_tele').value = item.tele || '';
   document.getElementById('b_sort').value = item.sort_order || 0;
@@ -206,7 +206,7 @@ document.getElementById('b_add').onclick = async () => {
   const payload = {
     image: document.getElementById('b_image').value.trim(),
     title: document.getElementById('b_title').value.trim(),
-    desc: document.getElementById('b_desc').value,
+    description: document.getElementById('b_desc').value,
     wa: document.getElementById('b_wa').value.trim(),
     tele: document.getElementById('b_tele').value.trim(),
     sort_order: parseInt(document.getElementById('b_sort').value) || 0,
@@ -276,7 +276,7 @@ function editTestimonial(item) {
   document.getElementById('t_image').value = item.image;
   document.getElementById('t_date').value = item.date;
   document.getElementById('t_title').value = item.title;
-  document.getElementById('t_desc').value = item.desc;
+  document.getElementById('t_desc').value = item.description;
   document.getElementById('t_sort').value = item.sort_order || 0;
 
   const addBtn = document.getElementById('t_add');
@@ -291,7 +291,7 @@ document.getElementById('t_add').onclick = async () => {
     image: document.getElementById('t_image').value.trim(),
     date: document.getElementById('t_date').value.trim(),
     title: document.getElementById('t_title').value.trim(),
-    desc: document.getElementById('t_desc').value.trim(),
+    description: document.getElementById('t_desc').value.trim(),
     sort_order: parseInt(document.getElementById('t_sort').value) || 0,
   };
 
