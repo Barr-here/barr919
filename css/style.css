@@ -1614,3 +1614,107 @@
   font-size: 22px;
   opacity: 0.7;
 }
+
+/* ============================================================
+   DOCK BAR (mengambang di bawah, seperti dock iPhone/macOS)
+   ============================================================ */
+
+.dock-bar {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  z-index: 500;
+  backdrop-filter: blur(10px);
+}
+
+.dock-item {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 44px;
+  padding: 0 11px;
+  border-radius: 16px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  width: 44px;
+  transition:
+    width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.dock-icon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dock-label {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  max-width: 0;
+  margin-left: 0;
+  transition:
+    opacity 0.25s ease 0.05s,
+    max-width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    margin-left 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dock-item:hover,
+.dock-item:focus-visible,
+.dock-item.dock-active {
+  width: auto;
+  transform: translateY(-4px);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.dock-item:hover .dock-icon,
+.dock-item:focus-visible .dock-icon,
+.dock-item.dock-active .dock-icon {
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.dock-item:hover .dock-label,
+.dock-item:focus-visible .dock-label,
+.dock-item.dock-active .dock-label {
+  opacity: 1;
+  max-width: 120px;
+  margin-left: 8px;
+  color: #ffffff;
+}
+
+@media (max-width: 480px) {
+  .dock-bar {
+    bottom: 14px;
+    padding: 8px 12px;
+    gap: 5px;
+  }
+  .dock-item {
+    height: 40px;
+    width: 40px;
+  }
+}
