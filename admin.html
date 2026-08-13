@@ -29,6 +29,17 @@
   #loginBox { max-width: 380px; margin: 60px auto; }
   .hidden { display: none !important; }
   #logoutBtn { float: right; }
+
+  /* Styling popup SweetAlert2 agar sesuai tema website */
+  .themed-swal {
+    font-family: 'JetBrains Mono', monospace !important;
+    border-radius: 14px !important;
+  }
+  .themed-swal-btn {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+  }
 </style>
 </head>
 <body>
@@ -101,9 +112,9 @@
         <div class="admin-title">Tambah Testimoni Baru</div>
         <div class="form-row"><label>URL Gambar</label><input id="t_image" placeholder="https://..."></div>
         <div class="form-row"><label>Tanggal</label><input id="t_date" placeholder="cth: 09 Agustus 2026"></div>
-        <div class="form-row"><label>Judul</label><input id="t_title" placeholder="cth: AM Premium"></div>
+        <div class="form-row"><label>Judul</label><input id="t_title" placeholder="cth: #27 AM Premium"></div>
         <div class="form-row"><label>Deskripsi</label><input id="t_desc" value="Terimkasih atas kepercayaan anda🌹"></div>
-        <div class="form-row"><label>Urutan</label><input id="t_sort" type="number" placeholder="cth: 100"></div>
+        <div class="form-row"><label>Urutan</label><input id="t_sort" type="number" value="0"></div>
         <button class="btn btn-primary" id="t_add">+ Tambah Testimoni</button>
       </div>
       <div class="admin-box">
@@ -113,6 +124,7 @@
     </div>
   </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/admin.js"></script>
