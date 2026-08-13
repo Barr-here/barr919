@@ -112,9 +112,9 @@
         <div class="admin-title">Tambah Testimoni Baru</div>
         <div class="form-row"><label>URL Gambar</label><input id="t_image" placeholder="https://..."></div>
         <div class="form-row"><label>Tanggal</label><input id="t_date" placeholder="cth: 09 Agustus 2026"></div>
-        <div class="form-row"><label>Judul</label><input id="t_title" placeholder="cth: #27 AM Premium"></div>
+        <div class="form-row"><label>Judul</label><input id="t_title" placeholder="cth: AM Premium"></div>
         <div class="form-row"><label>Deskripsi</label><input id="t_desc" value="Terimkasih atas kepercayaan anda🌹"></div>
-        <div class="form-row"><label>Urutan</label><input id="t_sort" type="number" value="0"></div>
+        <div class="form-row"><label>Urutan</label><input id="t_sort" type="number" placeholder="cht: 100"></div>
         <button class="btn btn-primary" id="t_add">+ Tambah Testimoni</button>
       </div>
       <div class="admin-box">
@@ -122,6 +122,20 @@
         <div id="t_list">Memuat...</div>
       </div>
     </div>
+  </div>
+
+  <!-- DOCK BAR -->
+  <div class="dock-bar" id="dockBar">
+    <a href="index.html" class="dock-item" id="dockHome">
+      <div class="dock-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7"></path>
+          <path d="M9 22V12h6v10"></path>
+          <path d="M5 10v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10"></path>
+        </svg>
+      </div>
+      <span class="dock-label">Beranda</span>
+    </a>
   </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
