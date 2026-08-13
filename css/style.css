@@ -752,6 +752,54 @@
       }      
     }
     
+    /* LOGIN HINT POPUP (mirip theme-popup, mengarah ke dock) */
+    .login-hint-popup {
+      position: fixed;
+      bottom: 78px;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-family: var(--mono);
+      box-shadow: var(--shadow);
+      z-index: 99999;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.25s;
+      max-width: 210px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    /* panah kecil mengarah ke bawah (dock) */
+    .login-hint-popup::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 12px;
+      height: 12px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .login-hint-popup.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 480px) {
+      .login-hint-popup {
+        bottom: 68px;
+      }
+    }
+
     /* TAGS */
     .tags-popup {
       position: fixed;
@@ -1626,14 +1674,12 @@
   transform: translateX(-50%);
   display: flex;
   align-items: flex-end;
-  gap: 6px;
-  padding: 10px 14px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 22px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  gap: 10px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   z-index: 500;
-  backdrop-filter: blur(10px);
 }
 
 .dock-item {
@@ -1704,8 +1750,8 @@
 @media (max-width: 480px) {
   .dock-bar {
     bottom: 14px;
-    padding: 8px 12px;
-    gap: 5px;
+    padding: 0;
+    gap: 6px;
   }
   .dock-item {
     height: 40px;
