@@ -110,12 +110,12 @@ supabaseClient
               </div>
               <button
                 class="like-btn"
-                data-id="${item.title}"
+                data-id="${item.id}"
               > ♥ </button>
             </div>
 
             <div class="testi-name">
-              ${item.title}
+              #${item.sort_order} ${item.title}
             </div>
 
             <div class="testi-desc">
