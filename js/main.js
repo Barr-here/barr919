@@ -482,6 +482,27 @@ setInterval(showThemePopup, 15000);
 
 
 // ============================================================
+// LOGIN HINT POPUP (tampil 1x saja)
+// ============================================================
+
+const loginHintPopup = document.getElementById('loginHintPopup');
+
+if (loginHintPopup && !localStorage.getItem('loginHintShown')) {
+
+  setTimeout(() => {
+    loginHintPopup.classList.add('show');
+
+    setTimeout(() => {
+      loginHintPopup.classList.remove('show');
+    }, 4500);
+
+    localStorage.setItem('loginHintShown', 'true');
+  }, 6000);
+
+}
+
+
+// ============================================================
 // SEARCH
 // ============================================================
 
