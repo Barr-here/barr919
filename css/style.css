@@ -1593,12 +1593,24 @@
   margin-right: 12px;
 }
 
-/* Pesan kosong/gagal (fallback) */
+/* Pesan kosong/gagal (fallback) — tampil sebagai card, bukan teks polos */
 .load-empty-msg {
   font-family: var(--mono);
   font-size: 13px;
   color: var(--subtext);
   text-align: center;
-  padding: 20px 12px;
+  padding: 24px 16px;
   width: 100%;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  background: var(--surface2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.load-empty-msg .empty-icon {
+  font-size: 22px;
+  opacity: 0.7;
 }
