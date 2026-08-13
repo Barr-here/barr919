@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — Barr Store</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body { padding: 20px; max-width: 900px; margin: 0 auto; }
+  .admin-box { background: var(--card-bg, #fff); border-radius: 14px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+  .admin-title { font-family: var(--mono); font-weight: 700; font-size: 18px; margin-bottom: 14px; }
+  .admin-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .admin-tab { padding: 8px 16px; border-radius: 8px; border: 1px solid #ddd; background: #f5f5f5; cursor: pointer; font-family: var(--mono); font-size: 13px; }
+  .admin-tab.active { background: #111; color: #fff; }
+  .admin-panel { display: none; }
+  .admin-panel.active { display: block; }
+  .form-row { margin-bottom: 12px; }
+  .form-row label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+  .form-row input, .form-row textarea { width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 8px; font-family: var(--mono); font-size: 13px; box-sizing: border-box; }
+  .form-row textarea { min-height: 90px; resize: vertical; }
+  .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-family: var(--mono); font-weight: 600; font-size: 13px; }
+  .btn-primary { background: #111; color: #fff; }
+  .btn-danger { background: #d33; color: #fff; }
+  .btn-secondary { background: #eee; color: #111; }
+  .item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #eee; border-radius: 10px; margin-bottom: 8px; gap: 10px; }
+  .item-row .item-title { font-weight: 600; font-size: 14px; }
+  .item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  #loginBox { max-width: 380px; margin: 60px auto; }
+  .hidden { display: none !important; }
+  #logoutBtn { float: right; }
+</style>
+</head>
+<body>
+
+  <div id="loginBox" class="admin-box">
+    <div class="admin-title">🔐 Login Admin</div>
+    <div class="form-row">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="email admin kamu">
+    </div>
+    <div class="form-row">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="password">
+    </div>
+    <button class="btn btn-primary" id="loginBtn" style="width:100%">Login</button>
+    <div id="loginError" style="color:#d33; font-size:12px; margin-top:10px;"></div>
+  </div>
+
+  <div id="adminApp" class="hidden">
+    <div class="admin-box">
+      <button class="btn btn-secondary" id="logoutBtn">Logout</button>
+      <div class="admin-title">⚙️ Admin Panel — Barr Store</div>
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="products">Produk</button>
+        <button class="admin-tab" data-tab="banners">Banner</button>
+        <button class="admin-tab" data-tab="testimonials">Testimoni</button>
+      </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="admin-panel active" id="panel-products">
+      <div class="admin-box">
+        <div class="admin-title">Tambah Produk Baru</div>
+        <div class="form-row"><label>Tipe</label><input id="p_type" value="PRODUK"></div>
+        <div class="form-row"><label>Judul</label><input id="p_title" placeholder="cth: Canva Premium"></div>
+        <div class="form-row"><label>Deskripsi singkat</label><input id="p_desc" placeholder="Klik untuk menampilkan price list"></div>
+        <div class="form-row"><label>Link WhatsApp</label><input id="p_wa" placeholder="https://wa.me/..."></div>
+        <div class="form-row"><label>Link Telegram</label><input id="p_tele" placeholder="https://t.me/..."></div>
+        <div class="form-row"><label>Isi lengkap (price list dll)</label><textarea id="p_content"></textarea></div>
+        <div class="form-row"><label>Urutan (angka kecil = tampil duluan)</label><input id="p_sort" type="number" value="0"></div>
+        <button class="btn btn-primary" id="p_add">+ Tambah Produk</button>
+      </div>
+      <div class="admin-box">
+        <div class="admin-title">Daftar Produk</div>
+        <div id="p_list">Memuat...</div>
+      </div>
+    </div>
+
+    <!-- BANNERS -->
+    <div class="admin-panel" id="panel-banners">
+      <div class="admin-box">
+        <div class="admin-title">Tambah Banner Baru</div>
+        <div class="form-row"><label>URL Gambar</label><input id="b_image" placeholder="https://..."></div>
+        <div class="form-row"><label>Judul</label><input id="b_title"></div>
+        <div class="form-row"><label>Deskripsi (boleh pakai &lt;br&gt;)</label><textarea id="b_desc"></textarea></div>
+        <div class="form-row"><label>Link WhatsApp</label><input id="b_wa"></div>
+        <div class="form-row"><label>Link Telegram</label><input id="b_tele"></div>
+        <div class="form-row"><label>Urutan</label><input id="b_sort" type="number" value="0"></div>
+        <button class="btn btn-primary" id="b_add">+ Tambah Banner</button>
+      </div>
+      <div class="admin-box">
+        <div class="admin-title">Daftar Banner</div>
+        <div id="b_list">Memuat...</div>
+      </div>
+    </div>
+
+    <!-- TESTIMONIALS -->
+    <div class="admin-panel" id="panel-testimonials">
+      <div class="admin-box">
+        <div class="admin-title">Tambah Testimoni Baru</div>
+        <div class="form-row"><label>URL Gambar</label><input id="t_image" placeholder="https://..."></div>
+        <div class="form-row"><label>Tanggal</label><input id="t_date" placeholder="cth: 09 Agustus 2026"></div>
+        <div class="form-row"><label>Judul</label><input id="t_title" placeholder="cth: #27 AM Premium"></div>
+        <div class="form-row"><label>Deskripsi</label><input id="t_desc" value="Terimkasih atas kepercayaan anda🌹"></div>
+        <div class="form-row"><label>Urutan</label><input id="t_sort" type="number" value="0"></div>
+        <button class="btn btn-primary" id="t_add">+ Tambah Testimoni</button>
+      </div>
+      <div class="admin-box">
+        <div class="admin-title">Daftar Testimoni</div>
+        <div id="t_list">Memuat...</div>
+      </div>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
