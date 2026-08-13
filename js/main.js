@@ -90,12 +90,12 @@ supabaseClient
 
     if (error) {
       console.error('Gagal ambil testimoni:', error);
-      testiSlider.innerHTML = '<div class="load-empty-msg">Gagal memuat testimoni. Coba refresh halaman.</div>';
+      testiSlider.innerHTML = '<div class="load-empty-msg"><span class="empty-icon">⚠️</span>Gagal memuat testimoni. Coba refresh halaman.</div>';
       return;
     }
 
     if (!testimonials || testimonials.length === 0) {
-      testiSlider.innerHTML = '<div class="load-empty-msg">Belum ada testimoni.</div>';
+      testiSlider.innerHTML = '<div class="load-empty-msg"><span class="empty-icon">💬</span>Belum ada testimoni.</div>';
       return;
     }
 
@@ -196,12 +196,12 @@ supabaseClient
 
     if (error) {
       console.error('Gagal ambil banner:', error);
-      bannerTrack.innerHTML = '<div class="load-empty-msg">Gagal memuat banner. Coba refresh halaman.</div>';
+      bannerTrack.innerHTML = '<div class="load-empty-msg"><span class="empty-icon">⚠️</span>Gagal memuat banner. Coba refresh halaman.</div>';
       return;
     }
 
     if (!banners || banners.length === 0) {
-      bannerTrack.innerHTML = '<div class="load-empty-msg">Belum ada banner.</div>';
+      bannerTrack.innerHTML = '<div class="load-empty-msg"><span class="empty-icon">🖼️</span>Belum ada banner.</div>';
       return;
     }
 
@@ -338,6 +338,10 @@ supabaseClient
 
     if (error) {
       console.error('Gagal ambil products:', error);
+      document.getElementById('endpointList').insertAdjacentHTML(
+        'beforeend',
+        '<div class="load-empty-msg"><span class="empty-icon">⚠️</span>Gagal memuat produk. Coba refresh halaman.</div>'
+      );
       return;
     }
 
