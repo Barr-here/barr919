@@ -2,6 +2,50 @@
 // ADMIN PANEL — LOGIN & CRUD
 // ============================================================
 
+// ----- HELPER: POPUP BERTEMA (menggantikan alert/confirm bawaan browser) -----
+const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+const swalTheme = {
+  background: isDark ? '#0f1923' : '#ffffff',
+  color: isDark ? '#e8f4fb' : '#0d1b2a',
+  confirmButtonColor: isDark ? '#00ccff' : '#00aadd',
+  cancelButtonColor: isDark ? '#1e3040' : '#e8f4fb',
+  customClass: {
+    popup: 'themed-swal',
+    confirmButton: 'themed-swal-btn',
+  },
+};
+
+function showSuccess(message) {
+  return Swal.fire({
+    icon: 'success',
+    title: 'Berhasil',
+    text: message,
+    ...swalTheme,
+  });
+}
+
+function showError(message) {
+  return Swal.fire({
+    icon: 'error',
+    title: 'Gagal',
+    text: message,
+    ...swalTheme,
+  });
+}
+
+function askConfirm(message) {
+  return Swal.fire({
+    icon: 'warning',
+    title: 'Konfirmasi',
+    text: message,
+    showCancelButton: true,
+    confirmButtonText: 'Ya, lanjutkan',
+    cancelButtonText: 'Batal',
+    ...swalTheme,
+  }).then(result => result.isConfirmed);
+}
+
 const loginBox = document.getElementById('loginBox');
 const adminApp = document.getElementById('adminApp');
 const loginError = document.getElementById('loginError');
@@ -88,8 +132,9 @@ async function loadProducts() {
 
   list.querySelectorAll('[data-del]').forEach(btn => {
     btn.onclick = async () => {
-      if (!confirm('Yakin hapus produk ini?')) return;
+      if (!(await askConfirm('Yakin hapus produk ini?'))) return;
       await supabaseClient.from('products').delete().eq('id', btn.dataset.del);
+      showSuccess('Produk berhasil dihapus');
       loadProducts();
     };
   });
@@ -126,7 +171,7 @@ document.getElementById('p_add').onclick = async () => {
     sort_order: parseInt(document.getElementById('p_sort').value) || 0,
   };
 
-  if (!payload.title) { alert('Judul wajib diisi'); return; }
+  if (!payload.title) { showError('Judul wajib diisi'); return; }
 
   let error;
   if (btn.dataset.editingId) {
@@ -137,11 +182,12 @@ document.getElementById('p_add').onclick = async () => {
     ({ error } = await supabaseClient.from('products').insert(payload));
   }
 
-  if (error) { alert('Gagal simpan: ' + error.message); return; }
+  if (error) { showError('Gagal simpan: ' + error.message); return; }
 
   ['p_title','p_desc','p_wa','p_tele','p_content'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('p_type').value = 'PRODUK';
   document.getElementById('p_sort').value = 0;
+  showSuccess('Produk berhasil disimpan');
   loadProducts();
 };
 
@@ -176,8 +222,9 @@ async function loadBanners() {
 
   list.querySelectorAll('[data-del]').forEach(btn => {
     btn.onclick = async () => {
-      if (!confirm('Yakin hapus banner ini?')) return;
+      if (!(await askConfirm('Yakin hapus banner ini?'))) return;
       await supabaseClient.from('banners').delete().eq('id', btn.dataset.del);
+      showSuccess('Banner berhasil dihapus');
       loadBanners();
     };
   });
@@ -212,7 +259,7 @@ document.getElementById('b_add').onclick = async () => {
     sort_order: parseInt(document.getElementById('b_sort').value) || 0,
   };
 
-  if (!payload.title || !payload.image) { alert('Judul dan gambar wajib diisi'); return; }
+  if (!payload.title || !payload.image) { showError('Judul dan gambar wajib diisi'); return; }
 
   let error;
   if (btn.dataset.editingId) {
@@ -223,10 +270,11 @@ document.getElementById('b_add').onclick = async () => {
     ({ error } = await supabaseClient.from('banners').insert(payload));
   }
 
-  if (error) { alert('Gagal simpan: ' + error.message); return; }
+  if (error) { showError('Gagal simpan: ' + error.message); return; }
 
   ['b_image','b_title','b_desc','b_wa','b_tele'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('b_sort').value = 0;
+  showSuccess('Banner berhasil disimpan');
   loadBanners();
 };
 
@@ -261,8 +309,9 @@ async function loadTestimonials() {
 
   list.querySelectorAll('[data-del]').forEach(btn => {
     btn.onclick = async () => {
-      if (!confirm('Yakin hapus testimoni ini?')) return;
+      if (!(await askConfirm('Yakin hapus testimoni ini?'))) return;
       await supabaseClient.from('testimonials').delete().eq('id', btn.dataset.del);
+      showSuccess('Testimoni berhasil dihapus');
       loadTestimonials();
     };
   });
@@ -295,7 +344,7 @@ document.getElementById('t_add').onclick = async () => {
     sort_order: parseInt(document.getElementById('t_sort').value) || 0,
   };
 
-  if (!payload.title || !payload.image) { alert('Judul dan gambar wajib diisi'); return; }
+  if (!payload.title || !payload.image) { showError('Judul dan gambar wajib diisi'); return; }
 
   let error;
   if (btn.dataset.editingId) {
@@ -306,10 +355,11 @@ document.getElementById('t_add').onclick = async () => {
     ({ error } = await supabaseClient.from('testimonials').insert(payload));
   }
 
-  if (error) { alert('Gagal simpan: ' + error.message); return; }
+  if (error) { showError('Gagal simpan: ' + error.message); return; }
 
   ['t_image','t_date','t_title'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('t_desc').value = 'Terimkasih atas kepercayaan anda🌹';
   document.getElementById('t_sort').value = 0;
+  showSuccess('Testimoni berhasil disimpan');
   loadTestimonials();
 };
