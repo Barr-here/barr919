@@ -80,15 +80,24 @@ supabaseClient
   .order('sort_order', { ascending: true })
   .then(({ data: testimonials, error }) => {
 
-    if (error) {
-      console.error('Gagal ambil testimoni:', error);
-      return;
-    }
-
     const testiSlider =
       document.getElementById(
         'testiSlider'
       );
+
+    // Hapus skeleton loading
+    testiSlider.innerHTML = '';
+
+    if (error) {
+      console.error('Gagal ambil testimoni:', error);
+      testiSlider.innerHTML = '<div class="load-empty-msg">Gagal memuat testimoni. Coba refresh halaman.</div>';
+      return;
+    }
+
+    if (!testimonials || testimonials.length === 0) {
+      testiSlider.innerHTML = '<div class="load-empty-msg">Belum ada testimoni.</div>';
+      return;
+    }
 
     testimonials.forEach(item => {
 
@@ -180,12 +189,21 @@ supabaseClient
   .order('sort_order', { ascending: true })
   .then(({ data: banners, error }) => {
 
+    const bannerTrack = document.getElementById('bannerTrack');
+
+    // Hapus skeleton loading
+    bannerTrack.innerHTML = '';
+
     if (error) {
       console.error('Gagal ambil banner:', error);
+      bannerTrack.innerHTML = '<div class="load-empty-msg">Gagal memuat banner. Coba refresh halaman.</div>';
       return;
     }
 
-    const bannerTrack = document.getElementById('bannerTrack');
+    if (!banners || banners.length === 0) {
+      bannerTrack.innerHTML = '<div class="load-empty-msg">Belum ada banner.</div>';
+      return;
+    }
 
     banners.forEach(item => {
 
@@ -311,6 +329,12 @@ supabaseClient
   .select('*')
   .order('sort_order', { ascending: true })
   .then(({ data: products, error }) => {
+
+    // Hapus skeleton loading produk (tanpa ganggu card statis lain)
+    const skeleton1 = document.getElementById('productSkeleton');
+    const skeleton2 = document.getElementById('productSkeleton2');
+    if (skeleton1) skeleton1.remove();
+    if (skeleton2) skeleton2.remove();
 
     if (error) {
       console.error('Gagal ambil products:', error);
