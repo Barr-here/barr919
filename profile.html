@@ -34,16 +34,35 @@
   .form-row input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--mono); font-size: 13px; box-sizing: border-box; background: var(--surface2); color: var(--text); }
   .deposit-hint { font-family: var(--mono); font-size: 11px; color: var(--subtext); margin-top: 6px; text-align: left; }
   .deposit-error { color: #d33; font-size: 12px; font-family: var(--mono); margin-top: 8px; min-height: 14px; }
-  #qrisCanvas { margin: 12px auto; display: block; border-radius: 10px; }
+  .qris-canvas-wrap {
+    width: 100%;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 8px 0 4px;
+  }
+  #qrisCanvas {
+    display: block;
+    width: 220px;
+    height: 220px;
+    max-width: 100%;
+    background: #fff;
+    border-radius: 10px;
+  }
+  .qris-footer {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 1.5;
+    color: var(--subtext);
+  }
   .deposit-amount { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); margin: 10px 0 4px; }
   .deposit-status { font-family: var(--mono); font-size: 12px; color: var(--subtext); margin-bottom: 14px; }
   .deposit-timer { font-family: var(--mono); font-size: 12px; color: var(--text); opacity: 0.7; }
   .close-modal-btn { background: none; border: none; color: var(--subtext); font-family: var(--mono); font-size: 12px; cursor: pointer; margin-top: 10px; text-decoration: underline; }
-  .qris-view { display: none; }
-  .qris-view.active { display: block; }
-  .deposit-form-view.hidden { display: none; }
-  .qris-footer { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 10px; line-height: 1.5; color: var(--subtext); }
-  #qrisCanvas { background: #fff; padding: 8px; box-sizing: border-box; }
 </style>
 </head>
 <body>
@@ -67,10 +86,11 @@
     <button class="btn btn-secondary" id="logoutBtn">Logout</button>
   </div>
 
-  <!-- MODAL DEPOSIT: FORM + QRIS DALAM SATU CONTAINER -->
+  <!-- MODAL DEPOSIT: FORM + QRIS DALAM CONTAINER YANG SAMA -->
   <div class="modal-overlay" id="depositModal">
-    <div class="modal-box">
-      <div class="deposit-form-view" id="depositFormView">
+    <div class="modal-box" id="depositContainer">
+      <!-- FORM DEPOSIT -->
+      <div id="depositFormView">
         <div class="modal-title">Deposit Coin</div>
         <div class="form-row">
           <label>Jumlah Coin (1 coin = Rp1.000)</label>
@@ -83,14 +103,17 @@
         <button class="btn btn-danger" id="closeDepositModal" style="margin-top:0;">Batal</button>
       </div>
 
-      <div class="qris-view" id="qrisView">
+      <!-- QRIS VIEW: container yang sama -->
+      <div id="qrisView" style="display:none;">
         <div class="modal-title">Scan untuk Bayar</div>
-        <canvas id="qrisCanvas" width="236" height="236"></canvas>
+        <div class="qris-canvas-wrap">
+          <canvas id="qrisCanvas"></canvas>
+        </div>
         <div class="deposit-amount" id="qrisAmount">Rp0</div>
         <div class="deposit-status" id="qrisStatus">Menunggu pembayaran...</div>
         <div class="deposit-timer" id="qrisTimer"></div>
         <button class="btn btn-danger" id="closeQrisModal" style="margin-top:12px;">Batalkan Pesanan</button>
-        <div class="qris-footer">Scan QRIS menggunakan aplikasi pembayaran yang mendukung QRIS. Jangan tutup halaman sampai pembayaran selesai.</div>
+        <div class="qris-footer">Scan QRIS menggunakan aplikasi pembayaran kamu. Jangan tutup halaman sampai pembayaran selesai.</div>
       </div>
     </div>
   </div>
@@ -158,12 +181,6 @@
 
   // ----- BUKA MODAL DEPOSIT -----
   document.getElementById('depositBtn').onclick = () => {
-    clearInterval(pollInterval);
-    clearInterval(timerInterval);
-    currentOrderId = null;
-
-    document.getElementById('depositFormView').classList.remove('hidden');
-    document.getElementById('qrisView').classList.remove('active');
     document.getElementById('coinInput').value = '';
     document.getElementById('totalPreview').textContent = '';
     document.getElementById('depositFormError').textContent = '';
@@ -172,6 +189,8 @@
 
   document.getElementById('closeDepositModal').onclick = () => {
     document.getElementById('depositModal').classList.remove('show');
+    document.getElementById('qrisView').style.display = 'none';
+    document.getElementById('depositFormView').style.display = 'block';
   };
 
   document.getElementById('coinInput').addEventListener('input', (e) => {
@@ -211,47 +230,77 @@
 
   let currentOrderId = null;
 
-  // ----- MODAL QRIS + POLLING -----
+  // ----- QRIS DI CONTAINER DEPOSIT YANG SAMA -----
   async function openQrisModal(deposit) {
-    clearInterval(pollInterval);
-    clearInterval(timerInterval);
     currentOrderId = deposit.orderId;
 
-    const modal = document.getElementById('depositModal');
+    const depositModal = document.getElementById('depositModal');
     const formView = document.getElementById('depositFormView');
     const qrisView = document.getElementById('qrisView');
     const canvas = document.getElementById('qrisCanvas');
 
-    // Pastikan QR lama dibersihkan sebelum membuat QR baru.
+    // Bersihkan transaksi/timer lama sebelum membuat QR baru.
+    clearInterval(pollInterval);
+    clearInterval(timerInterval);
+    pollInterval = null;
+    timerInterval = null;
+
+    // Reset canvas secara eksplisit.
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvas.width = 220;
+    canvas.height = 220;
 
-    try {
-      // QR dibuat dari payment_number Pakasir (EMV QRIS string), bukan dari URL.
-      await QRCode.toCanvas(canvas, deposit.paymentNumber, {
-        width: 220,
-        margin: 1,
-        errorCorrectionLevel: 'M'
-      });
-    } catch (qrErr) {
-      console.error('Gagal generate QR code:', qrErr, deposit);
+    const paymentNumber = String(deposit.paymentNumber || '').trim();
+    if (!paymentNumber) {
+      currentOrderId = null;
+      document.getElementById('depositFormError').textContent = 'Pakasir tidak mengirim payment_number.';
+      return;
+    }
+
+    // Pastikan library QR benar-benar tersedia.
+    if (!window.QRCode || typeof window.QRCode.toCanvas !== 'function') {
+      console.error('QRCode library tidak tersedia:', window.QRCode);
       currentOrderId = null;
       Swal.fire({
         icon: 'error',
-        title: 'Gagal menampilkan QR',
-        text: 'Data QRIS dari Pakasir diterima, tetapi QR gagal dirender. Coba buat transaksi lagi.',
+        title: 'QRIS gagal ditampilkan',
+        text: 'Library QR Code belum berhasil dimuat. Coba refresh halaman.',
         ...swalTheme,
       });
       return;
     }
 
-    document.getElementById('qrisAmount').textContent = 'Rp' + Number(deposit.totalPayment || 0).toLocaleString('id-ID');
+    try {
+      // Buat QR terlebih dahulu. Hanya jika sukses, tampilan diganti ke QRIS.
+      await QRCode.toCanvas(canvas, paymentNumber, {
+        errorCorrectionLevel: 'M',
+        width: 220,
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#ffffff'
+        }
+      });
+    } catch (qrErr) {
+      console.error('Gagal generate QRIS:', qrErr, paymentNumber);
+      currentOrderId = null;
+      Swal.fire({
+        icon: 'error',
+        title: 'QRIS gagal ditampilkan',
+        text: 'Data QRIS dari Pakasir tidak bisa dirender sebagai QR Code.',
+        ...swalTheme,
+      });
+      return;
+    }
+
+    document.getElementById('qrisAmount').textContent =
+      'Rp' + Number(deposit.totalPayment || 0).toLocaleString('id-ID');
     document.getElementById('qrisStatus').textContent = 'Menunggu pembayaran...';
 
-    // QR berhasil dibuat -> form deposit diganti menjadi tampilan QRIS
-    formView.classList.add('hidden');
-    qrisView.classList.add('active');
-    modal.classList.add('show');
+    formView.style.display = 'none';
+    qrisView.style.display = 'block';
+    depositModal.classList.add('show');
 
     let secondsLeft = Number(deposit.expiresInSeconds) || 600;
     updateTimerText(secondsLeft);
@@ -259,43 +308,62 @@
     timerInterval = setInterval(() => {
       secondsLeft--;
       updateTimerText(secondsLeft);
-      if (secondsLeft <= 0) clearInterval(timerInterval);
+
+      if (secondsLeft <= 0) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
     }, 1000);
 
     pollInterval = setInterval(async () => {
-      const { ok, data } = await callDeposit({ action: 'check-status', orderId: deposit.orderId });
+      if (!currentOrderId) return;
 
-      if (!ok) return;
-
-      if (data.status === 'completed') {
-        clearInterval(pollInterval);
-        clearInterval(timerInterval);
-        currentOrderId = null;
-        document.getElementById('depositModal').classList.remove('show');
-        document.getElementById('qrisView').classList.remove('active');
-        document.getElementById('depositFormView').classList.remove('hidden');
-        document.getElementById('profileCoin').textContent = data.coin;
-
-        Swal.fire({
-          icon: 'success',
-          title: 'Deposit Berhasil!',
-          text: `${deposit.coinAmount} coin telah ditambahkan ke akunmu.`,
-          ...swalTheme,
+      try {
+        const { ok, data } = await callDeposit({
+          action: 'check-status',
+          orderId: currentOrderId
         });
-      } else if (data.status === 'expired') {
-        clearInterval(pollInterval);
-        clearInterval(timerInterval);
-        currentOrderId = null;
-        document.getElementById('depositModal').classList.remove('show');
-        document.getElementById('qrisView').classList.remove('active');
-        document.getElementById('depositFormView').classList.remove('hidden');
 
-        Swal.fire({
-          icon: 'error',
-          title: 'Waktu Habis',
-          text: 'Transaksi kadaluarsa. Silakan buat transaksi baru.',
-          ...swalTheme,
-        });
+        if (!ok) return;
+
+        if (data.status === 'completed') {
+          clearInterval(pollInterval);
+          clearInterval(timerInterval);
+          pollInterval = null;
+          timerInterval = null;
+          currentOrderId = null;
+
+          depositModal.classList.remove('show');
+          qrisView.style.display = 'none';
+          formView.style.display = 'block';
+          document.getElementById('profileCoin').textContent = data.coin;
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Deposit Berhasil!',
+            text: `${deposit.coinAmount} coin telah ditambahkan ke akunmu.`,
+            ...swalTheme,
+          });
+        } else if (data.status === 'expired') {
+          clearInterval(pollInterval);
+          clearInterval(timerInterval);
+          pollInterval = null;
+          timerInterval = null;
+          currentOrderId = null;
+
+          depositModal.classList.remove('show');
+          qrisView.style.display = 'none';
+          formView.style.display = 'block';
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Waktu Habis',
+            text: 'Transaksi kadaluarsa. Silakan buat transaksi baru.',
+            ...swalTheme,
+          });
+        }
+      } catch (err) {
+        console.error('Gagal cek status deposit:', err);
       }
     }, 5000);
   }
@@ -326,10 +394,13 @@
 
     clearInterval(pollInterval);
     clearInterval(timerInterval);
+    pollInterval = null;
+    timerInterval = null;
     currentOrderId = null;
+
     document.getElementById('depositModal').classList.remove('show');
-    document.getElementById('qrisView').classList.remove('active');
-    document.getElementById('depositFormView').classList.remove('hidden');
+    document.getElementById('qrisView').style.display = 'none';
+    document.getElementById('depositFormView').style.display = 'block';
   };
 </script>
 
