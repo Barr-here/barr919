@@ -71,16 +71,25 @@ serve(async (req) => {
   }
 
   try {
-    const { action, email, password, code } = await req.json();
+    const body = await req.json();
+    const { action, email, password, code, userId, sessionToken } = body;
 
-    if (!action || !email) {
+    if (!action) {
       return new Response(JSON.stringify({ error: "Data tidak lengkap" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const cleanEmail = email.trim().toLowerCase();
+    // get-profile tidak butuh email, tapi semua action lain wajib
+    if (action !== "get-profile" && !email) {
+      return new Response(JSON.stringify({ error: "Data tidak lengkap" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const cleanEmail = email ? email.trim().toLowerCase() : "";
 
     // ========================================================
     // REGISTER
@@ -171,14 +180,17 @@ serve(async (req) => {
         });
       }
 
+      const sessionToken = crypto.randomUUID();
+
       await supabaseAdmin
         .from("users")
-        .update({ is_verified: true, otp_code: null, otp_expires_at: null })
+        .update({ is_verified: true, otp_code: null, otp_expires_at: null, session_token: sessionToken })
         .eq("id", user.id);
 
-      return new Response(JSON.stringify({ success: true, userId: user.id }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ success: true, userId: user.id, sessionToken, isAdmin: false, coin: 0 }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     // ========================================================
@@ -214,6 +226,41 @@ serve(async (req) => {
     }
 
     // ========================================================
+    // GET PROFILE (verifikasi sesi + ambil data user, termasuk is_admin)
+    // ========================================================
+    if (action === "get-profile") {
+      if (!userId || !sessionToken) {
+        return new Response(JSON.stringify({ error: "Sesi tidak valid" }), {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const { data: user } = await supabaseAdmin
+        .from("users")
+        .select("id, email, is_admin, coin, session_token")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (!user || user.session_token !== sessionToken) {
+        return new Response(JSON.stringify({ error: "Sesi tidak valid, silakan login ulang" }), {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          email: user.email,
+          isAdmin: user.is_admin,
+          coin: user.coin,
+        }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // ========================================================
     // LOGIN
     // ========================================================
     if (action === "login") {
@@ -226,7 +273,7 @@ serve(async (req) => {
 
       const { data: user } = await supabaseAdmin
         .from("users")
-        .select("id, email, password_hash, is_verified")
+        .select("id, email, password_hash, is_verified, is_admin, coin")
         .eq("email", cleanEmail)
         .maybeSingle();
 
@@ -252,11 +299,19 @@ serve(async (req) => {
         });
       }
 
-      // Buat token sesi sederhana
+      // Buat token sesi dan SIMPAN ke database, supaya bisa diverifikasi ulang nanti
       const sessionToken = crypto.randomUUID();
+      await supabaseAdmin.from("users").update({ session_token: sessionToken }).eq("id", user.id);
 
       return new Response(
-        JSON.stringify({ success: true, userId: user.id, email: user.email, sessionToken }),
+        JSON.stringify({
+          success: true,
+          userId: user.id,
+          email: user.email,
+          sessionToken,
+          isAdmin: user.is_admin,
+          coin: user.coin,
+        }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
