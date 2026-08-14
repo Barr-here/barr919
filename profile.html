@@ -207,6 +207,28 @@
 
     const canvas = document.getElementById('qrisCanvas');
 
+    if (!canvas) {
+      console.error('Elemen canvas #qrisCanvas tidak ditemukan di DOM');
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal menampilkan QR',
+        text: 'Terjadi kesalahan teknis pada halaman. Coba refresh dan ulangi.',
+        ...swalTheme,
+      });
+      return;
+    }
+
+    if (typeof QRCode === 'undefined') {
+      console.error('Library QRCode gagal dimuat dari CDN (window.QRCode undefined)');
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal menampilkan QR',
+        text: 'Library QR code gagal dimuat. Cek koneksi internet kamu, lalu refresh halaman.',
+        ...swalTheme,
+      });
+      return;
+    }
+
     if (!deposit.paymentNumber) {
       console.error('paymentNumber kosong, data deposit:', deposit);
       Swal.fire({
@@ -218,10 +240,18 @@
       return;
     }
 
-    try {
-      await QRCode.toCanvas(canvas, deposit.paymentNumber, { width: 220, margin: 1 });
-    } catch (qrErr) {
-      console.error('Gagal generate QR code:', qrErr, 'paymentNumber:', deposit.paymentNumber);
+    const qrGenerated = await new Promise((resolve) => {
+      QRCode.toCanvas(canvas, deposit.paymentNumber, { width: 220, margin: 1 }, (qrErr) => {
+        if (qrErr) {
+          console.error('Gagal generate QR code:', qrErr, 'paymentNumber:', deposit.paymentNumber);
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      });
+    });
+
+    if (!qrGenerated) {
       Swal.fire({
         icon: 'error',
         title: 'Gagal menampilkan QR',
