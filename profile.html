@@ -77,7 +77,7 @@
           <div class="deposit-hint">Minimal 1 coin, maksimal 50 coin per transaksi yahh</div>
         </div>
         <div class="deposit-hint" id="totalPreview" style="text-align:center; font-size:13px;"></div>
-        <button class="btn btn-primary" id="createDepositBtn">QRIS</button>
+        <button class="btn btn-primary" id="createDepositBtn" style="margin-bottom:0;">QRIS</button>
         <div class="deposit-error" id="depositFormError"></div>
         <button class="btn btn-danger" id="closeDepositModal" style="margin-top:0;">Batal</button>
       </div>
@@ -89,7 +89,7 @@
         <div class="deposit-status" id="qrisStatus">Menunggu pembayaran...</div>
         <div class="deposit-timer" id="qrisTimer"></div>
         <button class="btn btn-danger" id="closeQrisModal" style="margin-top:4px;">Batalkan Pesanan</button>
-        <div class="qris-footer">Scan QRIS menggunakan aplikasi pembayaran yang mendukung QRIS. Jangan tutup halaman sampai pembayaran selesai.</div>
+        <div class="qris-footer">Scan qris menggunakan aplikasi pembayaran yang mendukung qris. Jangan tutup halaman sampai pembayaran selesai</div>
       </div>
     </div>
   </div>
@@ -226,7 +226,7 @@
       Swal.fire({
         icon: 'error',
         title: 'QRIS tidak tersedia',
-        text: 'Data QRIS dari Pakasir tidak berisi payment number.',
+        text: 'Data qris dari server tidak berisi payment number',
         ...swalTheme,
       });
       return;
@@ -249,7 +249,7 @@
       Swal.fire({
         icon: 'error',
         title: 'Gagal menampilkan QR',
-        text: 'Layanan QR image tidak dapat diakses. Coba lagi.',
+        text: 'Layanan qr image tidak dapat diakses. Coba lagi nanti',
         ...swalTheme,
       });
       return;
@@ -303,7 +303,7 @@
         Swal.fire({
           icon: 'error',
           title: 'Waktu Habis',
-          text: 'Transaksi kadaluarsa. Silakan buat transaksi baru.',
+          text: 'Transaksi kadaluarsa. Silakan buat transaksi baru',
           ...swalTheme,
         });
       }
@@ -332,6 +332,13 @@
 
       btn.disabled = false;
       btn.textContent = 'Batalkan Pesanan';
+      
+      Swal.fire({
+        icon: 'succes',
+        title: 'Membatalkan pembayaran',
+        text: `Deposit sebelumnya berhasil di batalkan`,
+        ...swalTheme,
+      });
     }
 
     clearInterval(pollInterval);
