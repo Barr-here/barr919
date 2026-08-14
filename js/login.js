@@ -93,6 +93,8 @@ document.getElementById('loginBtn').onclick = async () => {
     userId: data.userId,
     email: data.email,
     sessionToken: data.sessionToken,
+    isAdmin: data.isAdmin,
+    coin: data.coin,
   }));
 
   Swal.fire({
@@ -185,7 +187,9 @@ document.getElementById('otpBtn').onclick = async () => {
   localStorage.setItem('barr_user_session', JSON.stringify({
     userId: data.userId,
     email: pendingEmail,
-    sessionToken: crypto.randomUUID(),
+    sessionToken: data.sessionToken,
+    isAdmin: data.isAdmin,
+    coin: data.coin,
   }));
 
   Swal.fire({

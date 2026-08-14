@@ -40,51 +40,43 @@ function askConfirm(message) {
     title: 'Konfirmasi',
     text: message,
     showCancelButton: true,
-    confirmButtonText: 'Ya, lanjutkan',
+    confirmButtonText: 'Lanjutkan',
     cancelButtonText: 'Batal',
     ...swalTheme,
   }).then(result => result.isConfirmed);
 }
 
-const loginBox = document.getElementById('loginBox');
+const loadingBox = document.getElementById('loadingBox');
 const adminApp = document.getElementById('adminApp');
-const loginError = document.getElementById('loginError');
 
-// ----- CEK SESI SAAT HALAMAN DIBUKA -----
+// ----- CEK SESI + STATUS ADMIN SAAT HALAMAN DIBUKA -----
 async function checkSession() {
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (session) {
-    showAdmin();
-  } else {
-    loginBox.classList.remove('hidden');
-    adminApp.classList.add('hidden');
+  const session = await verifySession();
+
+  if (!session) {
+    // Belum login sama sekali -> lempar ke halaman login
+    window.location.href = 'login.html';
+    return;
   }
+
+  if (!session.isAdmin) {
+    // Login tapi bukan admin -> tendang balik ke beranda
+    await showError('Kamu tidak punya akses ke halaman ini.');
+    window.location.href = 'index.html';
+    return;
+  }
+
+  showAdmin();
 }
 checkSession();
 
-// ----- LOGIN -----
-document.getElementById('loginBtn').onclick = async () => {
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value;
-  loginError.textContent = '';
-
-  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-  if (error) {
-    loginError.textContent = 'Gagal login: ' + error.message;
-    return;
-  }
-  showAdmin();
-};
-
 // ----- LOGOUT -----
-document.getElementById('logoutBtn').onclick = async () => {
-  await supabaseClient.auth.signOut();
-  location.reload();
+document.getElementById('logoutBtn').onclick = () => {
+  logoutUser();
 };
 
 function showAdmin() {
-  loginBox.classList.add('hidden');
+  loadingBox.classList.add('hidden');
   adminApp.classList.remove('hidden');
   loadProducts();
   loadBanners();
