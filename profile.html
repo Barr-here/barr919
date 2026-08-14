@@ -83,7 +83,7 @@
       </div>
 
       <div class="qris-view" id="qrisView">
-        <div class="modal-title">Scan untuk Bayar</div>
+        <div class="modal-title">SCAN UNTUK BAYAR</div>
         <img id="qrisImage" alt="QRIS" width="236" height="236">
         <div class="deposit-amount" id="qrisAmount">Rp0</div>
         <div class="deposit-status" id="qrisStatus">Menunggu pembayaran...</div>
@@ -194,15 +194,15 @@
     }
 
     btn.disabled = true;
-    btn.textContent = 'Membuat QRIS...';
+    btn.textContent = 'Mengambil qris...';
 
     const { ok, data } = await callDeposit({ action: 'create', coinAmount });
 
     btn.disabled = false;
-    btn.textContent = 'Buat QRIS';
+    btn.textContent = 'Berhasil...';
 
     if (!ok) {
-      errBox.textContent = data.error || 'Gagal membuat QRIS';
+      errBox.textContent = data.error || 'Gagal membuat qris';
       return;
     }
 
@@ -227,7 +227,7 @@
       currentOrderId = null;
       Swal.fire({
         icon: 'error',
-        title: 'QRIS tidak tersedia',
+        title: 'Qris tidak tersedia',
         text: 'Data qris dari server tidak berisi payment number',
         ...swalTheme,
       });
@@ -246,7 +246,7 @@
         qrImage.onerror = reject;
       });
     } catch (qrErr) {
-      console.error('Gagal memuat gambar QRIS:', qrErr);
+      console.error('Gagal memuat gambar qris:', qrErr);
       currentOrderId = null;
       Swal.fire({
         icon: 'error',
@@ -320,7 +320,7 @@
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
     document.getElementById('qrisTimer').textContent =
-      `Berlaku sampai ${m}:${s.toString().padStart(2, '0')} lagi`;
+      `Berlaku sampai ${m.toString().padStart(2, '0')} menit ${s.toString().padStart(2, '0')} detik lagi`;
   }
 
   document.getElementById('closeQrisModal').onclick = async () => {
@@ -337,7 +337,7 @@
       
       Swal.fire({
         icon: 'success',
-        title: 'Membatalkan pembayaran',
+        title: 'Cancel Payment',
         text: `Deposit sebelumnya berhasil di batalkan`,
         ...swalTheme,
       });
