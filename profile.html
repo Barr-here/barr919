@@ -198,7 +198,6 @@
 
     const { ok, data } = await callDeposit({ action: 'create', coinAmount });
 
-    btn.disabled = false;
     btn.textContent = 'Berhasil...';
 
     if (!ok) {
