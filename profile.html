@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Profil — Barr Store</title>
+<link rel="icon" type="image/png" href="media/icon.png">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body { padding: 20px; max-width: 460px; margin: 0 auto; }
+  .profile-box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin: 60px auto 20px; box-shadow: var(--shadow); text-align: center; }
+  .profile-avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 26px; font-weight: 700; margin: 0 auto 16px; }
+  .profile-email { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; word-break: break-all; }
+  .profile-badge { display: inline-block; font-family: var(--mono); font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--surface2); color: var(--subtext); margin-bottom: 20px; }
+  .profile-stats { display: flex; gap: 10px; margin-bottom: 20px; }
+  .stat-card { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 8px; }
+  .stat-value { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--accent); }
+  .stat-label { font-family: var(--mono); font-size: 11px; color: var(--subtext); margin-top: 2px; }
+  .btn { padding: 11px 18px; border-radius: 8px; border: none; cursor: pointer; font-family: var(--mono); font-weight: 600; font-size: 13px; width: 100%; margin-top: 8px; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .loading-text { font-family: var(--mono); font-size: 13px; color: var(--subtext); text-align: center; margin-top: 60px; }
+</style>
+</head>
+<body>
+
+  <div id="loadingBox" class="loading-text">Memuat profil...</div>
+
+  <div class="profile-box" id="profileBox" style="display:none;">
+    <div class="profile-avatar" id="avatarInitial">?</div>
+    <div class="profile-email" id="profileEmail">-</div>
+    <div class="profile-badge" id="profileBadge">Member</div>
+
+    <div class="profile-stats">
+      <div class="stat-card">
+        <div class="stat-value" id="profileCoin">0</div>
+        <div class="stat-label">Coin</div>
+      </div>
+    </div>
+
+    <a href="admin.html" class="btn btn-primary" id="adminLinkBtn" style="display:none; text-decoration:none; box-sizing:border-box;">⚙️ Buka Admin Panel</a>
+    <button class="btn btn-secondary" id="logoutBtn">Logout</button>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth-helper.js"></script>
+<script>
+  (async () => {
+    const session = await verifySession();
+
+    if (!session) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    document.getElementById('loadingBox').style.display = 'none';
+    document.getElementById('profileBox').style.display = 'block';
+
+    document.getElementById('profileEmail').textContent = session.email;
+    document.getElementById('avatarInitial').textContent = session.email.charAt(0).toUpperCase();
+    document.getElementById('profileCoin').textContent = session.coin ?? 0;
+
+    if (session.isAdmin) {
+      document.getElementById('profileBadge').textContent = 'Admin';
+      document.getElementById('adminLinkBtn').style.display = 'block';
+    }
+
+    document.getElementById('logoutBtn').onclick = () => {
+      logoutUser();
+    };
+  })();
+</script>
+</body>
+</html>
