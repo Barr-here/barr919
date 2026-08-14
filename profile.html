@@ -20,7 +20,24 @@
   .btn { padding: 11px 18px; border-radius: 8px; border: none; cursor: pointer; font-family: var(--mono); font-weight: 600; font-size: 13px; width: 100%; margin-top: 8px; }
   .btn-primary { background: var(--accent); color: #fff; }
   .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
   .loading-text { font-family: var(--mono); font-size: 13px; color: var(--subtext); text-align: center; margin-top: 60px; }
+
+  /* MODAL DEPOSIT */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 900; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.show { display: flex; }
+  .modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px; max-width: 380px; width: 100%; text-align: center; }
+  .modal-title { font-family: var(--mono); font-weight: 700; font-size: 16px; margin-bottom: 16px; color: var(--text); }
+  .form-row { margin-bottom: 14px; text-align: left; }
+  .form-row label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--text); font-family: var(--mono); }
+  .form-row input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--mono); font-size: 13px; box-sizing: border-box; background: var(--surface2); color: var(--text); }
+  .deposit-hint { font-family: var(--mono); font-size: 11px; color: var(--subtext); margin-top: 6px; text-align: left; }
+  .deposit-error { color: #d33; font-size: 12px; font-family: var(--mono); margin-top: 8px; min-height: 14px; }
+  #qrisCanvas { margin: 12px auto; display: block; border-radius: 10px; }
+  .deposit-amount { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); margin: 10px 0 4px; }
+  .deposit-status { font-family: var(--mono); font-size: 12px; color: var(--subtext); margin-bottom: 14px; }
+  .deposit-timer { font-family: var(--mono); font-size: 12px; color: var(--text); opacity: 0.7; }
+  .close-modal-btn { background: none; border: none; color: var(--subtext); font-family: var(--mono); font-size: 12px; cursor: pointer; margin-top: 10px; text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -39,27 +56,73 @@
       </div>
     </div>
 
+    <button class="btn btn-primary" id="depositBtn">💰 Deposit Coin</button>
     <a href="admin.html" class="btn btn-primary" id="adminLinkBtn" style="display:none; text-decoration:none; box-sizing:border-box;">⚙️ Buka Admin Panel</a>
     <button class="btn btn-secondary" id="logoutBtn">Logout</button>
   </div>
 
-  <div class="dock-bar" id="dockBar">
-    <a href="index.html" class="dock-item" id="dockHome">
-      <div class="dock-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 9l9-7 9 7"></path>
-          <path d="M9 22V12h6v10"></path>
-          <path d="M5 10v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10"></path>
-        </svg>
+  <!-- MODAL: INPUT NOMINAL -->
+  <div class="modal-overlay" id="depositModal">
+    <div class="modal-box">
+      <div class="modal-title">💰 Deposit Coin</div>
+      <div class="form-row">
+        <label>Jumlah Coin (1 coin = Rp1.000)</label>
+        <input type="number" id="coinInput" placeholder="misal: 10" min="1" max="50">
+        <div class="deposit-hint">Minimal 1 coin, maksimal 50 coin per transaksi</div>
       </div>
-      <span class="dock-label">Beranda</span>
-    </a>
+      <div class="deposit-hint" id="totalPreview" style="text-align:center; font-size:13px;"></div>
+      <button class="btn btn-primary" id="createDepositBtn">Buat QRIS</button>
+      <div class="deposit-error" id="depositFormError"></div>
+      <button class="close-modal-btn" id="closeDepositModal">Batal</button>
+    </div>
+  </div>
+
+  <!-- MODAL: QRIS -->
+  <div class="modal-overlay" id="qrisModal">
+    <div class="modal-box">
+      <div class="modal-title">Scan untuk Bayar</div>
+      <canvas id="qrisCanvas"></canvas>
+      <div class="deposit-amount" id="qrisAmount">Rp0</div>
+      <div class="deposit-status" id="qrisStatus">Menunggu pembayaran...</div>
+      <div class="deposit-timer" id="qrisTimer"></div>
+      <button class="close-modal-btn" id="closeQrisModal">Batalkan</button>
+    </div>
   </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/auth-helper.js"></script>
 <script>
+  const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const swalTheme = {
+    background: isDark ? '#0f1923' : '#ffffff',
+    color: isDark ? '#e8f4fb' : '#0d1b2a',
+    confirmButtonColor: isDark ? '#00ccff' : '#00aadd',
+  };
+
+  let currentSession = null;
+  let pollInterval = null;
+  let timerInterval = null;
+
+  async function callDeposit(payload) {
+    const res = await fetch(SUPABASE_URL + '/functions/v1/deposit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify({
+        userId: currentSession.userId,
+        sessionToken: currentSession.sessionToken,
+        ...payload,
+      }),
+    });
+    const data = await res.json();
+    return { ok: res.ok, data };
+  }
+
   (async () => {
     const session = await verifySession();
 
@@ -67,6 +130,8 @@
       window.location.href = 'login.html';
       return;
     }
+
+    currentSession = session;
 
     document.getElementById('loadingBox').style.display = 'none';
     document.getElementById('profileBox').style.display = 'block';
@@ -84,6 +149,135 @@
       logoutUser();
     };
   })();
+
+  // ----- BUKA MODAL DEPOSIT -----
+  document.getElementById('depositBtn').onclick = () => {
+    document.getElementById('coinInput').value = '';
+    document.getElementById('totalPreview').textContent = '';
+    document.getElementById('depositFormError').textContent = '';
+    document.getElementById('depositModal').classList.add('show');
+  };
+
+  document.getElementById('closeDepositModal').onclick = () => {
+    document.getElementById('depositModal').classList.remove('show');
+  };
+
+  document.getElementById('coinInput').addEventListener('input', (e) => {
+    const val = parseInt(e.target.value) || 0;
+    const preview = document.getElementById('totalPreview');
+    preview.textContent = val > 0 ? `Total bayar: Rp${(val * 1000).toLocaleString('id-ID')}` : '';
+  });
+
+  // ----- BUAT QRIS -----
+  document.getElementById('createDepositBtn').onclick = async () => {
+    const btn = document.getElementById('createDepositBtn');
+    const errBox = document.getElementById('depositFormError');
+    errBox.textContent = '';
+
+    const coinAmount = parseInt(document.getElementById('coinInput').value);
+
+    if (!coinAmount || coinAmount < 1 || coinAmount > 50) {
+      errBox.textContent = 'Jumlah coin harus antara 1 - 50';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Membuat QRIS...';
+
+    const { ok, data } = await callDeposit({ action: 'create', coinAmount });
+
+    btn.disabled = false;
+    btn.textContent = 'Buat QRIS';
+
+    if (!ok) {
+      errBox.textContent = data.error || 'Gagal membuat QRIS';
+      return;
+    }
+
+    document.getElementById('depositModal').classList.remove('show');
+    openQrisModal(data);
+  };
+
+  // ----- MODAL QRIS + POLLING -----
+  async function openQrisModal(deposit) {
+    const canvas = document.getElementById('qrisCanvas');
+    await QRCode.toCanvas(canvas, deposit.paymentNumber, { width: 220, margin: 1 });
+
+    document.getElementById('qrisAmount').textContent = 'Rp' + deposit.totalPayment.toLocaleString('id-ID');
+    document.getElementById('qrisStatus').textContent = 'Menunggu pembayaran...';
+    document.getElementById('qrisModal').classList.add('show');
+
+    let secondsLeft = deposit.expiresInSeconds;
+    updateTimerText(secondsLeft);
+
+    timerInterval = setInterval(() => {
+      secondsLeft--;
+      updateTimerText(secondsLeft);
+      if (secondsLeft <= 0) clearInterval(timerInterval);
+    }, 1000);
+
+    pollInterval = setInterval(async () => {
+      const { ok, data } = await callDeposit({ action: 'check-status', orderId: deposit.orderId });
+
+      if (!ok) return;
+
+      if (data.status === 'completed') {
+        clearInterval(pollInterval);
+        clearInterval(timerInterval);
+        document.getElementById('qrisModal').classList.remove('show');
+        document.getElementById('profileCoin').textContent = data.coin;
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Deposit Berhasil!',
+          text: `${deposit.coinAmount} coin telah ditambahkan ke akunmu.`,
+          ...swalTheme,
+        });
+      } else if (data.status === 'expired') {
+        clearInterval(pollInterval);
+        clearInterval(timerInterval);
+        document.getElementById('qrisModal').classList.remove('show');
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Waktu Habis',
+          text: 'Transaksi kadaluarsa. Silakan buat transaksi baru.',
+          ...swalTheme,
+        });
+      }
+    }, 5000);
+  }
+
+  function updateTimerText(seconds) {
+    if (seconds <= 0) {
+      document.getElementById('qrisTimer').textContent = 'Waktu habis';
+      return;
+    }
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    document.getElementById('qrisTimer').textContent =
+      `Berlaku sampai ${m}:${s.toString().padStart(2, '0')} lagi`;
+  }
+
+  document.getElementById('closeQrisModal').onclick = () => {
+    clearInterval(pollInterval);
+    clearInterval(timerInterval);
+    document.getElementById('qrisModal').classList.remove('show');
+  };
 </script>
+
+  <div class="dock-bar" id="dockBar">
+    <a href="index.html" class="dock-item" id="dockHome">
+      <div class="dock-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7"></path>
+          <path d="M9 22V12h6v10"></path>
+          <path d="M5 10v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10"></path>
+        </svg>
+      </div>
+      <span class="dock-label">Beranda</span>
+    </a>
+  </div>
+
 </body>
 </html>
