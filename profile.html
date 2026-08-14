@@ -33,12 +33,17 @@
   .form-row label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--text); font-family: var(--mono); }
   .form-row input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--mono); font-size: 13px; box-sizing: border-box; background: var(--surface2); color: var(--text); }
   .deposit-hint { font-family: var(--mono); font-size: 11px; color: var(--subtext); margin-top: 6px; text-align: left; }
-  .deposit-error { color: #d33; font-size: 12px; font-family: var(--mono); margin-top: 4px; min-height: 0; }
+  .deposit-error { color: #d33; font-size: 12px; font-family: var(--mono); margin-top: 8px; min-height: 14px; }
   #qrisCanvas { margin: 12px auto; display: block; border-radius: 10px; }
   .deposit-amount { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); margin: 10px 0 4px; }
   .deposit-status { font-family: var(--mono); font-size: 12px; color: var(--subtext); margin-bottom: 14px; }
   .deposit-timer { font-family: var(--mono); font-size: 12px; color: var(--text); opacity: 0.7; }
   .close-modal-btn { background: none; border: none; color: var(--subtext); font-family: var(--mono); font-size: 12px; cursor: pointer; margin-top: 10px; text-decoration: underline; }
+  .qris-view { display: none; }
+  .qris-view.active { display: block; }
+  .deposit-form-view.hidden { display: none; }
+  .qris-footer { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 10px; line-height: 1.5; color: var(--subtext); }
+  #qrisCanvas { background: #fff; padding: 8px; box-sizing: border-box; }
 </style>
 </head>
 <body>
@@ -62,31 +67,31 @@
     <button class="btn btn-secondary" id="logoutBtn">Logout</button>
   </div>
 
-  <!-- MODAL: INPUT NOMINAL -->
+  <!-- MODAL DEPOSIT: FORM + QRIS DALAM SATU CONTAINER -->
   <div class="modal-overlay" id="depositModal">
     <div class="modal-box">
-      <div class="modal-title">💰 Deposit Coin</div>
-      <div class="form-row">
-        <label>Jumlah Coin (1 coin = Rp1.000)</label>
-        <input type="number" id="coinInput" placeholder="misal: 10" min="1" max="50">
-        <div class="deposit-hint">Minimal 1 coin, maksimal 50 coin per transaksi</div>
+      <div class="deposit-form-view" id="depositFormView">
+        <div class="modal-title">Deposit Coin</div>
+        <div class="form-row">
+          <label>Jumlah Coin (1 coin = Rp1.000)</label>
+          <input type="number" id="coinInput" placeholder="misal: 10" min="1" max="50">
+          <div class="deposit-hint">Minimal 1 coin, maksimal 50 coin per transaksi yahh</div>
+        </div>
+        <div class="deposit-hint" id="totalPreview" style="text-align:center; font-size:13px;"></div>
+        <button class="btn btn-primary" id="createDepositBtn">QRIS</button>
+        <div class="deposit-error" id="depositFormError"></div>
+        <button class="btn btn-danger" id="closeDepositModal" style="margin-top:0;">Batal</button>
       </div>
-      <div class="deposit-hint" id="totalPreview" style="text-align:center; font-size:13px;"></div>
-      <button class="btn btn-primary" id="createDepositBtn">Buat QRIS</button>
-      <div class="deposit-error" id="depositFormError"></div>
-      <button class="btn btn-danger" id="closeDepositModal" style="margin-top:0;">Batal</button>
-    </div>
-  </div>
 
-  <!-- MODAL: QRIS -->
-  <div class="modal-overlay" id="qrisModal">
-    <div class="modal-box">
-      <div class="modal-title">Scan untuk Bayar</div>
-      <canvas id="qrisCanvas"></canvas>
-      <div class="deposit-amount" id="qrisAmount">Rp0</div>
-      <div class="deposit-status" id="qrisStatus">Menunggu pembayaran...</div>
-      <div class="deposit-timer" id="qrisTimer"></div>
-      <button class="btn btn-danger" id="closeQrisModal" style="margin-top:12px;">Batalkan Pesanan</button>
+      <div class="qris-view" id="qrisView">
+        <div class="modal-title">Scan untuk Bayar</div>
+        <canvas id="qrisCanvas" width="236" height="236"></canvas>
+        <div class="deposit-amount" id="qrisAmount">Rp0</div>
+        <div class="deposit-status" id="qrisStatus">Menunggu pembayaran...</div>
+        <div class="deposit-timer" id="qrisTimer"></div>
+        <button class="btn btn-danger" id="closeQrisModal" style="margin-top:12px;">Batalkan Pesanan</button>
+        <div class="qris-footer">Scan QRIS menggunakan aplikasi pembayaran yang mendukung QRIS. Jangan tutup halaman sampai pembayaran selesai.</div>
+      </div>
     </div>
   </div>
 
@@ -153,6 +158,12 @@
 
   // ----- BUKA MODAL DEPOSIT -----
   document.getElementById('depositBtn').onclick = () => {
+    clearInterval(pollInterval);
+    clearInterval(timerInterval);
+    currentOrderId = null;
+
+    document.getElementById('depositFormView').classList.remove('hidden');
+    document.getElementById('qrisView').classList.remove('active');
     document.getElementById('coinInput').value = '';
     document.getElementById('totalPreview').textContent = '';
     document.getElementById('depositFormError').textContent = '';
@@ -195,77 +206,54 @@
       return;
     }
 
-    document.getElementById('depositModal').classList.remove('show');
-    openQrisModal(data);
+    await openQrisModal(data);
   };
 
   let currentOrderId = null;
 
   // ----- MODAL QRIS + POLLING -----
   async function openQrisModal(deposit) {
+    clearInterval(pollInterval);
+    clearInterval(timerInterval);
     currentOrderId = deposit.orderId;
 
+    const modal = document.getElementById('depositModal');
+    const formView = document.getElementById('depositFormView');
+    const qrisView = document.getElementById('qrisView');
     const canvas = document.getElementById('qrisCanvas');
 
-    if (!canvas) {
-      console.error('Elemen canvas #qrisCanvas tidak ditemukan di DOM');
+    // Pastikan QR lama dibersihkan sebelum membuat QR baru.
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    try {
+      // QR dibuat dari payment_number Pakasir (EMV QRIS string), bukan dari URL.
+      await QRCode.toCanvas(canvas, deposit.paymentNumber, {
+        width: 220,
+        margin: 1,
+        errorCorrectionLevel: 'M'
+      });
+    } catch (qrErr) {
+      console.error('Gagal generate QR code:', qrErr, deposit);
+      currentOrderId = null;
       Swal.fire({
         icon: 'error',
         title: 'Gagal menampilkan QR',
-        text: 'Terjadi kesalahan teknis pada halaman. Coba refresh dan ulangi.',
+        text: 'Data QRIS dari Pakasir diterima, tetapi QR gagal dirender. Coba buat transaksi lagi.',
         ...swalTheme,
       });
       return;
     }
 
-    if (typeof QRCode === 'undefined') {
-      console.error('Library QRCode gagal dimuat dari CDN (window.QRCode undefined)');
-      Swal.fire({
-        icon: 'error',
-        title: 'Gagal menampilkan QR',
-        text: 'Library QR code gagal dimuat. Cek koneksi internet kamu, lalu refresh halaman.',
-        ...swalTheme,
-      });
-      return;
-    }
-
-    if (!deposit.paymentNumber) {
-      console.error('paymentNumber kosong, data deposit:', deposit);
-      Swal.fire({
-        icon: 'error',
-        title: 'Gagal menampilkan QR',
-        text: 'Data QRIS tidak lengkap dari server. Coba buat ulang transaksi.',
-        ...swalTheme,
-      });
-      return;
-    }
-
-    const qrGenerated = await new Promise((resolve) => {
-      QRCode.toCanvas(canvas, deposit.paymentNumber, { width: 220, margin: 1 }, (qrErr) => {
-        if (qrErr) {
-          console.error('Gagal generate QR code:', qrErr, 'paymentNumber:', deposit.paymentNumber);
-          resolve(false);
-        } else {
-          resolve(true);
-        }
-      });
-    });
-
-    if (!qrGenerated) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Gagal menampilkan QR',
-        text: 'Terjadi kesalahan saat membuat QR code. Coba lagi.',
-        ...swalTheme,
-      });
-      return;
-    }
-
-    document.getElementById('qrisAmount').textContent = 'Rp' + deposit.totalPayment.toLocaleString('id-ID');
+    document.getElementById('qrisAmount').textContent = 'Rp' + Number(deposit.totalPayment || 0).toLocaleString('id-ID');
     document.getElementById('qrisStatus').textContent = 'Menunggu pembayaran...';
-    document.getElementById('qrisModal').classList.add('show');
 
-    let secondsLeft = deposit.expiresInSeconds;
+    // QR berhasil dibuat -> form deposit diganti menjadi tampilan QRIS
+    formView.classList.add('hidden');
+    qrisView.classList.add('active');
+    modal.classList.add('show');
+
+    let secondsLeft = Number(deposit.expiresInSeconds) || 600;
     updateTimerText(secondsLeft);
 
     timerInterval = setInterval(() => {
@@ -283,7 +271,9 @@
         clearInterval(pollInterval);
         clearInterval(timerInterval);
         currentOrderId = null;
-        document.getElementById('qrisModal').classList.remove('show');
+        document.getElementById('depositModal').classList.remove('show');
+        document.getElementById('qrisView').classList.remove('active');
+        document.getElementById('depositFormView').classList.remove('hidden');
         document.getElementById('profileCoin').textContent = data.coin;
 
         Swal.fire({
@@ -296,7 +286,9 @@
         clearInterval(pollInterval);
         clearInterval(timerInterval);
         currentOrderId = null;
-        document.getElementById('qrisModal').classList.remove('show');
+        document.getElementById('depositModal').classList.remove('show');
+        document.getElementById('qrisView').classList.remove('active');
+        document.getElementById('depositFormView').classList.remove('hidden');
 
         Swal.fire({
           icon: 'error',
@@ -335,7 +327,9 @@
     clearInterval(pollInterval);
     clearInterval(timerInterval);
     currentOrderId = null;
-    document.getElementById('qrisModal').classList.remove('show');
+    document.getElementById('depositModal').classList.remove('show');
+    document.getElementById('qrisView').classList.remove('active');
+    document.getElementById('depositFormView').classList.remove('hidden');
   };
 </script>
 
