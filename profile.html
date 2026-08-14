@@ -20,6 +20,7 @@
   .btn { padding: 11px 18px; border-radius: 8px; border: none; cursor: pointer; font-family: var(--mono); font-weight: 600; font-size: 13px; width: 100%; margin-top: 8px; }
   .btn-primary { background: var(--accent); color: #fff; }
   .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-danger { background: #d33; color: #fff; }
   .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
   .loading-text { font-family: var(--mono); font-size: 13px; color: var(--subtext); text-align: center; margin-top: 60px; }
 
@@ -73,7 +74,7 @@
       <div class="deposit-hint" id="totalPreview" style="text-align:center; font-size:13px;"></div>
       <button class="btn btn-primary" id="createDepositBtn">Buat QRIS</button>
       <div class="deposit-error" id="depositFormError"></div>
-      <button class="close-modal-btn" id="closeDepositModal">Batal</button>
+      <button class="btn btn-danger" id="closeDepositModal" style="margin-top:8px;">Batal</button>
     </div>
   </div>
 
@@ -85,7 +86,7 @@
       <div class="deposit-amount" id="qrisAmount">Rp0</div>
       <div class="deposit-status" id="qrisStatus">Menunggu pembayaran...</div>
       <div class="deposit-timer" id="qrisTimer"></div>
-      <button class="close-modal-btn" id="closeQrisModal">Batalkan</button>
+      <button class="btn btn-danger" id="closeQrisModal" style="margin-top:12px;">Batalkan Pesanan</button>
     </div>
   </div>
 
@@ -198,10 +199,25 @@
     openQrisModal(data);
   };
 
+  let currentOrderId = null;
+
   // ----- MODAL QRIS + POLLING -----
   async function openQrisModal(deposit) {
+    currentOrderId = deposit.orderId;
+
     const canvas = document.getElementById('qrisCanvas');
-    await QRCode.toCanvas(canvas, deposit.paymentNumber, { width: 220, margin: 1 });
+    try {
+      await QRCode.toCanvas(canvas, deposit.paymentNumber, { width: 220, margin: 1 });
+    } catch (qrErr) {
+      console.error('Gagal generate QR code:', qrErr);
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal menampilkan QR',
+        text: 'Terjadi kesalahan saat membuat QR code. Coba lagi.',
+        ...swalTheme,
+      });
+      return;
+    }
 
     document.getElementById('qrisAmount').textContent = 'Rp' + deposit.totalPayment.toLocaleString('id-ID');
     document.getElementById('qrisStatus').textContent = 'Menunggu pembayaran...';
@@ -224,6 +240,7 @@
       if (data.status === 'completed') {
         clearInterval(pollInterval);
         clearInterval(timerInterval);
+        currentOrderId = null;
         document.getElementById('qrisModal').classList.remove('show');
         document.getElementById('profileCoin').textContent = data.coin;
 
@@ -236,6 +253,7 @@
       } else if (data.status === 'expired') {
         clearInterval(pollInterval);
         clearInterval(timerInterval);
+        currentOrderId = null;
         document.getElementById('qrisModal').classList.remove('show');
 
         Swal.fire({
@@ -259,9 +277,22 @@
       `Berlaku sampai ${m}:${s.toString().padStart(2, '0')} lagi`;
   }
 
-  document.getElementById('closeQrisModal').onclick = () => {
+  document.getElementById('closeQrisModal').onclick = async () => {
+    const btn = document.getElementById('closeQrisModal');
+
+    if (currentOrderId) {
+      btn.disabled = true;
+      btn.textContent = 'Membatalkan...';
+
+      await callDeposit({ action: 'cancel', orderId: currentOrderId });
+
+      btn.disabled = false;
+      btn.textContent = 'Batalkan Pesanan';
+    }
+
     clearInterval(pollInterval);
     clearInterval(timerInterval);
+    currentOrderId = null;
     document.getElementById('qrisModal').classList.remove('show');
   };
 </script>
