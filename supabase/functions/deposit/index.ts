@@ -18,8 +18,8 @@ const supabaseAdmin = createClient(
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
 );
 
-const PAKASIR_SLUG = Deno.env.get("barrstore")!;
-const PAKASIR_APIKEY = Deno.env.get("2FDpPzyPCg39E4AP5wVqp6CArj2Anvf3")!;
+const PAKASIR_SLUG = Deno.env.get("PAKASIR_SLUG")!;
+const PAKASIR_APIKEY = Deno.env.get("PAKASIR_APIKEY")!;
 
 const COIN_TO_RUPIAH = 1000;
 const MAX_COIN_PER_DEPOSIT = 50;
