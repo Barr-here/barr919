@@ -84,6 +84,7 @@ serve(async (req) => {
 
         pakasirRawText = await fetchRes.text();
         pakasirRes = JSON.parse(pakasirRawText);
+        console.log("Pakasir create response:", pakasirRawText);
       } catch (fetchErr) {
         return new Response(
           JSON.stringify({
@@ -106,21 +107,36 @@ serve(async (req) => {
 
       const payment = pakasirRes.payment;
 
+      // Pakasir kadang menamai field QR-nya berbeda (payment_number / qr_string / qris_string).
+      // Ambil yang tersedia, dan gagalkan lebih awal kalau semuanya kosong supaya
+      // errornya jelas di sini, bukan pas frontend coba generate QR code.
+      const qrValue = payment.payment_number || payment.qr_string || payment.qris_string;
+
+      if (!qrValue) {
+        return new Response(
+          JSON.stringify({
+            error: "Pakasir tidak mengirim data QR (payment_number kosong)",
+            pakasirResponse: pakasirRes,
+          }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
       await supabaseAdmin.from("deposits").insert({
         user_id: user.id,
         order_id: newOrderId,
         coin_amount: coinAmount,
         rupiah_amount: rupiahAmount,
         status: "pending",
-        payment_number: payment.payment_number,
+        payment_number: qrValue,
       });
 
       return new Response(
         JSON.stringify({
           success: true,
           orderId: newOrderId,
-          paymentNumber: payment.payment_number,
-          totalPayment: payment.total_payment,
+          paymentNumber: qrValue,
+          totalPayment: payment.total_payment ?? rupiahAmount,
           rupiahAmount,
           coinAmount,
           expiresInSeconds: 600,
