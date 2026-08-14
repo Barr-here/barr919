@@ -77,7 +77,7 @@
           <div class="deposit-hint">Minimal 1 coin, maksimal 50 coin per transaksi yahh</div>
         </div>
         <div class="deposit-hint" id="totalPreview" style="text-align:center; font-size:13px;"></div>
-        <div class="deposit-error" id="depositFormError"></div>
+        <div class="deposit-error" id="depositFormError" style="min-height:0; margin-top:4px;"></div>
         <button class="btn btn-primary" id="createDepositBtn">Bayar</button>
         <button class="btn btn-danger" id="closeDepositModal" style="margin-top:4px;">Batal</button>
       </div>
@@ -166,10 +166,12 @@
     document.getElementById('totalPreview').textContent = '';
     document.getElementById('depositFormError').textContent = '';
     document.getElementById('depositModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
   };
 
   document.getElementById('closeDepositModal').onclick = () => {
     document.getElementById('depositModal').classList.remove('show');
+    document.body.style.overflow = '';
   };
 
   document.getElementById('coinInput').addEventListener('input', (e) => {
@@ -334,7 +336,7 @@
       btn.textContent = 'Batalkan Pesanan';
       
       Swal.fire({
-        icon: 'succes',
+        icon: 'success',
         title: 'Membatalkan pembayaran',
         text: `Deposit sebelumnya berhasil di batalkan`,
         ...swalTheme,
@@ -347,6 +349,7 @@
     document.getElementById('depositModal').classList.remove('show');
     document.getElementById('qrisView').classList.remove('active');
     document.getElementById('depositFormView').classList.remove('hidden');
+    document.body.style.overflow = '';
   };
 </script>
 
