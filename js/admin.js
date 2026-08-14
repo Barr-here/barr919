@@ -46,6 +46,35 @@ function askConfirm(message) {
   }).then(result => result.isConfirmed);
 }
 
+// ----- HELPER: PANGGIL EDGE FUNCTION admin-data UNTUK INSERT/UPDATE/DELETE -----
+// (SELECT/baca data tetap langsung ke Supabase, karena itu publik & aman dibaca semua orang)
+async function callAdminData(action, table, extra = {}) {
+  const local = getLocalSession();
+  if (!local) {
+    showError('Sesi login habis, silakan login ulang');
+    window.location.href = 'login.html';
+    return { ok: false };
+  }
+
+  const res = await fetch(SUPABASE_URL + '/functions/v1/admin-data', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+    },
+    body: JSON.stringify({
+      action,
+      table,
+      userId: local.userId,
+      sessionToken: local.sessionToken,
+      ...extra,
+    }),
+  });
+
+  const data = await res.json();
+  return { ok: res.ok, data };
+}
+
 const loadingBox = document.getElementById('loadingBox');
 const adminApp = document.getElementById('adminApp');
 
@@ -125,7 +154,8 @@ async function loadProducts() {
   list.querySelectorAll('[data-del]').forEach(btn => {
     btn.onclick = async () => {
       if (!(await askConfirm('Yakin hapus produk ini?'))) return;
-      await supabaseClient.from('products').delete().eq('id', btn.dataset.del);
+      const { ok, data } = await callAdminData('delete', 'products', { id: btn.dataset.del });
+      if (!ok) { showError(data.error || 'Gagal hapus'); return; }
       showSuccess('Produk berhasil dihapus');
       loadProducts();
     };
@@ -165,16 +195,16 @@ document.getElementById('p_add').onclick = async () => {
 
   if (!payload.title) { showError('Judul wajib diisi'); return; }
 
-  let error;
+  let result;
   if (btn.dataset.editingId) {
-    ({ error } = await supabaseClient.from('products').update(payload).eq('id', btn.dataset.editingId));
+    result = await callAdminData('update', 'products', { id: btn.dataset.editingId, payload });
     delete btn.dataset.editingId;
     btn.textContent = '+ Tambah Produk';
   } else {
-    ({ error } = await supabaseClient.from('products').insert(payload));
+    result = await callAdminData('insert', 'products', { payload });
   }
 
-  if (error) { showError('Gagal simpan: ' + error.message); return; }
+  if (!result.ok) { showError('Gagal simpan: ' + (result.data.error || '')); return; }
 
   ['p_title','p_desc','p_wa','p_tele','p_content'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('p_type').value = 'PRODUK';
@@ -215,7 +245,8 @@ async function loadBanners() {
   list.querySelectorAll('[data-del]').forEach(btn => {
     btn.onclick = async () => {
       if (!(await askConfirm('Yakin hapus banner ini?'))) return;
-      await supabaseClient.from('banners').delete().eq('id', btn.dataset.del);
+      const { ok, data } = await callAdminData('delete', 'banners', { id: btn.dataset.del });
+      if (!ok) { showError(data.error || 'Gagal hapus'); return; }
       showSuccess('Banner berhasil dihapus');
       loadBanners();
     };
@@ -253,16 +284,16 @@ document.getElementById('b_add').onclick = async () => {
 
   if (!payload.title || !payload.image) { showError('Judul dan gambar wajib diisi'); return; }
 
-  let error;
+  let result;
   if (btn.dataset.editingId) {
-    ({ error } = await supabaseClient.from('banners').update(payload).eq('id', btn.dataset.editingId));
+    result = await callAdminData('update', 'banners', { id: btn.dataset.editingId, payload });
     delete btn.dataset.editingId;
     btn.textContent = '+ Tambah Banner';
   } else {
-    ({ error } = await supabaseClient.from('banners').insert(payload));
+    result = await callAdminData('insert', 'banners', { payload });
   }
 
-  if (error) { showError('Gagal simpan: ' + error.message); return; }
+  if (!result.ok) { showError('Gagal simpan: ' + (result.data.error || '')); return; }
 
   ['b_image','b_title','b_desc','b_wa','b_tele'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('b_sort').value = 0;
@@ -302,7 +333,8 @@ async function loadTestimonials() {
   list.querySelectorAll('[data-del]').forEach(btn => {
     btn.onclick = async () => {
       if (!(await askConfirm('Yakin hapus testimoni ini?'))) return;
-      await supabaseClient.from('testimonials').delete().eq('id', btn.dataset.del);
+      const { ok, data } = await callAdminData('delete', 'testimonials', { id: btn.dataset.del });
+      if (!ok) { showError(data.error || 'Gagal hapus'); return; }
       showSuccess('Testimoni berhasil dihapus');
       loadTestimonials();
     };
@@ -338,16 +370,16 @@ document.getElementById('t_add').onclick = async () => {
 
   if (!payload.title || !payload.image) { showError('Judul dan gambar wajib diisi'); return; }
 
-  let error;
+  let result;
   if (btn.dataset.editingId) {
-    ({ error } = await supabaseClient.from('testimonials').update(payload).eq('id', btn.dataset.editingId));
+    result = await callAdminData('update', 'testimonials', { id: btn.dataset.editingId, payload });
     delete btn.dataset.editingId;
     btn.textContent = '+ Tambah Testimoni';
   } else {
-    ({ error } = await supabaseClient.from('testimonials').insert(payload));
+    result = await callAdminData('insert', 'testimonials', { payload });
   }
 
-  if (error) { showError('Gagal simpan: ' + error.message); return; }
+  if (!result.ok) { showError('Gagal simpan: ' + (result.data.error || '')); return; }
 
   ['t_image','t_date','t_title'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('t_desc').value = 'Terimkasih atas kepercayaan anda🌹';
