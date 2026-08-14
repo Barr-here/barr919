@@ -68,22 +68,40 @@ serve(async (req) => {
       const rupiahAmount = coinAmount * COIN_TO_RUPIAH;
       const newOrderId = `${PAKASIR_SLUG}-${Date.now()}`;
 
-      const pakasirRes = await fetch("https://app.pakasir.com/api/transactioncreate/qris", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          project: PAKASIR_SLUG,
-          order_id: newOrderId,
-          amount: rupiahAmount,
-          api_key: PAKASIR_APIKEY,
-        }),
-      }).then((r) => r.json());
+      let pakasirRes;
+      let pakasirRawText = "";
+      try {
+        const fetchRes = await fetch("https://app.pakasir.com/api/transactioncreate/qris", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            project: PAKASIR_SLUG,
+            order_id: newOrderId,
+            amount: rupiahAmount,
+            api_key: PAKASIR_APIKEY,
+          }),
+        });
+
+        pakasirRawText = await fetchRes.text();
+        pakasirRes = JSON.parse(pakasirRawText);
+      } catch (fetchErr) {
+        return new Response(
+          JSON.stringify({
+            error: "Gagal menghubungi Pakasir: " + fetchErr.message,
+            rawResponse: pakasirRawText?.slice(0, 300),
+          }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
 
       if (!pakasirRes?.payment) {
-        return new Response(JSON.stringify({ error: "Gagal membuat transaksi QRIS" }), {
-          status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({
+            error: "Gagal membuat transaksi QRIS: " + (pakasirRes?.message || pakasirRes?.error || "Response tidak dikenali"),
+            pakasirResponse: pakasirRes,
+          }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
       }
 
       const payment = pakasirRes.payment;
@@ -109,6 +127,56 @@ serve(async (req) => {
         }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
+    }
+
+    // ========================================================
+    // CANCEL — user batalkan transaksi secara manual
+    // ========================================================
+    if (action === "cancel") {
+      if (!orderId) {
+        return new Response(JSON.stringify({ error: "orderId wajib diisi" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const { data: deposit } = await supabaseAdmin
+        .from("deposits")
+        .select("*")
+        .eq("order_id", orderId)
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (!deposit) {
+        return new Response(JSON.stringify({ error: "Transaksi tidak ditemukan" }), {
+          status: 404,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      if (deposit.status === "pending") {
+        try {
+          await fetch("https://app.pakasir.com/api/transactioncancel", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              project: PAKASIR_SLUG,
+              order_id: orderId,
+              amount: deposit.rupiah_amount,
+              api_key: PAKASIR_APIKEY,
+            }),
+          });
+        } catch (cancelErr) {
+          // Tetap lanjut update status walau request cancel ke Pakasir gagal
+          console.log("Gagal cancel ke Pakasir:", cancelErr.message);
+        }
+
+        await supabaseAdmin.from("deposits").update({ status: "cancelled" }).eq("id", deposit.id);
+      }
+
+      return new Response(JSON.stringify({ success: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // ========================================================
