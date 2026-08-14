@@ -20,7 +20,7 @@
   .btn { padding: 11px 18px; border-radius: 8px; border: none; cursor: pointer; font-family: var(--mono); font-weight: 600; font-size: 13px; width: 100%; margin-top: 8px; }
   .btn-primary { background: var(--accent); color: #fff; }
   .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-  .btn-danger { background: #d33; color: #fff; }
+  .btn-danger { background: #e57373; color: #fff; }
   .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
   .loading-text { font-family: var(--mono); font-size: 13px; color: var(--subtext); text-align: center; margin-top: 60px; }
 
@@ -33,7 +33,7 @@
   .form-row label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--text); font-family: var(--mono); }
   .form-row input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--mono); font-size: 13px; box-sizing: border-box; background: var(--surface2); color: var(--text); }
   .deposit-hint { font-family: var(--mono); font-size: 11px; color: var(--subtext); margin-top: 6px; text-align: left; }
-  .deposit-error { color: #d33; font-size: 12px; font-family: var(--mono); margin-top: 8px; min-height: 14px; }
+  .deposit-error { color: #d33; font-size: 12px; font-family: var(--mono); margin-top: 4px; min-height: 0; }
   #qrisCanvas { margin: 12px auto; display: block; border-radius: 10px; }
   .deposit-amount { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); margin: 10px 0 4px; }
   .deposit-status { font-family: var(--mono); font-size: 12px; color: var(--subtext); margin-bottom: 14px; }
@@ -74,7 +74,7 @@
       <div class="deposit-hint" id="totalPreview" style="text-align:center; font-size:13px;"></div>
       <button class="btn btn-primary" id="createDepositBtn">Buat QRIS</button>
       <div class="deposit-error" id="depositFormError"></div>
-      <button class="btn btn-danger" id="closeDepositModal" style="margin-top:8px;">Batal</button>
+      <button class="btn btn-danger" id="closeDepositModal" style="margin-top:0;">Batal</button>
     </div>
   </div>
 
@@ -206,10 +206,22 @@
     currentOrderId = deposit.orderId;
 
     const canvas = document.getElementById('qrisCanvas');
+
+    if (!deposit.paymentNumber) {
+      console.error('paymentNumber kosong, data deposit:', deposit);
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal menampilkan QR',
+        text: 'Data QRIS tidak lengkap dari server. Coba buat ulang transaksi.',
+        ...swalTheme,
+      });
+      return;
+    }
+
     try {
       await QRCode.toCanvas(canvas, deposit.paymentNumber, { width: 220, margin: 1 });
     } catch (qrErr) {
-      console.error('Gagal generate QR code:', qrErr);
+      console.error('Gagal generate QR code:', qrErr, 'paymentNumber:', deposit.paymentNumber);
       Swal.fire({
         icon: 'error',
         title: 'Gagal menampilkan QR',
