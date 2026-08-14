@@ -1,5 +1,7 @@
 // ============================================================
 // LOGIN / REGISTER USER — index.html
+// Sistem akun sendiri (tabel `users`), OTP dikirim via Gmail
+// lewat Supabase Edge Function "auth-user"
 // ============================================================
 
 const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -10,13 +12,26 @@ const swalTheme = {
   confirmButtonColor: isDark ? '#00ccff' : '#00aadd',
 };
 
+// URL Edge Function — otomatis dibentuk dari SUPABASE_URL yang sudah ada di supabase-config.js
+const AUTH_FUNCTION_URL = SUPABASE_URL + '/functions/v1/auth-user';
+
+async function callAuthFunction(payload) {
+  const res = await fetch(AUTH_FUNCTION_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  return { ok: res.ok, data };
+}
+
 // ----- JIKA SUDAH LOGIN, LANGSUNG BALIK KE HALAMAN UTAMA -----
-(async () => {
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (session) {
-    window.location.href = 'index.html';
-  }
-})();
+if (localStorage.getItem('barr_user_session')) {
+  window.location.href = 'index.html';
+}
 
 const authTabs = document.getElementById('authTabs');
 const panelLogin = document.getElementById('panel-login');
@@ -59,21 +74,26 @@ document.getElementById('loginBtn').onclick = async () => {
   btn.disabled = true;
   btn.textContent = 'Memproses...';
 
-  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  const { ok, data } = await callAuthFunction({ action: 'login', email, password });
 
   btn.disabled = false;
   btn.textContent = 'Login';
 
-  if (error) {
-    // Jika akun belum diverifikasi, arahkan ke step OTP
-    if (error.message && error.message.toLowerCase().includes('confirm')) {
+  if (!ok) {
+    if (data.error === 'not_verified') {
       pendingEmail = email;
       showPanel('otp');
       return;
     }
-    errBox.textContent = 'Gagal login: ' + error.message;
+    errBox.textContent = data.error || 'Gagal login';
     return;
   }
+
+  localStorage.setItem('barr_user_session', JSON.stringify({
+    userId: data.userId,
+    email: data.email,
+    sessionToken: data.sessionToken,
+  }));
 
   Swal.fire({
     icon: 'success',
@@ -113,13 +133,13 @@ document.getElementById('regBtn').onclick = async () => {
   btn.disabled = true;
   btn.textContent = 'Memproses...';
 
-  const { error } = await supabaseClient.auth.signUp({ email, password });
+  const { ok, data } = await callAuthFunction({ action: 'register', email, password });
 
   btn.disabled = false;
   btn.textContent = 'Daftar';
 
-  if (error) {
-    errBox.textContent = 'Gagal daftar: ' + error.message;
+  if (!ok) {
+    errBox.textContent = data.error || 'Gagal daftar';
     return;
   }
 
@@ -152,19 +172,21 @@ document.getElementById('otpBtn').onclick = async () => {
   btn.disabled = true;
   btn.textContent = 'Memverifikasi...';
 
-  const { error } = await supabaseClient.auth.verifyOtp({
-    email: pendingEmail,
-    token: code,
-    type: 'signup',
-  });
+  const { ok, data } = await callAuthFunction({ action: 'verify-otp', email: pendingEmail, code });
 
   btn.disabled = false;
   btn.textContent = 'Verifikasi';
 
-  if (error) {
-    errBox.textContent = 'Verifikasi gagal: ' + error.message;
+  if (!ok) {
+    errBox.textContent = data.error || 'Verifikasi gagal';
     return;
   }
+
+  localStorage.setItem('barr_user_session', JSON.stringify({
+    userId: data.userId,
+    email: pendingEmail,
+    sessionToken: crypto.randomUUID(),
+  }));
 
   Swal.fire({
     icon: 'success',
@@ -188,13 +210,10 @@ document.getElementById('otpResend').onclick = async () => {
     return;
   }
 
-  const { error } = await supabaseClient.auth.resend({
-    type: 'signup',
-    email: pendingEmail,
-  });
+  const { ok, data } = await callAuthFunction({ action: 'resend-otp', email: pendingEmail });
 
-  if (error) {
-    errBox.textContent = 'Gagal kirim ulang: ' + error.message;
+  if (!ok) {
+    errBox.textContent = data.error || 'Gagal kirim ulang';
     return;
   }
 
