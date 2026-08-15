@@ -9,45 +9,26 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <style>
-  body { padding: 20px; max-width: 460px; margin: 0 auto; }
+  body { padding: 20px; padding-bottom: 100px; max-width: 460px; margin: 0 auto; }
+
   .profile-box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin: 60px auto 20px; box-shadow: var(--shadow); text-align: center; }
   .profile-avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 26px; font-weight: 700; margin: 0 auto 16px; }
   .profile-email { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; word-break: break-all; }
   .profile-badge { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 11px; padding: 4px 12px; border-radius: 20px; background: var(--surface2); color: var(--subtext); margin-bottom: 20px; }
   .profile-badge svg { width: 13px; height: 13px; flex-shrink: 0; }
+
   .profile-stats { display: flex; gap: 10px; margin-bottom: 20px; }
-  .stat-card { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 8px; }
-  .stat-value { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--accent); }
+  .stat-card { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .stat-card svg { width: 24px; height: 24px; flex-shrink: 0; }
+  .stat-value-group { text-align: left; }
+  .stat-value { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--accent); line-height: 1.1; }
   .stat-label { font-family: var(--mono); font-size: 11px; color: var(--subtext); margin-top: 2px; }
+
   .btn { padding: 11px 18px; border-radius: 8px; border: none; cursor: pointer; font-family: var(--mono); font-weight: 600; font-size: 13px; width: 100%; margin-top: 8px; }
   .btn-primary { background: var(--accent); color: #fff; }
   .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
   .btn-danger { background: #e57373; color: #fff; }
-  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-  .loading-text { font-family: var(--mono); font-size: 13px; color: var(--subtext); text-align: center; margin-top: 60px; }
-  .loading-spinner {
-    width: 32px;
-    height: 32px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-right-color: var(--accent);
-    border-radius: 50%;
-    animation: profileSpin 0.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
-    position: relative;
-    margin-bottom: 12px;
-  }
-
-  .loading-spinner::after {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;     
-    border: 2px solid transparent;
-    border-top-color: var(--accent);
-    opacity: 0.3;
-    animation: profileSpin 0.9s linear infinite reverse;
-  }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
   .loading-text {
     display: flex;
@@ -58,21 +39,43 @@
     text-align: center;
     font-size: 14px;
     font-weight: 500;
-    color: var(--text, #333);
+    color: var(--text);
+    margin-top: 60px;
   }
+  .loading-spinner {
+    width: 32px; height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-right-color: var(--accent);
+    border-radius: 50%;
+    animation: profileSpin 0.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .loading-spinner::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: var(--accent);
+    opacity: 0.3;
+    animation: profileSpin 0.9s linear infinite reverse;
+  }
+  .loading-subtext { font-size: 11px; opacity: 0.6; margin-top: -2px; letter-spacing: 0.3px; }
+  @keyframes profileSpin { to { transform: rotate(360deg); } }
 
-  .loading-subtext {
-    font-size: 11px;
-    opacity: 0.6;
-    margin-top: -2px;
-    letter-spacing: 0.3px;
-  }
-
-  @keyframes profileSpin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
+  /* RIWAYAT DEPOSIT */
+  .history-section { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; margin-bottom: 20px; box-shadow: var(--shadow2); }
+  .history-title { font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .history-title svg { width: 16px; height: 16px; color: var(--accent); }
+  .history-empty { font-family: var(--mono); font-size: 12px; color: var(--subtext); text-align: center; padding: 16px 0; }
+  .history-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .history-item:last-child { border-bottom: none; }
+  .history-date { font-family: var(--mono); font-size: 11px; color: var(--subtext); }
+  .history-coin { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 4px; }
+  .history-coin svg { width: 14px; height: 14px; }
+  .history-rupiah { font-family: var(--mono); font-size: 11px; color: var(--subtext); }
 
   /* MODAL DEPOSIT */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 900; align-items: center; justify-content: center; padding: 20px; }
@@ -99,7 +102,7 @@
 
   <div id="loadingBox" class="loading-text">
     <div class="loading-spinner" aria-hidden="true"></div>
-      <div>Memuat Profile</div>
+    <div>Memuat Profile</div>
     <div class="loading-subtext">mohon tunggu sebentar</div>
   </div>
 
@@ -110,14 +113,41 @@
 
     <div class="profile-stats">
       <div class="stat-card">
-        <div class="stat-value" id="profileCoin">0</div>
-        <div class="stat-label">Coin</div>
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="coinGradTop" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ffe27a"/>
+              <stop offset="100%" stop-color="#f5b800"/>
+            </linearGradient>
+          </defs>
+          <circle cx="24" cy="24" r="21" fill="url(#coinGradTop)" stroke="#c98f00" stroke-width="2"/>
+          <circle cx="24" cy="24" r="16" fill="none" stroke="#c98f00" stroke-width="1.3" stroke-dasharray="2 3"/>
+          <text x="24" y="31" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="19" font-weight="700" fill="#a5720a">B</text>
+        </svg>
+        <div class="stat-value-group">
+          <div class="stat-value" id="profileCoin">0</div>
+          <div class="stat-label">Coin</div>
+        </div>
       </div>
     </div>
 
     <button class="btn btn-primary" id="depositBtn">Deposit Coin</button>
     <a href="admin.html" class="btn btn-primary" id="adminLinkBtn" style="display:none; text-decoration:none; box-sizing:border-box;">Area Admin</a>
     <button class="btn btn-secondary" id="logoutBtn">Logout</button>
+  </div>
+
+  <!-- RIWAYAT DEPOSIT (cuma yang sukses) -->
+  <div class="history-section" id="historySection" style="display:none;">
+    <div class="history-title">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 3v18h18"></path>
+        <path d="M18 9l-5 5-4-4-4 4"></path>
+      </svg>
+      Riwayat Deposit
+    </div>
+    <div id="historyList">
+      <div class="history-empty">Memuat riwayat...</div>
+    </div>
   </div>
 
   <!-- MODAL DEPOSIT: FORM + QRIS DALAM SATU CONTAINER -->
@@ -164,6 +194,9 @@
   let pollInterval = null;
   let timerInterval = null;
   let currentOrderId = null;
+  let isCreatingDeposit = false; // cegah spam klik
+
+  const HISTORY_COIN_ICON = `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="24" r="21" fill="#f5b800" stroke="#c98f00" stroke-width="2"/><text x="24" y="31" text-anchor="middle" font-family="monospace" font-size="19" font-weight="700" fill="#a5720a">B</text></svg>`;
 
   // ----- BADGE ROLE: Admin (mahkota), Member (orang), Reseller (toko) -----
   const BADGE_ICONS = {
@@ -200,76 +233,101 @@
     return { ok: res.ok, data };
   }
 
-  // Ganti bagian ini di script kamu
-(async () => {
-  const startTime = Date.now();
-  const MIN_LOADING_TIME = 3000; // 3 detik
-  
-  const session = await verifySession();
+  // ----- MUAT RIWAYAT DEPOSIT (cuma yang sukses) -----
+  async function loadHistory() {
+    const section = document.getElementById('historySection');
+    const list = document.getElementById('historyList');
 
-  if (!session) {
-    window.location.href = 'login.html';
-    return;
-  }
+    const { ok, data } = await callDeposit({ action: 'history' });
 
-  currentSession = session;
+    if (!ok) return;
 
-  // Hitung sisa waktu untuk mencapai minimal 3 detik
-  const elapsedTime = Date.now() - startTime;
-  const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+    section.style.display = 'block';
 
-  // Tunggu sisa waktu (kalau verifySession cepat)
-  await new Promise(resolve => setTimeout(resolve, remainingTime));
-
-  // Sembunyikan loading dengan fade out (optional)
-  const loadingBox = document.getElementById('loadingBox');
-  loadingBox.style.transition = 'opacity 0.3s ease';
-  loadingBox.style.opacity = '0';
-  
-  setTimeout(() => {
-    loadingBox.style.display = 'none';
-    document.getElementById('profileBox').style.display = 'block';
-    
-    // Tambah fade in untuk profile box
-    const profileBox = document.getElementById('profileBox');
-    profileBox.style.opacity = '0';
-    profileBox.style.transition = 'opacity 0.3s ease';
-    
-    requestAnimationFrame(() => {
-      profileBox.style.opacity = '1';
-    });
-  }, 300);
-
-  // Set profile data
-  document.getElementById('profileEmail').textContent = session.email;
-  document.getElementById('avatarInitial').textContent = session.email.charAt(0).toUpperCase();
-  document.getElementById('profileCoin').textContent = session.coin ?? 0;
-
-  if (session.isAdmin) {
-    setBadge('admin');
-    document.getElementById('adminLinkBtn').style.display = 'block';
-  } else if (session.isReseller) {
-    setBadge('reseller');
-  } else {
-    setBadge('member');
-  }
-
-  document.getElementById('logoutBtn').onclick = async () => {
-    const result = await Swal.fire({
-      icon: 'warning',
-      title: 'Logout?',
-      text: 'Kamu akan keluar dari akun ini.',
-      showCancelButton: true,
-      confirmButtonText: 'Ya, Logout',
-      cancelButtonText: 'Batal',
-      ...swalTheme,
-    });
-
-    if (result.isConfirmed) {
-      logoutUser();
+    if (!data.deposits || data.deposits.length === 0) {
+      list.innerHTML = '<div class="history-empty">Belum ada riwayat deposit</div>';
+      return;
     }
-  };
-})();
+
+    list.innerHTML = data.deposits.map(dep => {
+      const date = new Date(dep.completed_at || dep.created_at).toLocaleString('id-ID', {
+        day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
+      });
+      return `
+        <div class="history-item">
+          <div>
+            <div class="history-coin">${HISTORY_COIN_ICON.replace('viewBox="0 0 48 48"', 'viewBox="0 0 48 48" width="14" height="14"')} +${dep.coin_amount}</div>
+            <div class="history-date">${date}</div>
+          </div>
+          <div class="history-rupiah">Rp${Number(dep.rupiah_amount).toLocaleString('id-ID')}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  (async () => {
+    const startTime = Date.now();
+    const MIN_LOADING_TIME = 1200;
+
+    const session = await verifySession();
+
+    if (!session) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    currentSession = session;
+
+    const elapsedTime = Date.now() - startTime;
+    const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+    await new Promise(resolve => setTimeout(resolve, remainingTime));
+
+    const loadingBox = document.getElementById('loadingBox');
+    loadingBox.style.transition = 'opacity 0.3s ease';
+    loadingBox.style.opacity = '0';
+
+    setTimeout(() => {
+      loadingBox.style.display = 'none';
+      const profileBox = document.getElementById('profileBox');
+      profileBox.style.display = 'block';
+      profileBox.style.opacity = '0';
+      profileBox.style.transition = 'opacity 0.3s ease';
+      requestAnimationFrame(() => {
+        profileBox.style.opacity = '1';
+      });
+    }, 300);
+
+    document.getElementById('profileEmail').textContent = session.email;
+    document.getElementById('avatarInitial').textContent = session.email.charAt(0).toUpperCase();
+    document.getElementById('profileCoin').textContent = session.coin ?? 0;
+
+    if (session.isAdmin) {
+      setBadge('admin');
+      document.getElementById('adminLinkBtn').style.display = 'block';
+    } else if (session.isReseller) {
+      setBadge('reseller');
+    } else {
+      setBadge('member');
+    }
+
+    loadHistory();
+
+    document.getElementById('logoutBtn').onclick = async () => {
+      const result = await Swal.fire({
+        icon: 'warning',
+        title: 'Logout?',
+        text: 'Kamu akan keluar dari akun ini.',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Logout',
+        cancelButtonText: 'Batal',
+        ...swalTheme,
+      });
+
+      if (result.isConfirmed) {
+        logoutUser();
+      }
+    };
+  })();
 
   // ----- BUKA MODAL DEPOSIT -----
   document.getElementById('depositBtn').onclick = () => {
@@ -297,8 +355,10 @@
     preview.textContent = val > 0 ? `Total bayar: Rp${(val * 1000).toLocaleString('id-ID')}` : '';
   });
 
-  // ----- BUAT QRIS -----
+  // ----- BUAT QRIS (dengan proteksi anti-spam & cek pending) -----
   document.getElementById('createDepositBtn').onclick = async () => {
+    if (isCreatingDeposit) return; // cegah klik ganda selagi proses berjalan
+
     const btn = document.getElementById('createDepositBtn');
     const errBox = document.getElementById('depositFormError');
     errBox.textContent = '';
@@ -310,14 +370,23 @@
       return;
     }
 
+    isCreatingDeposit = true;
     btn.disabled = true;
     btn.textContent = 'Mengambil qris...';
 
     const { ok, data } = await callDeposit({ action: 'create', coinAmount });
 
-    btn.textContent = 'Berhasil...';
+    isCreatingDeposit = false;
+    btn.disabled = false;
+    btn.textContent = 'Bayar';
 
     if (!ok) {
+      // Kalau ternyata masih ada transaksi pending sebelumnya, langsung lanjutkan QRIS yang lama itu
+      if (data.existingPending) {
+        errBox.textContent = '';
+        await openQrisModal(data.existingPending);
+        return;
+      }
       errBox.textContent = data.error || 'Gagal membuat qris';
       return;
     }
@@ -348,7 +417,6 @@
       return;
     }
 
-    // QR dibuat sebagai gambar dari layanan eksternal, jadi tidak butuh canvas atau library QRCode.
     qrImage.removeAttribute('src');
     qrImage.src =
       'https://api.qrserver.com/v1/create-qr-code/?size=236x236&margin=8&data=' +
@@ -364,7 +432,7 @@
       currentOrderId = null;
       Swal.fire({
         icon: 'error',
-        title: 'Gagal menampilkan QR',
+        title: 'Gagal menampilkan qr',
         text: 'Layanan qr image tidak dapat diakses. Coba lagi nanti',
         ...swalTheme,
       });
@@ -374,10 +442,10 @@
     document.getElementById('qrisAmount').textContent = 'Rp' + Number(deposit.totalPayment || 0).toLocaleString('id-ID');
     document.getElementById('qrisStatus').textContent = 'Menunggu pembayaran...';
 
-    // QR berhasil dibuat -> form deposit diganti menjadi tampilan QRIS
     formView.classList.add('hidden');
     qrisView.classList.add('active');
     modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
 
     let secondsLeft = Number(deposit.expiresInSeconds) || 600;
     updateTimerText(secondsLeft);
@@ -402,6 +470,8 @@
         document.getElementById('depositFormView').classList.remove('hidden');
         document.body.style.overflow = '';
         document.getElementById('profileCoin').textContent = data.coin;
+
+        loadHistory();
 
         Swal.fire({
           icon: 'success',
