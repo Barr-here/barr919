@@ -28,7 +28,7 @@
       --grid-color: rgba(0,170,221,0.06);
     }
 
-    body.dark {
+    html.dark {
       --bg: #090e14;
       --surface: #0f1923;
       --surface2: #141f2b;
