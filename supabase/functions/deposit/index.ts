@@ -21,8 +21,30 @@ const supabaseAdmin = createClient(
 const PAKASIR_SLUG = Deno.env.get("PAKASIR_SLUG")!;
 const PAKASIR_APIKEY = Deno.env.get("PAKASIR_APIKEY")!;
 
+const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN");
+const TELEGRAM_CHAT_ID = Deno.env.get("TELEGRAM_CHAT_ID");
+
 const COIN_TO_RUPIAH = 1000;
 const MAX_COIN_PER_DEPOSIT = 50;
+
+// ----- HELPER: kirim notifikasi ke Telegram (gagal kirim tidak boleh menggagalkan proses utama) -----
+async function sendTelegramNotif(message: string) {
+  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
+
+  try {
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message,
+        parse_mode: "HTML",
+      }),
+    });
+  } catch (err) {
+    console.log("Gagal kirim notif Telegram:", err.message);
+  }
+}
 
 async function verifySessionUser(userId: string, sessionToken: string) {
   if (!userId || !sessionToken) return null;
@@ -243,6 +265,15 @@ serve(async (req) => {
           .from("deposits")
           .update({ status: "completed", completed_at: new Date().toISOString() })
           .eq("id", deposit.id);
+
+        await sendTelegramNotif(
+          `💰 <b>Deposit Berhasil</b>\n\n` +
+          `📧 Email: <code>${user.email}</code>\n` +
+          `🪙 Coin: +${deposit.coin_amount} (total: ${newCoin})\n` +
+          `💵 Rupiah: Rp${deposit.rupiah_amount.toLocaleString("id-ID")}\n` +
+          `🧾 Order ID: <code>${orderId}</code>\n` +
+          `🕐 Waktu: ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })} WIB`
+        );
 
         return new Response(
           JSON.stringify({ success: true, status: "completed", coin: newCoin }),
