@@ -432,18 +432,8 @@ supabaseClient
 
 const btn = document.getElementById('themeBtn');
 
-// load theme tersimpan
-if (localStorage.getItem('theme') === 'dark') {
-
-  document.body.classList.add('dark');
-
-  btn.textContent = '☀️';
-
-} else {
-
-  btn.textContent = '🌙';
-
-}
+// Set ikon awal sesuai tema yang sudah diterapkan js/theme.js
+btn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
 
 // toggle theme
 btn.onclick = () => {
