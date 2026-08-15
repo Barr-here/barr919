@@ -727,7 +727,7 @@ document.addEventListener('click', (e) => {
   if (session) {
     topbarAuthLink.href = 'profile.html';
     topbarName.textContent = session.email.split('@')[0];
-    topbarTag.textContent = `⌗ (coin: ${session.coin ?? 0})`;
+    topbarTag.textContent = `Coin: ${session.coin ?? 0}`;
 
     // Ganti avatar jadi kotak inisial huruf pertama email
     topbarAvatarImg.style.display = 'none';
