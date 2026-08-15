@@ -738,5 +738,7 @@ document.addEventListener('click', (e) => {
         <circle cx="12" cy="7" r="4"></circle>
       </svg>
     `;
+    // Label berubah -> lebar dock item berubah -> reposisi indikator kalau item ini yang aktif
+    if (window.repositionDockIndicator) window.repositionDockIndicator();
   }
 })();
