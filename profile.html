@@ -25,53 +25,90 @@
   .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
   .loading-text { font-family: var(--mono); font-size: 13px; color: var(--subtext); text-align: center; margin-top: 60px; }
   .loading-spinner {
-    width: 32px;
-    height: 32px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-right-color: var(--accent);
-    border-radius: 50%;
-    animation: profileSpin 0.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
-    position: relative;
-    margin-bottom: 12px;
-  }
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-right-color: var(--accent);
+  border-radius: 50%;
+  animation: profileSpin 0.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+  margin-bottom: 12px;
+}
 
-  .loading-spinner::after {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;     
-    border: 2px solid transparent;
-    border-top-color: var(--accent);
-    opacity: 0.3;
-    animation: profileSpin 0.9s linear infinite reverse;
-  }
+/* Jarum jam */
+.loading-spinner::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 14px;
+  background: var(--accent);
+  transform-origin: bottom center;
+  transform: translate(-50%, -100%) rotate(0deg);
+  animation: hourHand 3s linear infinite;
+  border-radius: 2px;
+}
 
-  .loading-text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    padding: 24px;
-    text-align: center;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text, #333);
-  }
+/* Jarum menit */
+.loading-spinner::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 18px;
+  background: var(--text, #333);
+  transform-origin: bottom center;
+  transform: translate(-50%, -100%) rotate(0deg);
+  animation: minuteHand 0.6s linear infinite;
+  border-radius: 2px;
+}
 
-  .loading-subtext {
-    font-size: 11px;
-    opacity: 0.6;
-    margin-top: -2px;
-    letter-spacing: 0.3px;
-  }
+/* Titik tengah jam */
+.loading-text {
+  position: relative;
+}
 
-  @keyframes profileSpin {
-    to {
-      transform: rotate(360deg);
-    }
+.loading-text::before {
+  content: '';
+  position: absolute;
+  top: calc(50% - 16px); /* Sesuaikan dengan posisi spinner */
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  box-shadow: 0 0 6px rgba(0, 204, 255, 0.8);
+}
+
+@keyframes profileSpin {
+  to {
+    transform: rotate(360deg);
   }
+}
+
+@keyframes hourHand {
+  from {
+    transform: translate(-50%, -100%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -100%) rotate(360deg);
+  }
+}
+
+@keyframes minuteHand {
+  from {
+    transform: translate(-50%, -100%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -100%) rotate(360deg);
+  }
+}
 
   /* MODAL DEPOSIT */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 900; align-items: center; justify-content: center; padding: 20px; }
@@ -198,65 +235,60 @@
     const data = await res.json();
     return { ok: res.ok, data };
   }
-
-  // Ganti bagian ini di script kamu
-(async () => {
-  const startTime = Date.now();
-  const MIN_LOADING_TIME = 3000; // 3 detik
   
-  const session = await verifySession();
-
-  if (!session) {
-    window.location.href = 'login.html';
-    return;
-  }
-
-  currentSession = session;
-
-  // Hitung sisa waktu untuk mencapai minimal 3 detik
-  const elapsedTime = Date.now() - startTime;
-  const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
-
-  // Tunggu sisa waktu (kalau verifySession cepat)
-  await new Promise(resolve => setTimeout(resolve, remainingTime));
-
-  // Sembunyikan loading dengan fade out (optional)
-  const loadingBox = document.getElementById('loadingBox');
-  loadingBox.style.transition = 'opacity 0.3s ease';
-  loadingBox.style.opacity = '0';
+  // Menampilkan profile
+  (async () => {
+    const startTime = Date.now();
+    const MIN_LOADING_TIME = 3000; 
   
-  setTimeout(() => {
-    loadingBox.style.display = 'none';
-    document.getElementById('profileBox').style.display = 'block';
+    const session = await verifySession();
+
+    if (!session) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    currentSession = session;
+
+    const elapsedTime = Date.now() - startTime;
+    const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+
+    await new Promise(resolve => setTimeout(resolve, remainingTime));
+
+    const loadingBox = document.getElementById('loadingBox');
+    loadingBox.style.transition = 'opacity 0.3s ease';
+    loadingBox.style.opacity = '0';
+  
+    setTimeout(() => {
+      loadingBox.style.display = 'none';
+      document.getElementById('profileBox').style.display = 'block';
     
-    // Tambah fade in untuk profile box
-    const profileBox = document.getElementById('profileBox');
-    profileBox.style.opacity = '0';
-    profileBox.style.transition = 'opacity 0.3s ease';
+      const profileBox = document.getElementById('profileBox');
+      profileBox.style.opacity = '0';
+      profileBox.style.transition = 'opacity 0.3s ease';
     
-    requestAnimationFrame(() => {
-      profileBox.style.opacity = '1';
-    });
-  }, 300);
+      requestAnimationFrame(() => {
+        profileBox.style.opacity = '1';
+      });
+    }, 300);
 
-  // Set profile data
-  document.getElementById('profileEmail').textContent = session.email;
-  document.getElementById('avatarInitial').textContent = session.email.charAt(0).toUpperCase();
-  document.getElementById('profileCoin').textContent = session.coin ?? 0;
+    document.getElementById('profileEmail').textContent = session.email;
+    document.getElementById('avatarInitial').textContent = session.email.charAt(0).toUpperCase();
+    document.getElementById('profileCoin').textContent = session.coin ?? 0;
 
-  if (session.isAdmin) {
-    setBadge('admin');
-    document.getElementById('adminLinkBtn').style.display = 'block';
-  } else if (session.isReseller) {
-    setBadge('reseller');
-  } else {
-    setBadge('member');
-  }
-
-  document.getElementById('logoutBtn').onclick = () => {
-    logoutUser();
-  };
-})();
+    if (session.isAdmin) {
+      setBadge('admin');
+      document.getElementById('adminLinkBtn').style.display = 'block';
+    } else if (session.isReseller) {
+      setBadge('reseller');
+    } else {
+      setBadge('member');
+    }
+  
+    document.getElementById('logoutBtn').onclick = () => {
+      logoutUser();
+    };
+  })();
 
   // ----- BUKA MODAL DEPOSIT -----
   document.getElementById('depositBtn').onclick = () => {
