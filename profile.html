@@ -199,36 +199,64 @@
     return { ok: res.ok, data };
   }
 
-  (async () => {
-    const session = await verifySession();
+  // Ganti bagian ini di script kamu
+(async () => {
+  const startTime = Date.now();
+  const MIN_LOADING_TIME = 3000; // 3 detik
+  
+  const session = await verifySession();
 
-    if (!session) {
-      window.location.href = 'login.html';
-      return;
-    }
+  if (!session) {
+    window.location.href = 'login.html';
+    return;
+  }
 
-    currentSession = session;
+  currentSession = session;
 
-    document.getElementById('loadingBox').style.display = 'none';
+  // Hitung sisa waktu untuk mencapai minimal 3 detik
+  const elapsedTime = Date.now() - startTime;
+  const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+
+  // Tunggu sisa waktu (kalau verifySession cepat)
+  await new Promise(resolve => setTimeout(resolve, remainingTime));
+
+  // Sembunyikan loading dengan fade out (optional)
+  const loadingBox = document.getElementById('loadingBox');
+  loadingBox.style.transition = 'opacity 0.3s ease';
+  loadingBox.style.opacity = '0';
+  
+  setTimeout(() => {
+    loadingBox.style.display = 'none';
     document.getElementById('profileBox').style.display = 'block';
+    
+    // Tambah fade in untuk profile box
+    const profileBox = document.getElementById('profileBox');
+    profileBox.style.opacity = '0';
+    profileBox.style.transition = 'opacity 0.3s ease';
+    
+    requestAnimationFrame(() => {
+      profileBox.style.opacity = '1';
+    });
+  }, 300);
 
-    document.getElementById('profileEmail').textContent = session.email;
-    document.getElementById('avatarInitial').textContent = session.email.charAt(0).toUpperCase();
-    document.getElementById('profileCoin').textContent = session.coin ?? 0;
+  // Set profile data
+  document.getElementById('profileEmail').textContent = session.email;
+  document.getElementById('avatarInitial').textContent = session.email.charAt(0).toUpperCase();
+  document.getElementById('profileCoin').textContent = session.coin ?? 0;
 
-    if (session.isAdmin) {
-      setBadge('admin');
-      document.getElementById('adminLinkBtn').style.display = 'block';
-    } else if (session.isReseller) {
-      setBadge('reseller');
-    } else {
-      setBadge('member');
-    }
+  if (session.isAdmin) {
+    setBadge('admin');
+    document.getElementById('adminLinkBtn').style.display = 'block';
+  } else if (session.isReseller) {
+    setBadge('reseller');
+  } else {
+    setBadge('member');
+  }
 
-    document.getElementById('logoutBtn').onclick = () => {
-      logoutUser();
-    };
-  })();
+  document.getElementById('logoutBtn').onclick = () => {
+    logoutUser();
+  };
+})();
 
   // ----- BUKA MODAL DEPOSIT -----
   document.getElementById('depositBtn').onclick = () => {
