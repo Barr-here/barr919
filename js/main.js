@@ -433,14 +433,14 @@ supabaseClient
 const btn = document.getElementById('themeBtn');
 
 // Set ikon awal sesuai tema yang sudah diterapkan js/theme.js
-btn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+btn.textContent = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
 
 // toggle theme
 btn.onclick = () => {
 
-  document.body.classList.toggle('dark');
+  document.documentElement.classList.toggle('dark');
 
-  const dark = document.body.classList.contains('dark');
+  const dark = document.documentElement.classList.contains('dark');
 
   btn.textContent = dark ? '☀️' : '🌙';
 
