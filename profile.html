@@ -24,6 +24,9 @@
   .btn-danger { background: #e57373; color: #fff; }
   .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
   .loading-text { font-family: var(--mono); font-size: 13px; color: var(--subtext); text-align: center; margin-top: 60px; }
+  .loading-spinner { width:28px; height:28px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:profileSpin .8s linear infinite; }
+  .loading-subtext { font-size:11px; opacity:.7; margin-top:-5px; }
+  @keyframes profileSpin { to { transform:rotate(360deg); } }
 
   /* MODAL DEPOSIT */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 900; align-items: center; justify-content: center; padding: 20px; }
@@ -48,7 +51,11 @@
 </head>
 <body data-page="auth">
 
-  <div id="loadingBox" class="loading-text">Memuat profil...</div>
+  <div id="loadingBox" class="loading-text">
+    <div class="loading-spinner" aria-hidden="true"></div>
+      <div>Memuat profil...</div>
+    <div class="loading-subtext">Mohon tunggu sebentar</div>
+  </div>
 
   <div class="profile-box" id="profileBox" style="display:none;">
     <div class="profile-avatar" id="avatarInitial">?</div>
