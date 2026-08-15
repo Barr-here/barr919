@@ -81,27 +81,31 @@
 
   // ----- KLIK DOCK ITEM -----
   items.forEach(item => {
-    item.addEventListener('click', () => {
-      if (item.tagName === 'A' && item.href) {
-        sessionStorage.setItem('dock_from_page', currentPage);
-        return;
-      }
+  item.addEventListener('click', () => {
+    const targetUrl = item.dataset.url || item.href;
+    
+    if (targetUrl && item.dataset.page !== currentPage) {
+      // Simpan posisi asal untuk animasi
+      sessionStorage.setItem('dock_from_page', currentPage);
+      
+      // Navigasi manual tanpa menampilkan URL di address bar
+      // (tetap ganti halaman, tapi URL tidak berubah)
+      window.location.replace(targetUrl);
+      return;
+    }
 
-      if (item !== activeItem) {
-        // Tambah indicator-active ke item yang diklik
-        item.classList.add('indicator-active');
-        setActive(item);
-        moveIndicatorTo(item, true);
+    // Untuk item yang tidak pindah halaman (Bantuan)
+    if (item !== activeItem) {
+      setActive(item);
+      moveIndicatorTo(item, true);
 
-        setTimeout(() => {
-          // Hapus indicator-active dari item yang diklik
-          item.classList.remove('indicator-active');
-          setActive(activeItem);
-          moveIndicatorTo(activeItem, true);
-        }, 1500);
-      }
-    });
+      setTimeout(() => {
+        setActive(activeItem);
+        moveIndicatorTo(activeItem, true);
+      }, 1500);
+    }
   });
+});
 
   // ----- HANDLER KHUSUS "BANTUAN" (berlaku di semua halaman, taruh di sini biar gak duplikat) -----
   const dockBantuan = document.getElementById('dockBantuan');
