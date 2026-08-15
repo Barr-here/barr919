@@ -1664,7 +1664,8 @@
 }
 
 /* ============================================================
-   DOCK BAR (mengambang di bawah, seperti dock iPhone/macOS)
+   DOCK BAR — pill navbar dengan sliding indicator
+   (mengambang di bawah, indikator bergeser mengikuti item aktif)
    ============================================================ */
 
 .dock-bar {
@@ -1673,107 +1674,95 @@
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  align-items: flex-end;
-  gap: 10px;
-  padding: 0;
-  background: transparent;
-  border: none;
-  box-shadow: none;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
   z-index: 500;
+  backdrop-filter: blur(10px);
+}
+
+.dock-indicator {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  height: calc(100% - 12px);
+  border-radius: 999px;
+  background: var(--accent);
+  transition:
+    transform 0.4s cubic-bezier(0.65, 0, 0.35, 1),
+    width 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+  z-index: 0;
 }
 
 .dock-item {
-  display: grid;
-  grid-template-columns: 56px 0fr;
+  position: relative;
+  z-index: 1;
+  display: flex;
   align-items: center;
-  height: 56px;
-  padding: 0;
-  border-radius: 20px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text);
+  gap: 8px;
+  height: 48px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: transparent;
+  border: none;
+  color: var(--subtext);
   text-decoration: none;
   cursor: pointer;
-  overflow: hidden;
-  transition:
-    grid-template-columns 0.35s cubic-bezier(0.25, 0.8, 0.4, 1),
-    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-    background 0.25s ease,
-    border-color 0.25s ease;
+  white-space: nowrap;
+  transition: color 0.3s ease;
 }
 
 .dock-icon {
-  width: 56px;
-  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent);
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.25s ease;
+  transition: color 0.3s ease;
 }
 
 .dock-icon svg {
-  width: 26px;
-  height: 26px;
+  width: 20px;
+  height: 20px;
 }
 
 .dock-label {
   font-family: var(--mono);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  white-space: nowrap;
-  min-width: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: color 0.3s ease;
 }
 
-.dock-item:hover,
-.dock-item:focus-visible,
 .dock-item.dock-active {
-  grid-template-columns: 56px 1fr;
-  transform: translateY(-4px);
-  background: var(--accent);
-  border-color: var(--accent);
+  color: #ffffff;
 }
 
-.dock-item:hover .dock-icon,
-.dock-item:focus-visible .dock-icon,
 .dock-item.dock-active .dock-icon {
   color: #ffffff;
-  transform: scale(1.05);
-}
-
-.dock-item:hover .dock-label,
-.dock-item:focus-visible .dock-label,
-.dock-item.dock-active .dock-label {
-  opacity: 1;
-  padding-right: 16px;
-  transition: opacity 0.25s ease 0.15s;
 }
 
 @media (max-width: 480px) {
   .dock-bar {
     bottom: 14px;
-    padding: 0;
-    gap: 8px;
+    padding: 5px;
+  }
+  .dock-indicator {
+    top: 5px;
+    height: calc(100% - 10px);
   }
   .dock-item {
-    height: 50px;
-    grid-template-columns: 50px 0fr;
-    border-radius: 18px;
-  }
-  .dock-icon {
-    width: 50px;
-    height: 50px;
+    height: 44px;
+    padding: 0 14px;
+    gap: 6px;
   }
   .dock-icon svg {
-    width: 23px;
-    height: 23px;
+    width: 18px;
+    height: 18px;
   }
-  .dock-item:hover,
-  .dock-item:focus-visible,
-  .dock-item.dock-active {
-    grid-template-columns: 50px 1fr;
+  .dock-label {
+    font-size: 12px;
   }
 }
+
