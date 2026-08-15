@@ -1690,13 +1690,31 @@
 .page-loader {
   position: fixed;
   inset: 0;
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.7); /* Default light mode */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 9999;
   transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .page-loader {
+    background: rgba(15, 25, 35, 0.7);
+  }
+}
+
+/* Atau kalau pakai class theme di body/html */
+[data-theme="dark"] .page-loader {
+  background: rgba(15, 25, 35, 0.7);
+}
+
+[data-theme="light"] .page-loader {
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .page-loader.hidden {
@@ -1716,6 +1734,13 @@
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
   position: relative;
   margin-bottom: 12px;
+}
+
+/* Dark mode spinner glow */
+@media (prefers-color-scheme: dark) {
+  .page-loader .loading-spinner {
+    box-shadow: 0 0 20px rgba(0, 204, 255, 0.3);
+  }
 }
 
 .page-loader .loading-spinner::after {
@@ -1738,8 +1763,16 @@
   text-align: center;
   font-size: 14px;
   font-weight: 500;
-  color: var(--text, #333);
+  color: #333; /* Default light mode */
   font-family: var(--mono);
+}
+
+/* Dark mode text */
+@media (prefers-color-scheme: dark) {
+  .page-loader .loading-text {
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
 }
 
 .page-loader .loading-subtext {
@@ -1747,6 +1780,16 @@
   opacity: 0.6;
   margin-top: -2px;
   letter-spacing: 0.3px;
+  color: #666; /* Default light mode */
+}
+
+/* Dark mode subtext */
+@media (prefers-color-scheme: dark) {
+  .page-loader .loading-subtext {
+    color: #ffffff;
+    opacity: 0.7;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
 }
 
 @keyframes profileSpin {
