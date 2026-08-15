@@ -720,25 +720,25 @@ document.addEventListener('click', (e) => {
 });
 
 // ============================================================
-// DOCK AUTH — ganti icon Login jadi Profile kalau user sudah login
+// TOP BAR — ganti tampilan kalau user sudah login
+// (dock bar "Profil" tetap sama, selalu ke profile.html;
+//  profile.html sendiri yang redirect ke login.html kalau belum login)
 // ============================================================
 
 (async () => {
   const session = await verifySession();
-  const dockAuth = document.getElementById('dockAuth');
-  const dockAuthIcon = document.getElementById('dockAuthIcon');
-  const dockAuthLabel = document.getElementById('dockAuthLabel');
+  const topbarAuthLink = document.getElementById('topbarAuthLink');
+  const topbarName = document.getElementById('topbarName');
+  const topbarTag = document.getElementById('topbarTag');
 
   if (session) {
-    dockAuth.href = 'profile.html';
-    dockAuthLabel.textContent = 'Profil';
-    dockAuthIcon.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-        <circle cx="12" cy="7" r="4"></circle>
-      </svg>
-    `;
-    // Label berubah -> lebar dock item berubah -> reposisi indikator kalau item ini yang aktif
-    if (window.repositionDockIndicator) window.repositionDockIndicator();
+    topbarAuthLink.href = 'profile.html';
+    topbarName.textContent = session.email.split('@')[0];
+    topbarTag.textContent = `⌗ (coin: ${session.coin ?? 0})`;
+  } else {
+    // Belum login -> top bar default
+    topbarAuthLink.href = 'login.html';
+    topbarName.textContent = 'Login';
+    topbarTag.textContent = '⌗ (coin: 0)';
   }
 })();
