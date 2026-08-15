@@ -323,7 +323,7 @@ async function loadTestimonials() {
   const hintBox = document.getElementById('t_sort_hint');
   if (data.length > 0) {
     const lastSort = data[data.length - 1].sort_order;
-    hintBox.textContent = `Urutan terakhir sekarang: ${lastSort}`;
+    hintBox.textContent = `Urutan sekarang: ${lastSort}`;
   } else {
     hintBox.textContent = 'Belum ada testimoni, mulai dari urutan 1';
   }
