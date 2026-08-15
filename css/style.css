@@ -1153,19 +1153,6 @@
   line-height: 1.5;
 }
 
-.testi-highlight {
-  position: relative;
-  overflow: hidden;
-  border-color:
-    rgba(255,255,255,0.08);
-  background:
-    linear-gradient(
-      135deg,
-      var(--surface),
-      var(--surface2)
-    );
-}
-
 .testi-meta {
 
   display: flex;
