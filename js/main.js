@@ -459,29 +459,6 @@ btn.onclick = () => {
 
 };
 
-// Theme popup
-const themePopup = document.getElementById('themePopup');
-
-function showThemePopup() {
-
-  // cuma tampil di mode terang
-  if (document.body.classList.contains('dark')) return;
-
-  themePopup.classList.add('show');
-
-  setTimeout(() => {
-    themePopup.classList.remove('show');
-  }, 4000);
-
-}
-
-// tampil pertama kali
-setTimeout(showThemePopup, 2000);
-
-// ulang tiap 15 detik
-setInterval(showThemePopup, 15000);
-
-
 // ============================================================
 // LOGIN HINT POPUP (tampil 1x saja)
 // ============================================================
