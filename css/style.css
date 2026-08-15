@@ -79,8 +79,6 @@
       border: 1px solid var(--border);
       border-radius: 14px;
       box-shadow: var(--shadow2);
-      position: relative;
-      z-index: 10001;
     }
 
     .topbar-left {
@@ -711,6 +709,59 @@
       .copy-popup.error {
         border-width: 1.5px;
       }
+    }
+    
+    /* THEME POPUP */
+    .theme-popup {
+      position: absolute;
+      top: 72px;
+      right: 18px;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-family: var(--mono);
+      box-shadow: var(--shadow);
+      z-index: 99999;
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+      transition: 0.25s;
+      max-width: 190px;
+      line-height: 1.5;
+    }
+    
+    /* panah kecil */
+    .theme-popup::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      right: 26px;
+      width: 12px;
+      height: 12px;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      border-top: 1px solid var(--border);
+      transform: rotate(45deg);
+    }
+    
+    .theme-popup.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (min-width: 900px) {
+      .theme-popup {
+        top: 90px;
+        right: 25px;
+
+      }
+
+      .theme-popup::before {
+        right: 26px;
+      }      
     }
     
     /* LOGIN HINT POPUP (mirip theme-popup, mengarah ke dock) */
@@ -1584,7 +1635,7 @@
   border: 1px solid var(--border);
   border-radius: 999px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-  z-index: 10001;
+  z-index: 500;
   backdrop-filter: blur(10px);
 }
 
@@ -1638,30 +1689,11 @@
   transition: color 0.3s ease;
 }
 
-.dock-item {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 48px;
-  padding: 0 18px;
-  border-radius: 999px;
-  background: transparent;
-  border: none;
-  color: var(--subtext);
-  text-decoration: none;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: color 0.3s ease;
-}
-
-/* Warna putih untuk item yang sedang ada indikatornya */
-.dock-item.indicator-active {
+.dock-item.dock-active {
   color: #ffffff;
 }
 
-.dock-item.indicator-active .dock-icon {
+.dock-item.dock-active .dock-icon {
   color: #ffffff;
 }
 
@@ -1688,114 +1720,3 @@
   }
 }
 
-/* ============ PAGE LOADER (GLOBAL) ============ */
-.page-loader {
-  position: fixed;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.7); /* Default light mode */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  transition: opacity 0.4s ease, visibility 0.4s ease;
-}
-
-/* Dark mode */
-@media (prefers-color-scheme: dark) {
-  .page-loader {
-    background: rgba(15, 25, 35, 0.7);
-  }
-}
-
-/* Atau kalau pakai class theme di body/html */
-[data-theme="dark"] .page-loader {
-  background: rgba(15, 25, 35, 0.7);
-}
-
-[data-theme="light"] .page-loader {
-  background: rgba(255, 255, 255, 0.7);
-}
-
-.page-loader.hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.page-loader .loading-spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid var(--border);
-  border-top-color: var(--accent);
-  border-right-color: var(--accent);
-  border-radius: 50%;
-  animation: profileSpin 0.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
-  position: relative;
-  margin-bottom: 12px;
-}
-
-/* Dark mode spinner glow */
-@media (prefers-color-scheme: dark) {
-  .page-loader .loading-spinner {
-    box-shadow: 0 0 20px rgba(0, 204, 255, 0.3);
-  }
-}
-
-.page-loader .loading-spinner::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  border-top-color: var(--accent);
-  opacity: 0.3;
-  animation: profileSpin 0.9s linear infinite reverse;
-}
-
-.page-loader .loading-text {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 24px;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: #333; /* Default light mode */
-  font-family: var(--mono);
-}
-
-/* Dark mode text */
-@media (prefers-color-scheme: dark) {
-  .page-loader .loading-text {
-    color: #ffffff;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-  }
-}
-
-.page-loader .loading-subtext {
-  font-size: 11px;
-  opacity: 0.6;
-  margin-top: -2px;
-  letter-spacing: 0.3px;
-  color: #666; /* Default light mode */
-}
-
-/* Dark mode subtext */
-@media (prefers-color-scheme: dark) {
-  .page-loader .loading-subtext {
-    color: #ffffff;
-    opacity: 0.7;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-  }
-}
-
-@keyframes profileSpin {
-  to {
-    transform: rotate(360deg);
-  }
-}
