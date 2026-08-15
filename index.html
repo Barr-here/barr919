@@ -15,6 +15,14 @@
 </head>
 <body data-page="beranda">
 
+  <div class="page-loader" id="pageLoader">
+    <div class="loading-spinner" aria-hidden="true"></div>
+    <div class="loading-text">
+      <div>Memuat Halaman</div>
+      <div class="loading-subtext">Mohon tunggu sebentar</div>
+    </div>
+  </div>
+
   <!-- TOP BAR -->
   <div class="topbar">
     <a class="topbar-left" href="login.html" id="topbarAuthLink" style="text-decoration:none; color:inherit;">
@@ -313,6 +321,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
   <script src="js/auth-helper.js"></script>
+  <script src="js/loading.js"></script>
   <script src="js/main.js"></script>
   <script src="js/dock.js"></script>
 </body>
