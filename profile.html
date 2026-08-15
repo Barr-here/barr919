@@ -24,6 +24,54 @@
   .btn-danger { background: #e57373; color: #fff; }
   .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
   .loading-text { font-family: var(--mono); font-size: 13px; color: var(--subtext); text-align: center; margin-top: 60px; }
+  .loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-right-color: var(--accent);
+    border-radius: 50%;
+    animation: profileSpin 0.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+    position: relative;
+    margin-bottom: 12px;
+  }
+
+  .loading-spinner::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;     
+    border: 2px solid transparent;
+    border-top-color: var(--accent);
+    opacity: 0.3;
+    animation: profileSpin 0.9s linear infinite reverse;
+  }
+
+  .loading-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 24px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text, #333);
+  }
+
+  .loading-subtext {
+    font-size: 11px;
+    opacity: 0.6;
+    margin-top: -2px;
+    letter-spacing: 0.3px;
+  }
+
+  @keyframes profileSpin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
 
   /* MODAL DEPOSIT */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 900; align-items: center; justify-content: center; padding: 20px; }
@@ -48,12 +96,10 @@
 </head>
 <body data-page="auth">
 
-  <div class="page-loader" id="pageLoader">
+  <div id="loadingBox" class="loading-text">
     <div class="loading-spinner" aria-hidden="true"></div>
-    <div class="loading-text">
-      <div>Memuat halaman...</div>
-      <div class="loading-subtext">Mohon tunggu sebentar</div>
-    </div>
+      <div>Memuat Profile</div>
+    <div class="loading-subtext">mohon tunggu sebentar</div>
   </div>
 
   <div class="profile-box" id="profileBox" style="display:none;">
@@ -153,43 +199,64 @@
     return { ok: res.ok, data };
   }
 
-  (async () => {
-    const session = await verifySession();
+  // Ganti bagian ini di script kamu
+(async () => {
+  const startTime = Date.now();
+  const MIN_LOADING_TIME = 3000; // 3 detik
+  
+  const session = await verifySession();
 
-    if (!session) {
-      window.location.href = 'login.html';
-      return;
-    }
+  if (!session) {
+    window.location.href = 'login.html';
+    return;
+  }
 
-    currentSession = session;
+  currentSession = session;
 
-    // Set profile data
-    document.getElementById('profileEmail').textContent = session.email;
-    document.getElementById('avatarInitial').textContent = session.email.charAt(0).toUpperCase();
-    document.getElementById('profileCoin').textContent = session.coin ?? 0;
+  // Hitung sisa waktu untuk mencapai minimal 3 detik
+  const elapsedTime = Date.now() - startTime;
+  const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
 
-    if (session.isAdmin) {
-      setBadge('admin');
-      document.getElementById('adminLinkBtn').style.display = 'block';
-    } else if (session.isReseller) {
-      setBadge('reseller');
-    } else {
-      setBadge('member');
-    }
+  // Tunggu sisa waktu (kalau verifySession cepat)
+  await new Promise(resolve => setTimeout(resolve, remainingTime));
 
-    document.getElementById('logoutBtn').onclick = () => {
-      logoutUser();
-    };
-
+  // Sembunyikan loading dengan fade out (optional)
+  const loadingBox = document.getElementById('loadingBox');
+  loadingBox.style.transition = 'opacity 0.3s ease';
+  loadingBox.style.opacity = '0';
+  
+  setTimeout(() => {
+    loadingBox.style.display = 'none';
+    document.getElementById('profileBox').style.display = 'block';
+    
+    // Tambah fade in untuk profile box
     const profileBox = document.getElementById('profileBox');
-    profileBox.style.display = 'block';
     profileBox.style.opacity = '0';
     profileBox.style.transition = 'opacity 0.3s ease';
-  
+    
     requestAnimationFrame(() => {
       profileBox.style.opacity = '1';
     });
-  })();
+  }, 300);
+
+  // Set profile data
+  document.getElementById('profileEmail').textContent = session.email;
+  document.getElementById('avatarInitial').textContent = session.email.charAt(0).toUpperCase();
+  document.getElementById('profileCoin').textContent = session.coin ?? 0;
+
+  if (session.isAdmin) {
+    setBadge('admin');
+    document.getElementById('adminLinkBtn').style.display = 'block';
+  } else if (session.isReseller) {
+    setBadge('reseller');
+  } else {
+    setBadge('member');
+  }
+
+  document.getElementById('logoutBtn').onclick = () => {
+    logoutUser();
+  };
+})();
 
   // ----- BUKA MODAL DEPOSIT -----
   document.getElementById('depositBtn').onclick = () => {
@@ -425,7 +492,6 @@
     </div>
   </nav>
 
-<script src="js/loading.js"></script>
 <script src="js/dock.js"></script>
 </body>
 </html>
