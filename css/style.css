@@ -1166,51 +1166,6 @@
     );
 }
 
-.testi-highlight::after {
-  content: 'NEW';
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  font-size: 10px;
-  font-family: var(--mono);
-  font-weight: 700;
-  color: white;
-  background: var(--accent);
-  padding: 5px 9px;
-  border-radius: 999px;
-  box-shadow: 0 0 12px var(--accent-glow); 
-}
-
-/* MOVING LIGHT */
-.testi-highlight::before {
-  content: '';
-  position: absolute;
-  top: -120%;
-  left: -40%;
-  width: 60%;
-  height: 300%;
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      color-mix(
-        in srgb,
-        var(--accent) 35%,
-        transparent
-      ),
-      transparent
-    );
-  transform: rotate(25deg);
-  animation: testiGlowMove 4s linear infinite;
-  pointer-events: none;
-}
-
-
-@keyframes testiGlowMove {
-  0% { left: -60%; }
-  100% { left: 160%; }
-}
-
 .testi-meta {
 
   display: flex;
