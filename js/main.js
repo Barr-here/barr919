@@ -703,15 +703,6 @@ document.querySelectorAll('.dock-item').forEach(item => {
   });
 });
 
-// Klik Bantuan — placeholder, nanti diisi tutorial auto order
-document.getElementById('dockBantuan').addEventListener('click', () => {
-  Swal.fire({
-    icon: 'info',
-    title: 'Segera Hadir',
-    text: 'Tutorial auto order akan tersedia di sini.',
-  });
-});
-
 // Tutup dock item aktif kalau tap di luar dock
 document.addEventListener('click', (e) => {
   if (!e.target.closest('.dock-bar')) {
@@ -736,7 +727,7 @@ document.addEventListener('click', (e) => {
   if (session) {
     topbarAuthLink.href = 'profile.html';
     topbarName.textContent = session.email.split('@')[0];
-    topbarTag.textContent = `Coin: ${session.coin ?? 0}`;
+    topbarTag.textContent = `⌗ (coin: ${session.coin ?? 0})`;
 
     // Ganti avatar jadi kotak inisial huruf pertama email
     topbarAvatarImg.style.display = 'none';
@@ -746,7 +737,7 @@ document.addEventListener('click', (e) => {
     // Belum login -> top bar default
     topbarAuthLink.href = 'login.html';
     topbarName.textContent = 'Login';
-    topbarTag.textContent = 'Coin: 0';
+    topbarTag.textContent = '⌗ (coin: 0)';
 
     topbarAvatarImg.style.display = 'block';
     topbarAvatarInitial.style.display = 'none';
