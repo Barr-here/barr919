@@ -45,6 +45,7 @@ donasiPopup.onclick = (e) => {
 document.getElementById('openQrisFromDonasi').onclick = () => {
   donasiPopup.classList.remove('show');
   qrisPopup.classList.add('show');
+  document.body.style.overflow = '';
 };
 
 // ============================================================
