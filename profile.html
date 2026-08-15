@@ -253,8 +253,20 @@
     setBadge('member');
   }
 
-  document.getElementById('logoutBtn').onclick = () => {
-    logoutUser();
+  document.getElementById('logoutBtn').onclick = async () => {
+    const result = await Swal.fire({
+      icon: 'warning',
+      title: 'Logout?',
+      text: 'Kamu akan keluar dari akun ini.',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, Logout',
+      cancelButtonText: 'Batal',
+      ...swalTheme,
+    });
+
+    if (result.isConfirmed) {
+      logoutUser();
+    }
   };
 })();
 
