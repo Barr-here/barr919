@@ -730,15 +730,25 @@ document.addEventListener('click', (e) => {
   const topbarAuthLink = document.getElementById('topbarAuthLink');
   const topbarName = document.getElementById('topbarName');
   const topbarTag = document.getElementById('topbarTag');
+  const topbarAvatarImg = document.getElementById('topbarAvatarImg');
+  const topbarAvatarInitial = document.getElementById('topbarAvatarInitial');
 
   if (session) {
     topbarAuthLink.href = 'profile.html';
     topbarName.textContent = session.email.split('@')[0];
-    topbarTag.textContent = `⌗ (coin: ${session.coin ?? 0})`;
+    topbarTag.textContent = `Coin: ${session.coin ?? 0}`;
+
+    // Ganti avatar jadi kotak inisial huruf pertama email
+    topbarAvatarImg.style.display = 'none';
+    topbarAvatarInitial.style.display = 'flex';
+    topbarAvatarInitial.textContent = session.email.charAt(0).toUpperCase();
   } else {
     // Belum login -> top bar default
     topbarAuthLink.href = 'login.html';
     topbarName.textContent = 'Login';
-    topbarTag.textContent = '⌗ (coin: 0)';
+    topbarTag.textContent = 'Coin: 0';
+
+    topbarAvatarImg.style.display = 'block';
+    topbarAvatarInitial.style.display = 'none';
   }
 })();
