@@ -87,6 +87,41 @@ serve(async (req) => {
         );
       }
 
+      // Cegah 2 transaksi pending sekaligus -> kalau masih ada yang pending & belum expired, tolak dan kirim balik data transaksi lama itu
+      const { data: existingPending } = await supabaseAdmin
+        .from("deposits")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("status", "pending")
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (existingPending) {
+        const createdAt = new Date(existingPending.created_at).getTime();
+        const isExpired = Date.now() - createdAt > 10 * 60 * 1000;
+
+        if (!isExpired) {
+          const secondsLeft = 600 - Math.floor((Date.now() - createdAt) / 1000);
+          return new Response(
+            JSON.stringify({
+              error: "Kamu masih punya transaksi deposit yang belum selesai",
+              existingPending: {
+                orderId: existingPending.order_id,
+                paymentNumber: existingPending.payment_number,
+                totalPayment: existingPending.total_payment ?? existingPending.rupiah_amount,
+                coinAmount: existingPending.coin_amount,
+                expiresInSeconds: Math.max(secondsLeft, 0),
+              },
+            }),
+            { status: 409, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+
+        // Kalau memang sudah expired tapi belum sempat ditandai, tandai dulu di sini
+        await supabaseAdmin.from("deposits").update({ status: "expired" }).eq("id", existingPending.id);
+      }
+
       const rupiahAmount = coinAmount * COIN_TO_RUPIAH;
       const newOrderId = `${PAKASIR_SLUG}-${Date.now()}`;
 
@@ -149,6 +184,7 @@ serve(async (req) => {
         order_id: newOrderId,
         coin_amount: coinAmount,
         rupiah_amount: rupiahAmount,
+        total_payment: payment.total_payment ?? rupiahAmount,
         status: "pending",
         payment_number: qrValue,
       });
@@ -315,7 +351,8 @@ serve(async (req) => {
         .from("deposits")
         .select("order_id, coin_amount, rupiah_amount, status, created_at, completed_at")
         .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
+        .eq("status", "completed")
+        .order("completed_at", { ascending: false })
         .limit(20);
 
       return new Response(JSON.stringify({ success: true, deposits: deposits || [] }), {
