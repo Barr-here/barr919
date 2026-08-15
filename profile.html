@@ -12,7 +12,8 @@
   .profile-box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin: 60px auto 20px; box-shadow: var(--shadow); text-align: center; }
   .profile-avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 26px; font-weight: 700; margin: 0 auto 16px; }
   .profile-email { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; word-break: break-all; }
-  .profile-badge { display: inline-block; font-family: var(--mono); font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--surface2); color: var(--subtext); margin-bottom: 20px; }
+  .profile-badge { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 11px; padding: 4px 12px; border-radius: 20px; background: var(--surface2); color: var(--subtext); margin-bottom: 20px; }
+  .profile-badge svg { width: 13px; height: 13px; flex-shrink: 0; }
   .profile-stats { display: flex; gap: 10px; margin-bottom: 20px; }
   .stat-card { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 8px; }
   .stat-value { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--accent); }
@@ -52,7 +53,7 @@
   <div class="profile-box" id="profileBox" style="display:none;">
     <div class="profile-avatar" id="avatarInitial">?</div>
     <div class="profile-email" id="profileEmail">-</div>
-    <div class="profile-badge" id="profileBadge">Member</div>
+    <div class="profile-badge" id="profileBadge"><span id="profileBadgeIcon"></span><span id="profileBadgeText">Member</span></div>
 
     <div class="profile-stats">
       <div class="stat-card">
@@ -61,8 +62,8 @@
       </div>
     </div>
 
-    <button class="btn btn-primary" id="depositBtn">DEPOSIT COIN</button>
-    <a href="admin.html" class="btn btn-primary" id="adminLinkBtn" style="display:none; text-decoration:none; box-sizing:border-box;">⚙️ Buka Admin Panel</a>
+    <button class="btn btn-primary" id="depositBtn">Deposit Coin</button>
+    <a href="admin.html" class="btn btn-primary" id="adminLinkBtn" style="display:none; text-decoration:none; box-sizing:border-box;">Area Admin</a>
     <button class="btn btn-secondary" id="logoutBtn">Logout</button>
   </div>
 
@@ -70,7 +71,7 @@
   <div class="modal-overlay" id="depositModal">
     <div class="modal-box">
       <div class="deposit-form-view" id="depositFormView">
-        <div class="modal-title">Deposit Coin</div>
+        <div class="modal-title">DEPOSIT COIN</div>
         <div class="form-row">
           <label>Harga 1 coin setara Rp1.000 :)</label>
           <input type="number" id="coinInput" placeholder="misal: 10" min="1" max="50">
@@ -111,6 +112,24 @@
   let timerInterval = null;
   let currentOrderId = null;
 
+  // ----- BADGE ROLE: Admin (mahkota), Member (orang), Reseller (toko) -----
+  const BADGE_ICONS = {
+    admin: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2.5 18.5h19l1-9-6 4-4.5-7-4.5 7-6-4z"/><path d="M4 20h16v1.5H4z"/></svg>`,
+    member: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`,
+    reseller: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"></path><path d="M3 9a2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0"></path><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9"></path><path d="M9 21v-6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6"></path></svg>`,
+  };
+
+  const BADGE_LABELS = {
+    admin: 'Admin',
+    member: 'Member',
+    reseller: 'Reseller',
+  };
+
+  function setBadge(role) {
+    document.getElementById('profileBadgeIcon').innerHTML = BADGE_ICONS[role] || BADGE_ICONS.member;
+    document.getElementById('profileBadgeText').textContent = BADGE_LABELS[role] || 'Member';
+  }
+
   async function callDeposit(payload) {
     const res = await fetch(SUPABASE_URL + '/functions/v1/deposit', {
       method: 'POST',
@@ -146,8 +165,12 @@
     document.getElementById('profileCoin').textContent = session.coin ?? 0;
 
     if (session.isAdmin) {
-      document.getElementById('profileBadge').textContent = 'Admin';
+      setBadge('admin');
       document.getElementById('adminLinkBtn').style.display = 'block';
+    } else if (session.isReseller) {
+      setBadge('reseller');
+    } else {
+      setBadge('member');
     }
 
     document.getElementById('logoutBtn').onclick = () => {
@@ -199,8 +222,7 @@
 
     const { ok, data } = await callDeposit({ action: 'create', coinAmount });
 
-    btn.disabled = false;
-    btn.textContent = 'Bayar';
+    btn.textContent = 'Berhasil...';
 
     if (!ok) {
       errBox.textContent = data.error || 'Gagal membuat qris';
