@@ -31,8 +31,15 @@
   }
 
   function setActive(item) {
-    getItems().forEach(el => el.classList.remove('dock-active'));
-    if (item) item.classList.add('dock-active');
+    getItems().forEach(el => {
+      el.classList.remove('dock-active');
+      el.classList.remove('indicator-active');
+    });
+  
+    if (item) {
+      item.classList.add('dock-active');
+      item.classList.add('indicator-active');
+    }
   }
 
   // ----- TENTUKAN ITEM AKTIF BERDASARKAN HALAMAN SAAT INI -----
@@ -76,19 +83,19 @@
   items.forEach(item => {
     item.addEventListener('click', () => {
       if (item.tagName === 'A' && item.href) {
-        // Item ini pindah halaman -> simpan posisi asal buat animasi di halaman tujuan
         sessionStorage.setItem('dock_from_page', currentPage);
         return;
       }
 
-      // Item ini TIDAK pindah halaman (misal "Bantuan" yang cuma munculkan popup)
-      // -> geser indikator ke situ secara instan di halaman yang sama,
-      //    lalu kembalikan ke item halaman aktif setelah sesaat.
       if (item !== activeItem) {
+        // Tambah indicator-active ke item yang diklik
+        item.classList.add('indicator-active');
         setActive(item);
         moveIndicatorTo(item, true);
 
         setTimeout(() => {
+          // Hapus indicator-active dari item yang diklik
+          item.classList.remove('indicator-active');
           setActive(activeItem);
           moveIndicatorTo(activeItem, true);
         }, 1500);
