@@ -18,8 +18,8 @@
   .profile-badge svg { width: 13px; height: 13px; flex-shrink: 0; }
 
   .profile-stats { display: flex; gap: 10px; margin-bottom: 20px; }
-  .stat-card { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-  .stat-card svg { width: 24px; height: 24px; flex-shrink: 0; }
+  .stat-card { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; justify-content: flex-start; gap: 10px; }
+  .stat-card svg { width: 22px; height: 22px; flex-shrink: 0; }
   .stat-value-group { text-align: left; }
   .stat-value { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--accent); line-height: 1.1; }
   .stat-label { font-family: var(--mono); font-size: 11px; color: var(--subtext); margin-top: 2px; }
@@ -70,12 +70,14 @@
   .history-title { font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
   .history-title svg { width: 16px; height: 16px; color: var(--accent); }
   .history-empty { font-family: var(--mono); font-size: 12px; color: var(--subtext); text-align: center; padding: 16px 0; }
-  .history-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
-  .history-item:last-child { border-bottom: none; }
-  .history-date { font-family: var(--mono); font-size: 11px; color: var(--subtext); }
-  .history-coin { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 4px; }
-  .history-coin svg { width: 14px; height: 14px; }
-  .history-rupiah { font-family: var(--mono); font-size: 11px; color: var(--subtext); }
+  .history-item { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 10px; border-radius: 10px; background: var(--surface2); border: 1px solid var(--border); margin-bottom: 8px; }
+  .history-item:last-child { margin-bottom: 0; }
+  .history-left { display: flex; align-items: center; gap: 10px; }
+  .history-icon { width: 34px; height: 34px; border-radius: 50%; background: rgba(245, 184, 0, 0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .history-icon svg { width: 18px; height: 18px; }
+  .history-date { font-family: var(--mono); font-size: 11px; color: var(--subtext); margin-top: 2px; }
+  .history-coin { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--accent); }
+  .history-rupiah { font-family: var(--mono); font-size: 12px; color: var(--subtext); text-align: right; }
 
   /* MODAL DEPOSIT */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 900; align-items: center; justify-content: center; padding: 20px; }
@@ -255,9 +257,12 @@
       });
       return `
         <div class="history-item">
-          <div>
-            <div class="history-coin">${HISTORY_COIN_ICON.replace('viewBox="0 0 48 48"', 'viewBox="0 0 48 48" width="14" height="14"')} +${dep.coin_amount}</div>
-            <div class="history-date">${date}</div>
+          <div class="history-left">
+            <div class="history-icon">${HISTORY_COIN_ICON}</div>
+            <div>
+              <div class="history-coin">+${dep.coin_amount} Coin</div>
+              <div class="history-date">${date}</div>
+            </div>
           </div>
           <div class="history-rupiah">Rp${Number(dep.rupiah_amount).toLocaleString('id-ID')}</div>
         </div>
