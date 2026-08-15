@@ -42,7 +42,7 @@
   }
 </style>
 </head>
-<body>
+<body data-page="auth">
 
   <div id="loadingBox" class="admin-box" style="text-align:center; font-family: var(--mono); color: var(--subtext); margin-top: 60px;">
     Memeriksa akses admin...
@@ -51,7 +51,7 @@
   <div id="adminApp" class="hidden">
     <div class="admin-box">
       <button class="btn btn-secondary" id="logoutBtn">Logout</button>
-      <div class="admin-title">⚙️ Admin Panel — Barr Store</div>
+      <div class="admin-title">Admin Panel</div>
       <div class="admin-tabs">
         <button class="admin-tab active" data-tab="products">Produk</button>
         <button class="admin-tab" data-tab="banners">Banner</button>
@@ -114,11 +114,13 @@
     </div>
   </div>
 
-  <!-- DOCK BAR -->
-  <div class="dock-bar" id="dockBar">
-    <a href="index.html" class="dock-item" id="dockHome">
+  <!-- DOCK BAR (pill navbar dengan sliding indicator) -->
+  <nav class="dock-bar" id="dockBar">
+    <div class="dock-indicator" id="dockIndicator"></div>
+
+    <a href="index.html" class="dock-item" id="dockHome" data-page="beranda">
       <div class="dock-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 9l9-7 9 7"></path>
           <path d="M9 22V12h6v10"></path>
           <path d="M5 10v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10"></path>
@@ -126,12 +128,23 @@
       </div>
       <span class="dock-label">Beranda</span>
     </a>
-  </div>
+
+    <a href="profile.html" class="dock-item" id="dockAuth" data-page="auth">
+      <div class="dock-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </div>
+      <span class="dock-label">Profil</span>
+    </a>
+  </nav>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/auth-helper.js"></script>
 <script src="js/admin.js"></script>
+<script src="js/dock.js"></script>
 </body>
 </html>

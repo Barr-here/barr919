@@ -34,18 +34,14 @@
   .form-row input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--mono); font-size: 13px; box-sizing: border-box; background: var(--surface2); color: var(--text); }
   .deposit-hint { font-family: var(--mono); font-size: 11px; color: var(--subtext); margin-top: 6px; text-align: left; }
   .deposit-error { color: #d33; font-size: 12px; font-family: var(--mono); margin-top: 8px; min-height: 14px; }
-  #qrisImage { margin: 6px auto 8px; display: block; width: 236px; height: 236px; border-radius: 10px; background: #fff; padding: 8px; box-sizing: border-box; }
-  .deposit-amount { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); margin: 4px 0 2px; }
-  .deposit-status { font-family: var(--mono); font-size: 12px; color: var(--subtext); margin-bottom: 5px; }
-  .deposit-timer { font-family: var(--mono); font-size: 12px; color: var(--text); opacity: 0.7; margin-bottom: 0; }
+  #qrisCanvas { margin: 12px auto; display: block; border-radius: 10px; }
+  .deposit-amount { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); margin: 10px 0 4px; }
+  .deposit-status { font-family: var(--mono); font-size: 12px; color: var(--subtext); margin-bottom: 14px; }
+  .deposit-timer { font-family: var(--mono); font-size: 12px; color: var(--text); opacity: 0.7; }
   .close-modal-btn { background: none; border: none; color: var(--subtext); font-family: var(--mono); font-size: 12px; cursor: pointer; margin-top: 10px; text-decoration: underline; }
-  .qris-view { display: none; }
-  .qris-view.active { display: block; }
-  .deposit-form-view.hidden { display: none; }
-  .qris-footer { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 10px; line-height: 1.5; color: var(--subtext); }
 </style>
 </head>
-<body>
+<body data-page="auth">
 
   <div id="loadingBox" class="loading-text">Memuat profil...</div>
 
@@ -66,35 +62,36 @@
     <button class="btn btn-secondary" id="logoutBtn">Logout</button>
   </div>
 
-  <!-- MODAL DEPOSIT: FORM + QRIS DALAM SATU CONTAINER -->
+  <!-- MODAL: INPUT NOMINAL -->
   <div class="modal-overlay" id="depositModal">
     <div class="modal-box">
-      <div class="deposit-form-view" id="depositFormView">
-        <div class="modal-title">Deposit Coin</div>
-        <div class="form-row">
-          <label>Harga 1 coin setara Rp1.000 :)</label>
-          <input type="number" id="coinInput" placeholder="misal: 10" min="1" max="50">
-          <div class="deposit-hint" style="text-align: center;">Minimal 1 coin, maksimal 50 coin per transaksi yahh</div>
-        </div>
-        <div class="deposit-hint" id="totalPreview" style="text-align:center; font-size:13px;"></div>
-        <div class="deposit-error" id="depositFormError" style="min-height:0; margin-top:4px;"></div>
-        <button class="btn btn-primary" id="createDepositBtn">Bayar</button>
-        <button class="btn btn-danger" id="closeDepositModal" style="margin-top:4px;">Batal</button>
+      <div class="modal-title">Deposit Coin</div>
+      <div class="form-row">
+        <label>Jumlah Coin (1 coin = Rp1.000)</label>
+        <input type="number" id="coinInput" placeholder="misal: 10" min="1" max="50">
+        <div class="deposit-hint">Minimal 1 coin, maksimal 50 coin per transaksi yahh</div>
       </div>
+      <div class="deposit-hint" id="totalPreview" style="text-align:center; font-size:13px;"></div>
+      <button class="btn btn-primary" id="createDepositBtn">QRIS</button>
+      <div class="deposit-error" id="depositFormError"></div>
+      <button class="btn btn-danger" id="closeDepositModal" style="margin-top:0;">Batal</button>
+    </div>
+  </div>
 
-      <div class="qris-view" id="qrisView">
-        <div class="modal-title">SCAN UNTUK BAYAR</div>
-        <img id="qrisImage" alt="QRIS" width="236" height="236">
-        <div class="deposit-amount" id="qrisAmount">Rp0</div>
-        <div class="deposit-status" id="qrisStatus">Menunggu pembayaran...</div>
-        <div class="deposit-timer" id="qrisTimer"></div>
-        <button class="btn btn-danger" id="closeQrisModal" style="margin-top:4px;">Batalkan Pesanan</button>
-        <div class="qris-footer">Scan qris menggunakan aplikasi pembayaran yang mendukung qris. Jangan tutup halaman sampai pembayaran selesai</div>
-      </div>
+  <!-- MODAL: QRIS -->
+  <div class="modal-overlay" id="qrisModal">
+    <div class="modal-box">
+      <div class="modal-title">Scan untuk Bayar</div>
+      <div id="qrisContainer"></div>
+      <div class="deposit-amount" id="qrisAmount">Rp0</div>
+      <div class="deposit-status" id="qrisStatus">Menunggu pembayaran...</div>
+      <div class="deposit-timer" id="qrisTimer"></div>
+      <button class="btn btn-danger" id="closeQrisModal" style="margin-top:12px;">Batalkan Pesanan</button>
     </div>
   </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/auth-helper.js"></script>
@@ -156,22 +153,14 @@
 
   // ----- BUKA MODAL DEPOSIT -----
   document.getElementById('depositBtn').onclick = () => {
-    clearInterval(pollInterval);
-    clearInterval(timerInterval);
-    currentOrderId = null;
-
-    document.getElementById('depositFormView').classList.remove('hidden');
-    document.getElementById('qrisView').classList.remove('active');
     document.getElementById('coinInput').value = '';
     document.getElementById('totalPreview').textContent = '';
     document.getElementById('depositFormError').textContent = '';
     document.getElementById('depositModal').classList.add('show');
-    document.body.style.overflow = 'hidden';
   };
 
   document.getElementById('closeDepositModal').onclick = () => {
     document.getElementById('depositModal').classList.remove('show');
-    document.body.style.overflow = '';
   };
 
   document.getElementById('coinInput').addEventListener('input', (e) => {
@@ -194,77 +183,47 @@
     }
 
     btn.disabled = true;
-    btn.textContent = 'Mengambil qris...';
+    btn.textContent = 'Membuat QRIS...';
 
     const { ok, data } = await callDeposit({ action: 'create', coinAmount });
 
-    btn.textContent = 'Berhasil...';
+    btn.disabled = false;
+    btn.textContent = 'Buat QRIS';
 
     if (!ok) {
-      errBox.textContent = data.error || 'Gagal membuat qris';
+      errBox.textContent = data.error || 'Gagal membuat QRIS';
       return;
     }
 
-    await openQrisModal(data);
+    document.getElementById('depositModal').classList.remove('show');
+    openQrisModal(data);
   };
 
   let currentOrderId = null;
 
   // ----- MODAL QRIS + POLLING -----
   async function openQrisModal(deposit) {
-    clearInterval(pollInterval);
-    clearInterval(timerInterval);
     currentOrderId = deposit.orderId;
 
-    const modal = document.getElementById('depositModal');
-    const formView = document.getElementById('depositFormView');
-    const qrisView = document.getElementById('qrisView');
-    const qrImage = document.getElementById('qrisImage');
-
-    if (!deposit.paymentNumber) {
-      console.error('paymentNumber kosong:', deposit);
-      currentOrderId = null;
-      Swal.fire({
-        icon: 'error',
-        title: 'Qris tidak tersedia',
-        text: 'Data qris dari server tidak berisi payment number',
-        ...swalTheme,
-      });
-      return;
-    }
-
-    // QR dibuat sebagai gambar, jadi tidak membutuhkan canvas atau library QRCode.
-    qrImage.removeAttribute('src');
-    qrImage.src =
-      'https://api.qrserver.com/v1/create-qr-code/?size=236x236&margin=8&data=' +
-      encodeURIComponent(deposit.paymentNumber);
-
+    const canvas = document.getElementById('qrisCanvas');
     try {
-      await new Promise((resolve, reject) => {
-        qrImage.onload = resolve;
-        qrImage.onerror = reject;
-      });
+      await QRCode.toCanvas(canvas, deposit.paymentNumber, { width: 220, margin: 1 });
     } catch (qrErr) {
-      console.error('Gagal memuat gambar qris:', qrErr);
-      currentOrderId = null;
+      console.error('Gagal generate QR code:', qrErr);
       Swal.fire({
         icon: 'error',
         title: 'Gagal menampilkan QR',
-        text: 'Layanan qr image tidak dapat diakses. Coba lagi nanti',
+        text: 'Terjadi kesalahan saat membuat QR code. Coba lagi.',
         ...swalTheme,
       });
       return;
     }
 
-    document.getElementById('qrisAmount').textContent = 'Rp' + Number(deposit.totalPayment || 0).toLocaleString('id-ID');
+    document.getElementById('qrisAmount').textContent = 'Rp' + deposit.totalPayment.toLocaleString('id-ID');
     document.getElementById('qrisStatus').textContent = 'Menunggu pembayaran...';
+    document.getElementById('qrisModal').classList.add('show');
 
-    // QR berhasil dibuat -> form deposit diganti menjadi tampilan QRIS
-    formView.classList.add('hidden');
-    qrisView.classList.add('active');
-    modal.classList.add('show');
-
-    let secondsLeft = Number(deposit.expiresInSeconds) || 600;
+    let secondsLeft = deposit.expiresInSeconds;
     updateTimerText(secondsLeft);
 
     timerInterval = setInterval(() => {
@@ -282,9 +241,7 @@
         clearInterval(pollInterval);
         clearInterval(timerInterval);
         currentOrderId = null;
-        document.getElementById('depositModal').classList.remove('show');
-        document.getElementById('qrisView').classList.remove('active');
-        document.getElementById('depositFormView').classList.remove('hidden');
+        document.getElementById('qrisModal').classList.remove('show');
         document.getElementById('profileCoin').textContent = data.coin;
 
         Swal.fire({
@@ -297,14 +254,12 @@
         clearInterval(pollInterval);
         clearInterval(timerInterval);
         currentOrderId = null;
-        document.getElementById('depositModal').classList.remove('show');
-        document.getElementById('qrisView').classList.remove('active');
-        document.getElementById('depositFormView').classList.remove('hidden');
+        document.getElementById('qrisModal').classList.remove('show');
 
         Swal.fire({
           icon: 'error',
           title: 'Waktu Habis',
-          text: 'Transaksi kadaluarsa. Silakan buat transaksi baru',
+          text: 'Transaksi kadaluarsa. Silakan buat transaksi baru.',
           ...swalTheme,
         });
       }
@@ -319,7 +274,7 @@
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
     document.getElementById('qrisTimer').textContent =
-      `Berlaku sampai ${m.toString().padStart(2, '0')} menit ${s.toString().padStart(2, '0')} detik lagi`;
+      `Berlaku sampai ${m}:${s.toString().padStart(2, '0')} lagi`;
   }
 
   document.getElementById('closeQrisModal').onclick = async () => {
@@ -333,29 +288,21 @@
 
       btn.disabled = false;
       btn.textContent = 'Batalkan Pesanan';
-      
-      Swal.fire({
-        icon: 'success',
-        title: 'Cancel Payment',
-        text: `Deposit sebelumnya berhasil di batalkan`,
-        ...swalTheme,
-      });
     }
 
     clearInterval(pollInterval);
     clearInterval(timerInterval);
     currentOrderId = null;
-    document.getElementById('depositModal').classList.remove('show');
-    document.getElementById('qrisView').classList.remove('active');
-    document.getElementById('depositFormView').classList.remove('hidden');
-    document.body.style.overflow = '';
+    document.getElementById('qrisModal').classList.remove('show');
   };
 </script>
 
-  <div class="dock-bar" id="dockBar">
-    <a href="index.html" class="dock-item" id="dockHome">
+  <nav class="dock-bar" id="dockBar">
+    <div class="dock-indicator" id="dockIndicator"></div>
+
+    <a href="index.html" class="dock-item" id="dockHome" data-page="beranda">
       <div class="dock-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 9l9-7 9 7"></path>
           <path d="M9 22V12h6v10"></path>
           <path d="M5 10v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10"></path>
@@ -363,7 +310,18 @@
       </div>
       <span class="dock-label">Beranda</span>
     </a>
-  </div>
 
+    <div class="dock-item" id="dockProfil" data-page="auth">
+      <div class="dock-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </div>
+      <span class="dock-label">Profil</span>
+    </div>
+  </nav>
+
+<script src="js/dock.js"></script>
 </body>
 </html>
