@@ -1,8 +1,5 @@
-// ============================================================
 // ADMIN PANEL — LOGIN & CRUD
-// ============================================================
-
-// ----- HELPER: POPUP BERTEMA (menggantikan alert/confirm bawaan browser) -----
+// HELPER: POPUP BERTEMA (menggantikan alert/confirm bawaan browser)
 const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 const swalTheme = {
@@ -90,7 +87,7 @@ async function checkSession() {
 
   if (!session.isAdmin) {
     // Login tapi bukan admin -> tendang balik ke beranda
-    await showError('Kamu tidak punya akses ke halaman ini.');
+    await showError('Kamu tidak punya akses ke halaman ini');
     window.location.href = 'index.html';
     return;
   }
@@ -122,10 +119,7 @@ document.querySelectorAll('.admin-tab').forEach(tab => {
   };
 });
 
-// ============================================================
 // PRODUCTS
-// ============================================================
-
 async function loadProducts() {
   const list = document.getElementById('p_list');
   list.textContent = 'Memuat...';
@@ -183,6 +177,9 @@ function editProduct(item) {
 
 document.getElementById('p_add').onclick = async () => {
   const btn = document.getElementById('p_add');
+  const isEditing = !!btn.dataset.editingId;
+  const originalText = isEditing ? '💾 Simpan Perubahan' : '+ Tambah Produk';
+
   const payload = {
     type: document.getElementById('p_type').value.trim(),
     title: document.getElementById('p_title').value.trim(),
@@ -195,14 +192,19 @@ document.getElementById('p_add').onclick = async () => {
 
   if (!payload.title) { showError('Judul wajib diisi'); return; }
 
+  btn.disabled = true;
+  btn.textContent = isEditing ? 'Menyimpan...' : 'Menambahkan...';
+
   let result;
-  if (btn.dataset.editingId) {
+  if (isEditing) {
     result = await callAdminData('update', 'products', { id: btn.dataset.editingId, payload });
     delete btn.dataset.editingId;
-    btn.textContent = '+ Tambah Produk';
   } else {
     result = await callAdminData('insert', 'products', { payload });
   }
+
+  btn.disabled = false;
+  btn.textContent = '+ Tambah Produk';
 
   if (!result.ok) { showError('Gagal simpan: ' + (result.data.error || '')); return; }
 
@@ -213,10 +215,7 @@ document.getElementById('p_add').onclick = async () => {
   loadProducts();
 };
 
-// ============================================================
 // BANNERS
-// ============================================================
-
 async function loadBanners() {
   const list = document.getElementById('b_list');
   list.textContent = 'Memuat...';
@@ -273,6 +272,8 @@ function editBanner(item) {
 
 document.getElementById('b_add').onclick = async () => {
   const btn = document.getElementById('b_add');
+  const isEditing = !!btn.dataset.editingId;
+
   const payload = {
     image: document.getElementById('b_image').value.trim(),
     title: document.getElementById('b_title').value.trim(),
@@ -284,14 +285,19 @@ document.getElementById('b_add').onclick = async () => {
 
   if (!payload.title || !payload.image) { showError('Judul dan gambar wajib diisi'); return; }
 
+  btn.disabled = true;
+  btn.textContent = isEditing ? 'Menyimpan...' : 'Menambahkan...';
+
   let result;
-  if (btn.dataset.editingId) {
+  if (isEditing) {
     result = await callAdminData('update', 'banners', { id: btn.dataset.editingId, payload });
     delete btn.dataset.editingId;
-    btn.textContent = '+ Tambah Banner';
   } else {
     result = await callAdminData('insert', 'banners', { payload });
   }
+
+  btn.disabled = false;
+  btn.textContent = '+ Tambah Banner';
 
   if (!result.ok) { showError('Gagal simpan: ' + (result.data.error || '')); return; }
 
@@ -301,10 +307,7 @@ document.getElementById('b_add').onclick = async () => {
   loadBanners();
 };
 
-// ============================================================
 // TESTIMONIALS
-// ============================================================
-
 async function loadTestimonials() {
   const list = document.getElementById('t_list');
   list.textContent = 'Memuat...';
@@ -360,6 +363,8 @@ function editTestimonial(item) {
 
 document.getElementById('t_add').onclick = async () => {
   const btn = document.getElementById('t_add');
+  const isEditing = !!btn.dataset.editingId;
+
   const payload = {
     image: document.getElementById('t_image').value.trim(),
     date: document.getElementById('t_date').value.trim(),
@@ -370,14 +375,19 @@ document.getElementById('t_add').onclick = async () => {
 
   if (!payload.title || !payload.image) { showError('Judul dan gambar wajib diisi'); return; }
 
+  btn.disabled = true;
+  btn.textContent = isEditing ? 'Menyimpan...' : 'Menambahkan...';
+
   let result;
-  if (btn.dataset.editingId) {
+  if (isEditing) {
     result = await callAdminData('update', 'testimonials', { id: btn.dataset.editingId, payload });
     delete btn.dataset.editingId;
-    btn.textContent = '+ Tambah Testimoni';
   } else {
     result = await callAdminData('insert', 'testimonials', { payload });
   }
+
+  btn.disabled = false;
+  btn.textContent = '+ Tambah Testimoni';
 
   if (!result.ok) { showError('Gagal simpan: ' + (result.data.error || '')); return; }
 
