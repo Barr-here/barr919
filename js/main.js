@@ -737,7 +737,7 @@ document.addEventListener('click', (e) => {
     // Belum login -> top bar default
     topbarAuthLink.href = 'login.html';
     topbarName.textContent = 'Login';
-    topbarTag.textContent = '⌗ (coin: 0)';
+    topbarTag.textContent = 'Coin: 0';
 
     topbarAvatarImg.style.display = 'block';
     topbarAvatarInitial.style.display = 'none';
