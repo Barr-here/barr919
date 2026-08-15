@@ -1,5 +1,5 @@
 // ADMIN PANEL — LOGIN & CRUD
-// HELPER: POPUP BERTEMA (menggantikan alert/confirm bawaan browser)
+// ----- HELPER: POPUP BERTEMA (menggantikan alert/confirm bawaan browser) -----
 const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 const swalTheme = {
@@ -87,7 +87,7 @@ async function checkSession() {
 
   if (!session.isAdmin) {
     // Login tapi bukan admin -> tendang balik ke beranda
-    await showError('Kamu tidak punya akses ke halaman ini');
+    await showError('Kamu tidak punya akses ke halaman ini.');
     window.location.href = 'index.html';
     return;
   }
@@ -318,6 +318,15 @@ async function loadTestimonials() {
     .order('sort_order', { ascending: true });
 
   if (error) { list.textContent = 'Error: ' + error.message; return; }
+
+  // Update hint "urutan terakhir" di form tambah testimoni
+  const hintBox = document.getElementById('t_sort_hint');
+  if (data.length > 0) {
+    const lastSort = data[data.length - 1].sort_order;
+    hintBox.textContent = `Urutan terakhir sekarang: ${lastSort}`;
+  } else {
+    hintBox.textContent = 'Belum ada testimoni, mulai dari urutan 1';
+  }
 
   list.innerHTML = '';
   data.forEach(item => {
