@@ -95,6 +95,18 @@
       border: 2px solid var(--accent);
     }
 
+    .avatar-initial {
+      background: var(--accent);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 16px;
+      font-weight: 700;
+      border: none;
+    }
+
     .brand-name {
       font-family: var(--mono);
       font-size: 14px;
