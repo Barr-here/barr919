@@ -161,10 +161,6 @@
 <script>
   // ----- TOGGLE SHOW/HIDE PASSWORD -----
   document.querySelectorAll('.toggle-password').forEach(btn => {
-    // Cegah tombol mencuri fokus dari input saat ditekan, supaya keyboard mobile tidak tertutup
-    btn.addEventListener('mousedown', (e) => e.preventDefault());
-    btn.addEventListener('touchstart', (e) => e.preventDefault());
-
     btn.addEventListener('click', () => {
       const input = document.getElementById(btn.dataset.target);
       const isHidden = input.type === 'password';
