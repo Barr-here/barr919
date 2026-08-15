@@ -163,7 +163,7 @@
 
     currentSession = session;
 
-    // Set profile data dulu (sambil loading)
+    // Set profile data
     document.getElementById('profileEmail').textContent = session.email;
     document.getElementById('avatarInitial').textContent = session.email.charAt(0).toUpperCase();
     document.getElementById('profileCoin').textContent = session.coin ?? 0;
@@ -181,23 +181,14 @@
       logoutUser();
     };
 
-    const checkLoader = setInterval(() => {
-      const loader = document.getElementById('pageLoader');
-   
-      if (!loader || loader.classList.contains('hidden')) {
-        clearInterval(checkLoader);
-      
-        // Tampilkan profile dengan fade in
-        const profileBox = document.getElementById('profileBox');
-        profileBox.style.display = 'block';
-        profileBox.style.opacity = '0';
-        profileBox.style.transition = 'opacity 0.3s ease';
-      
-        requestAnimationFrame(() => {
-          profileBox.style.opacity = '1';
-        });
-      }
-    }, 100);
+    const profileBox = document.getElementById('profileBox');
+    profileBox.style.display = 'block';
+    profileBox.style.opacity = '0';
+    profileBox.style.transition = 'opacity 0.3s ease';
+  
+    requestAnimationFrame(() => {
+      profileBox.style.opacity = '1';
+    });
   })();
 
   // ----- BUKA MODAL DEPOSIT -----
