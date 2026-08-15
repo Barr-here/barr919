@@ -17,13 +17,13 @@
 
   <!-- TOP BAR -->
   <div class="topbar">
-    <div class="topbar-left">
+    <a class="topbar-left" href="login.html" id="topbarAuthLink" style="text-decoration:none; color:inherit;">
       <img class="avatar" src="https://c.termai.cc/i180/IUA.jpg" alt="Barr Store">
       <div>
-        <div class="brand-name">Barr Store</div>
-        <div class="brand-tag">⌗ Selamat datang...</div>
+        <div class="brand-name" id="topbarName">Login</div>
+        <div class="brand-tag" id="topbarTag">⌗ (coin: 0)</div>
       </div>
-    </div>
+    </a>
     <div class="topbar-right">
       <div class="status-dot"></div>
       <div class="status-text">online</div>
@@ -288,15 +288,14 @@
       <span class="dock-label">Beranda</span>
     </a>
 
-    <a href="login.html" class="dock-item" id="dockAuth" data-page="auth">
+    <a href="profile.html" class="dock-item" id="dockAuth" data-page="auth">
       <div class="dock-icon" id="dockAuthIcon">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-          <polyline points="10 17 15 12 10 7"></polyline>
-          <line x1="15" y1="12" x2="3" y2="12"></line>
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
         </svg>
       </div>
-      <span class="dock-label" id="dockAuthLabel">Login</span>
+      <span class="dock-label" id="dockAuthLabel">Profil</span>
     </a>
 
     <div class="dock-item" id="dockBantuan" data-page="bantuan">
