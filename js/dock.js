@@ -72,11 +72,26 @@
     moveIndicatorTo(dockBar.querySelector('.dock-active'), true);
   };
 
-  // ----- SIMPAN HALAMAN ASAL SEBELUM PINDAH -----
+  // ----- KLIK DOCK ITEM -----
   items.forEach(item => {
     item.addEventListener('click', () => {
       if (item.tagName === 'A' && item.href) {
+        // Item ini pindah halaman -> simpan posisi asal buat animasi di halaman tujuan
         sessionStorage.setItem('dock_from_page', currentPage);
+        return;
+      }
+
+      // Item ini TIDAK pindah halaman (misal "Bantuan" yang cuma munculkan popup)
+      // -> geser indikator ke situ secara instan di halaman yang sama,
+      //    lalu kembalikan ke item halaman aktif setelah sesaat.
+      if (item !== activeItem) {
+        setActive(item);
+        moveIndicatorTo(item, true);
+
+        setTimeout(() => {
+          setActive(activeItem);
+          moveIndicatorTo(activeItem, true);
+        }, 1500);
       }
     });
   });
