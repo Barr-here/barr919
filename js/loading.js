@@ -5,6 +5,9 @@
 
   const MIN_LOADING_TIME = 3000;
   const startTime = Date.now();
+  
+  document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
 
   function hideLoader() {
     const elapsedTime = Date.now() - startTime;
@@ -30,6 +33,9 @@
       pageLoader.style.opacity = '0';
       setTimeout(() => {
         pageLoader.classList.add('hidden');
+        
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
       }, 400);
     }
   }, 5000);
