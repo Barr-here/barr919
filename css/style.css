@@ -34,27 +34,27 @@
     }
     
     html.dark {
-      /* NEO-BRUTALISM — THEME GELAP */
-      --bg: #111111;
-      --surface: #202020;
-      --surface2: #292929;
-      --border: #8F9BA8;
-      --border2: #8F9BA8;
-      --text: #F5F5F5;
-      --subtext: #B8B8B8;
-      --accent: #00E5FF;
-      --accent2: #8B5CF6;
-      --accent3: #FF4FD8;
-      --accent-glow: rgba(0,229,255,0.25);
-      --get: #8B5CF6;
-      --get-bg: #8B5CF6;
-      --post: #FF4FD8;
-      --post-bg: #FF4FD8;
-      --product: #111111;
-      --product-bg: #00E5FF;
-      --shadow: var(--shadow-off) var(--shadow-off) 0 0 #8F9BA8;
-      --shadow2: 3px 3px 0 0 #8F9BA8;
-      --shadow-sm: 2px 2px 0 0 #8F9BA8;
+      /* NEO-BRUTALISM — THEME GELAP (Coklat Hangat) */
+      --bg: #2B2116;
+      --surface: #3A2E1F;
+      --surface2: #453626;
+      --border: #E8DCC8;
+      --border2: #E8DCC8;
+      --text: #F5EEE0;
+      --subtext: #C9B8A0;
+      --accent: #FF8A3D;
+      --accent2: #A78BFA;
+      --accent3: #FF6FB5;
+      --accent-glow: rgba(255,138,61,0.28);
+      --get: #A78BFA;
+      --get-bg: #A78BFA;
+      --post: #FF6FB5;
+      --post-bg: #FF6FB5;
+      --product: #2B2116;
+      --product-bg: #FF8A3D;
+      --shadow: var(--shadow-off) var(--shadow-off) 0 0 #E8DCC8;
+      --shadow2: 3px 3px 0 0 #E8DCC8;
+      --shadow-sm: 2px 2px 0 0 #E8DCC8;
     }
 
     body {
