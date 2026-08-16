@@ -48,23 +48,59 @@ document.getElementById('openQrisFromDonasi').onclick = () => {
   document.body.style.overflow = '';
 };
 
-// MUSIC TOGGLE
+const btn = document.getElementById('themeBtn');
 const musicBtn = document.getElementById('musicBtn');
 const bgMusic = document.getElementById('bgMusic');
 
-musicBtn.innerHTML = getSvg('not');
+function getThemeColor() {
+  return document.documentElement.classList.contains('dark')
+    ? '#ffffff'
+    : '#111111';
+}
+
+// MUSIC
+musicBtn.innerHTML = getSvg('not', getThemeColor());
+
 let playing = false;
 
 musicBtn.onclick = () => {
-
   if (playing) {
     bgMusic.pause();
-    musicBtn.innerHTML = getSvg('not');
+    musicBtn.innerHTML = getSvg('not', getThemeColor());
   } else {
     bgMusic.play();
-    musicBtn.innerHTML = getSvg('song');
+    musicBtn.innerHTML = getSvg('song', getThemeColor());
   }
+
   playing = !playing;
+};
+
+
+// THEME
+function updateThemeIcon() {
+  const dark = document.documentElement.classList.contains('dark');
+
+  btn.innerHTML = dark
+    ? getSvg('sun', '#ffffff')
+    : getSvg('moon', '#111111');
+
+  // Update warna icon music juga
+  musicBtn.innerHTML = getSvg(
+    playing ? 'song' : 'not',
+    dark ? '#ffffff' : '#111111'
+  );
+}
+
+updateThemeIcon();
+
+btn.onclick = () => {
+  document.documentElement.classList.toggle('dark');
+
+  const dark = document.documentElement.classList.contains('dark');
+
+  updateThemeIcon();
+
+  localStorage.setItem('theme', dark ? 'dark' : 'light');
 };
 
 // ============================================================
@@ -420,24 +456,6 @@ supabaseClient
     buildTags();
 
   });
-
-
-//THEME TOGGLE
-const btn = document.getElementById('themeBtn');
-btn.innerHTML = document.documentElement.classList.contains('dark')
-  ? getSvg('sun')
-  : getSvg('moon');
-
-btn.onclick = () => {
-  document.documentElement.classList.toggle('dark');
-
-  const dark = document.documentElement.classList.contains('dark');
-  btn.innerHTML = dark
-    ? getSvg('sun')
-    : getSvg('moon');
-
-  localStorage.setItem('theme', dark ? 'dark' : 'light');
-};
 
 // ============================================================
 // LOGIN HINT POPUP (tampil 1x saja)
