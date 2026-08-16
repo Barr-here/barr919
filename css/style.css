@@ -37,11 +37,11 @@
       /* NEO-BRUTALISM — THEME GELAP */
       --bg: #111111;
       --surface: #202020;
-      --surface2: #2a2a2a;
-      --border: #FFFFFF;
-      --border2: #FFFFFF;
+      --surface2: #292929;
+      --border: #E8E8E8;
+      --border2: #E8E8E8;
       --text: #F5F5F5;
-      --subtext: #c9c9c9;
+      --subtext: #B8B8B8;
       --accent: #C6FF00;
       --accent2: #8B5CF6;
       --accent3: #FF4FD8;
@@ -52,9 +52,9 @@
       --post-bg: #FF4FD8;
       --product: #111111;
       --product-bg: #C6FF00;
-      --shadow: var(--shadow-off) var(--shadow-off) 0 0 #FFFFFF;
-      --shadow2: 3px 3px 0 0 #FFFFFF;
-      --shadow-sm: 2px 2px 0 0 #FFFFFF;
+      --shadow: var(--shadow-off) var(--shadow-off) 0 0 #E8E8E8;
+      --shadow2: 3px 3px 0 0 #E8E8E8;
+      --shadow-sm: 2px 2px 0 0 #E8E8E8;
     }
 
     body {
@@ -151,7 +151,7 @@
 
     /* THEME BTN */
     .theme-btn {
-      background: var(--accent3);
+      background: var(--accent);
       border: 2.5px solid var(--border);
       border-radius: var(--radius);
       padding: 5px 10px;
@@ -437,7 +437,7 @@
     .category-header {
       width: 100%;
       max-width: 520px;
-      background: var(--accent3);
+      background: var(--accent);
       border: var(--bw) solid var(--border);
       border-radius: var(--radius);
       padding: 14px 18px;
@@ -724,8 +724,8 @@
       bottom: 78px;
       left: 50%;
       transform: translateX(-50%) translateY(8px);
-      background: var(--accent3);
-      color: #000000;
+      background: var(--accent2);
+      color: #ffffff;
       border: var(--bw) solid var(--border);
       padding: 10px 14px;
       border-radius: var(--radius);
@@ -751,7 +751,7 @@
       transform: translateX(-50%) rotate(45deg);
       width: 12px;
       height: 12px;
-      background: var(--accent3);
+      background: var(--accent2);
       border-right: var(--bw) solid var(--border);
       border-bottom: var(--bw) solid var(--border);
     }
@@ -1355,9 +1355,9 @@
 
 .qris-btn:hover {
 
-  background: var(--accent3);
+  background: var(--accent2);
 
-  color: #000000;
+  color: #ffffff;
 
 }
 
@@ -1542,7 +1542,7 @@
   background: linear-gradient(
     90deg,
     var(--surface2) 25%,
-    var(--accent3) 50%,
+    var(--accent2) 50%,
     var(--surface2) 75%
   );
   background-size: 400px 100%;
