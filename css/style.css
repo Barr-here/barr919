@@ -166,7 +166,7 @@
       box-shadow: 5px 5px 0 0 var(--border);
     }
     .theme-btn:active {
-      transform: translate(0,0);
+      transform: translate(2px,2px);
       box-shadow: 0 0 0 0 var(--border);
     }
     
@@ -204,8 +204,13 @@
     }
 
     .banner-card:hover {
-      transform: translate(-3px,-3px);
-      box-shadow: 8px 8px 0 0 var(--border);
+      transform: translate(-2px,-2px);
+      box-shadow: 7px 7px 0 0 var(--border);
+    }
+
+    .banner-card:active {
+      transform: translate(5px,5px);
+      box-shadow: 0 0 0 0 var(--border);
     }
 
     /* IMAGE */
@@ -391,7 +396,7 @@
 }
 
 .popup-btn:active {
-  transform: translate(0,0);
+  transform: translate(2px,2px);
   box-shadow: 0 0 0 0 var(--border);
 }
 
@@ -520,8 +525,13 @@
     }
 
     .card:hover {
-      transform: translate(-3px,-3px);
-      box-shadow: 7px 7px 0 0 var(--border);
+      transform: translate(-2px,-2px);
+      box-shadow: 5px 5px 0 0 var(--border);
+    }
+
+    .card:active {
+      transform: translate(3px,3px);
+      box-shadow: 0 0 0 0 var(--border);
     }
 
     .card-top {
@@ -654,6 +664,11 @@
     .expand-btn:hover {
       transform: translate(-2px,-2px);
       box-shadow: 4px 4px 0 0 var(--border);
+    }
+
+    .expand-btn:active {
+      transform: translate(2px,2px);
+      box-shadow: 0 0 0 0 var(--border);
     }
     
     .expand-footer {
@@ -836,6 +851,11 @@
       transform: translate(-2px,-2px);
       box-shadow: 4px 4px 0 0 var(--border);
     }
+
+    .tag-btn:active {
+      transform: translate(2px,2px);
+      box-shadow: 0 0 0 0 var(--border);
+    }
     
     .tags-overlay {
       position: fixed;
@@ -892,9 +912,16 @@
 
 .mini-card:hover {
 
-  transform: translate(-3px,-3px);
+  transform: translate(-2px,-2px);
 
-  box-shadow: 6px 6px 0 0 var(--border);
+  box-shadow: 5px 5px 0 0 var(--border);
+}
+
+.mini-card:active {
+
+  transform: translate(3px,3px);
+
+  box-shadow: 0 0 0 0 var(--border);
 }
 
   /* TEXT */
@@ -1032,6 +1059,11 @@
 .testi-close:hover {
   transform: translate(-2px,-2px);
   box-shadow: 4px 4px 0 0 var(--border);
+}
+
+.testi-close:active {
+  transform: translate(2px,2px);
+  box-shadow: 0 0 0 0 var(--border);
 }
 
 /* SLIDER */
@@ -1201,9 +1233,17 @@
 
 .donation-card:hover {
 
-  transform: translate(-3px,-3px);
+  transform: translate(-2px,-2px);
 
-  box-shadow: 8px 8px 0 0 var(--border);
+  box-shadow: 7px 7px 0 0 var(--border);
+
+}
+
+.donation-card:active {
+
+  transform: translate(5px,5px);
+
+  box-shadow: 0 0 0 0 var(--border);
 
 }
 
@@ -1296,7 +1336,7 @@
 }
 
 .donation-btn:active {
-  transform: translate(0,0);
+  transform: translate(2px,2px);
   box-shadow: 0 0 0 0 var(--border);
 }
 
