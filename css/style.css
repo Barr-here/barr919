@@ -860,30 +860,24 @@
 
 /* MINI CARD */
 .mini-card {
-
   position: relative;
-
   background: var(--surface);
-
   border: var(--bw) solid var(--border);
-
   border-radius: var(--radius);
-
   padding: 10px;
-
   min-height: 60px;
-
   overflow: hidden;
-
   cursor: pointer;
-
+  color: var(--text);
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
-
   box-shadow: var(--shadow2);
-
   backdrop-filter: none;
+}
+
+.mini-card svg {
+  color: inherit;
 }
 
 .mini-card:hover {
