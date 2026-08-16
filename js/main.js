@@ -48,27 +48,23 @@ document.getElementById('openQrisFromDonasi').onclick = () => {
   document.body.style.overflow = '';
 };
 
-// ============================================================
 // MUSIC TOGGLE
-// ============================================================
-
 const musicBtn = document.getElementById('musicBtn');
 const bgMusic = document.getElementById('bgMusic');
 
+musicBtn.innerHTML = getSvg('not');
 let playing = false;
 
 musicBtn.onclick = () => {
 
   if (playing) {
     bgMusic.pause();
-    musicBtn.textContent = '🎵';
+    musicBtn.innerHTML = getSvg('not');
   } else {
     bgMusic.play();
-    musicBtn.textContent = '🔊';
+    musicBtn.innerHTML = getSvg('song');
   }
-
   playing = !playing;
-
 };
 
 // ============================================================
@@ -426,27 +422,21 @@ supabaseClient
   });
 
 
-// ============================================================
-// THEME TOGGLE
-// ============================================================
-
+//THEME TOGGLE
 const btn = document.getElementById('themeBtn');
+btn.innerHTML = document.documentElement.classList.contains('dark')
+  ? getSvg('sun')
+  : getSvg('moon');
 
-// Set ikon awal sesuai tema yang sudah diterapkan js/theme.js
-btn.textContent = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
-
-// toggle theme
 btn.onclick = () => {
-
   document.documentElement.classList.toggle('dark');
 
   const dark = document.documentElement.classList.contains('dark');
+  btn.innerHTML = dark
+    ? getSvg('sun')
+    : getSvg('moon');
 
-  btn.textContent = dark ? '☀️' : '🌙';
-
-  // simpan theme
   localStorage.setItem('theme', dark ? 'dark' : 'light');
-
 };
 
 // ============================================================
