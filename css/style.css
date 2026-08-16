@@ -52,9 +52,9 @@
       --post-bg: #FF6FB5;
       --product: #2B2116;
       --product-bg: #FF8A3D;
-      --shadow: var(--shadow-off) var(--shadow-off) 0 0 #E8DCC8;
-      --shadow2: 3px 3px 0 0 #E8DCC8;
-      --shadow-sm: 2px 2px 0 0 #E8DCC8;
+      --shadow: var(--shadow-off) var(--shadow-off) 0 0 var(--border);
+      --shadow2: 3px 3px 0 0 var(--border);
+      --shadow-sm: 2px 2px 0 0 var(--border);
     }
 
     body {
