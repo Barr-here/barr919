@@ -6,23 +6,23 @@
 
     :root {
       /* NEO-BRUTALISM — THEME TERANG */
-      --bg: #FEFDF0;
+      --bg: #FFF6E5;
       --surface: #FFFFFF;
-      --surface2: #FFF9DB;
-      --border: #000000;
-      --border2: #000000;
-      --text: #000000;
+      --surface2: #FFF0D4;
+      --border: #111111;
+      --border2: #111111;
+      --text: #111111;
       --subtext: #3a3a3a;
-      --accent: #FF4E4E;
-      --accent2: #5843E5;
-      --accent3: #16E2AA;
-      --accent-glow: rgba(255,78,78,0.25);
-      --get: #16E2AA;
-      --get-bg: #16E2AA;
-      --post: #5843E5;
-      --post-bg: #5843E5;
-      --product: #000000;
-      --product-bg: #FFD000;
+      --accent: #FFD43B;
+      --accent2: #4D7CFE;
+      --accent3: #FF5C8A;
+      --accent-glow: rgba(255,212,59,0.3);
+      --get: #4D7CFE;
+      --get-bg: #4D7CFE;
+      --post: #FF5C8A;
+      --post-bg: #FF5C8A;
+      --product: #111111;
+      --product-bg: #FFD43B;
       --mono: 'JetBrains Mono', monospace;
       --sans: 'DM Sans', sans-serif;
       --bw: 3px;
@@ -30,33 +30,31 @@
       --shadow: var(--shadow-off) var(--shadow-off) 0 0 var(--border);
       --shadow2: 3px 3px 0 0 var(--border);
       --shadow-sm: 2px 2px 0 0 var(--border);
-      --grid-color: rgba(0,0,0,0.05);
       --radius: 0px;
     }
 
     html.dark {
       /* NEO-BRUTALISM — THEME GELAP */
-      --bg: #121214;
-      --surface: #1b1b1e;
-      --surface2: #232326;
+      --bg: #111111;
+      --surface: #202020;
+      --surface2: #2a2a2a;
       --border: #FFFFFF;
       --border2: #FFFFFF;
-      --text: #FFFFFF;
-      --subtext: #c9c9cf;
-      --accent: #FFD000;
-      --accent2: #FF66C4;
-      --accent3: #00F0FF;
-      --accent-glow: rgba(255,208,0,0.2);
-      --get: #00F0FF;
-      --get-bg: #00F0FF;
-      --post: #FF66C4;
-      --post-bg: #FF66C4;
-      --product: #121214;
-      --product-bg: #FFD000;
-      --shadow: var(--shadow-off) var(--shadow-off) 0 0 #000000;
-      --shadow2: 3px 3px 0 0 #000000;
-      --shadow-sm: 2px 2px 0 0 #000000;
-      --grid-color: rgba(255,255,255,0.05);
+      --text: #F5F5F5;
+      --subtext: #c9c9c9;
+      --accent: #C6FF00;
+      --accent2: #8B5CF6;
+      --accent3: #FF4FD8;
+      --accent-glow: rgba(198,255,0,0.25);
+      --get: #8B5CF6;
+      --get-bg: #8B5CF6;
+      --post: #FF4FD8;
+      --post-bg: #FF4FD8;
+      --product: #111111;
+      --product-bg: #C6FF00;
+      --shadow: var(--shadow-off) var(--shadow-off) 0 0 #FFFFFF;
+      --shadow2: 3px 3px 0 0 #FFFFFF;
+      --shadow-sm: 2px 2px 0 0 #FFFFFF;
     }
 
     body {
@@ -69,10 +67,6 @@
       align-items: center;
       padding: 24px 16px 40px;
       transition: background 0.3s, color 0.3s;
-      background-image:
-        linear-gradient(var(--grid-color) 2px, transparent 2px),
-        linear-gradient(90deg, var(--grid-color) 2px, transparent 2px);
-      background-size: 32px 32px;
     }
 
     /* TOP BAR */
