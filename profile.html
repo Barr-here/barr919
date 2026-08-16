@@ -11,24 +11,27 @@
 <style>
   body { padding: 20px; padding-bottom: 100px; max-width: 460px; margin: 0 auto; }
 
-  .profile-box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin: 60px auto 20px; box-shadow: var(--shadow); text-align: center; }
-  .profile-avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 26px; font-weight: 700; margin: 0 auto 16px; }
-  .profile-email { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; word-break: break-all; }
-  .profile-badge { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 11px; padding: 4px 12px; border-radius: 20px; background: var(--surface2); color: var(--subtext); margin-bottom: 20px; }
+  .profile-box { background: var(--surface); border: var(--bw) solid var(--border); border-radius: var(--radius); padding: 24px; margin: 60px auto 20px; box-shadow: var(--shadow); text-align: center; }
+  .profile-avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--accent); color: #000; border: var(--bw) solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 26px; font-weight: 700; margin: 0 auto 16px; }
+  .profile-email { font-family: var(--mono); font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; word-break: break-all; }
+  .profile-badge { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: var(--radius); border: 2.5px solid var(--border); background: var(--surface2); color: var(--text); margin-bottom: 20px; }
   .profile-badge svg { width: 13px; height: 13px; flex-shrink: 0; }
 
   .profile-stats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; justify-content: center; }
-  .stat-card { display: inline-flex; align-items: center; gap: 6px; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px 6px 8px; }
+  .stat-card { display: inline-flex; align-items: center; gap: 6px; background: var(--surface2); border: 2.5px solid var(--border); border-radius: var(--radius); padding: 6px 14px 6px 8px; box-shadow: var(--shadow-sm); }
   .stat-icon { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
   .stat-icon svg { width: 100%; height: 100%; }
-  .stat-value { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--accent); line-height: 1; margin-right: 4px; }
-  .stat-label { font-family: var(--mono); font-size: 11px; color: var(--subtext); }
+  .stat-value { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--accent2); line-height: 1; margin-right: 4px; }
+  .stat-label { font-family: var(--mono); font-size: 11px; color: var(--text); }
 
-  .btn { padding: 11px 18px; border-radius: 8px; border: none; cursor: pointer; font-family: var(--mono); font-weight: 600; font-size: 13px; width: 100%; margin-top: 8px; }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-  .btn-danger { background: #e57373; color: #fff; }
-  .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn { padding: 11px 18px; border-radius: var(--radius); border: 2.5px solid var(--border); cursor: pointer; font-family: var(--mono); font-weight: 700; font-size: 13px; width: 100%; margin-top: 8px; box-shadow: var(--shadow-sm); transition: transform 0.15s, box-shadow 0.15s; }
+  .btn:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 0 var(--border); }
+  .btn:active { transform: translate(0,0); box-shadow: 0 0 0 0 var(--border); }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 2.5px solid var(--border); }
+  .btn-danger { background: var(--accent2); color: #fff; }
+  html.dark .btn-danger { color: #000; }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: var(--shadow-sm); }
 
   .loading-text {
     display: flex;
@@ -38,7 +41,7 @@
     padding: 24px;
     text-align: center;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 700;
     color: var(--text);
     margin-top: 60px;
   }
@@ -62,48 +65,49 @@
     opacity: 0.3;
     animation: profileSpin 0.9s linear infinite reverse;
   }
-  .loading-subtext { font-size: 11px; opacity: 0.6; margin-top: -2px; letter-spacing: 0.3px; }
+  .loading-subtext { font-size: 11px; opacity: 0.7; margin-top: -2px; letter-spacing: 0.3px; }
   @keyframes profileSpin { to { transform: rotate(360deg); } }
 
   /* RIWAYAT DEPOSIT */
-  .history-section { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; margin-bottom: 20px; box-shadow: var(--shadow2); }
+  .history-section { background: var(--surface); border: var(--bw) solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 20px; box-shadow: var(--shadow2); }
   .history-title { font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--text); display: flex; align-items: center; justify-content: space-between; gap: 6px; cursor: pointer; user-select: none; background: none; border: none; width: 100%; padding: 0; }
   .history-title-left { display: flex; align-items: center; gap: 6px; }
-  .history-title svg { width: 16px; height: 16px; color: var(--accent); }
-  .history-toggle-icon { width: 16px; height: 16px; color: var(--subtext); transition: transform 0.2s ease; flex-shrink: 0; }
+  .history-title svg { width: 16px; height: 16px; color: var(--accent2); }
+  .history-toggle-icon { width: 16px; height: 16px; color: var(--text); transition: transform 0.2s ease; flex-shrink: 0; }
   .history-section.collapsed .history-toggle-icon { transform: rotate(-90deg); }
   .history-section.collapsed #historyList { display: none; }
   #historyList { margin-top: 12px; }
-  .history-empty { font-family: var(--mono); font-size: 12px; color: var(--subtext); text-align: center; padding: 16px 0; }
-  .history-item { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 10px; border-radius: 10px; background: var(--surface2); border: 1px solid var(--border); margin-bottom: 8px; }
+  .history-empty { font-family: var(--mono); font-size: 12px; color: var(--text); opacity: 0.7; text-align: center; padding: 16px 0; }
+  .history-item { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 10px; border-radius: var(--radius); background: var(--surface2); border: 2.5px solid var(--border); margin-bottom: 8px; }
   .history-item:last-child { margin-bottom: 0; }
   .history-left { display: flex; align-items: center; gap: 10px; }
-  .history-icon { width: 34px; height: 34px; border-radius: 50%; background: rgba(245, 184, 0, 0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .history-icon { width: 34px; height: 34px; border-radius: 50%; background: var(--accent3); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .history-icon svg { width: 18px; height: 18px; }
-  .history-date { font-family: var(--mono); font-size: 11px; color: var(--subtext); margin-top: 2px; }
-  .history-coin { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--accent); }
-  .history-divider { width: 1px; align-self: stretch; background: var(--border); flex-shrink: 0; }
-  .history-rupiah { font-family: var(--mono); font-size: 12px; color: var(--subtext); text-align: right; padding-left: 10px; }
+  .history-date { font-family: var(--mono); font-size: 11px; color: var(--text); opacity: 0.7; margin-top: 2px; }
+  .history-coin { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--accent2); }
+  .history-divider { width: 2px; align-self: stretch; background: var(--border); flex-shrink: 0; }
+  .history-rupiah { font-family: var(--mono); font-size: 12px; color: var(--text); opacity: 0.7; text-align: right; padding-left: 10px; }
 
   /* MODAL DEPOSIT */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 900; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 900; align-items: center; justify-content: center; padding: 20px; }
   .modal-overlay.show { display: flex; }
-  .modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px; max-width: 380px; width: 100%; text-align: center; }
+  .modal-box { background: var(--surface); border: var(--bw) solid var(--border); border-radius: var(--radius); box-shadow: 8px 8px 0 0 var(--border); padding: 22px; max-width: 380px; width: 100%; text-align: center; }
   .modal-title { font-family: var(--mono); font-weight: 700; font-size: 16px; margin-bottom: 16px; color: var(--text); }
   .form-row { margin-bottom: 14px; text-align: left; }
-  .form-row label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--text); font-family: var(--mono); }
-  .form-row input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-family: var(--mono); font-size: 13px; box-sizing: border-box; background: var(--surface2); color: var(--text); }
-  .deposit-hint { font-family: var(--mono); font-size: 11px; color: var(--subtext); margin-top: 6px; text-align: left; }
-  .deposit-error { color: #d33; font-size: 12px; font-family: var(--mono); margin-top: 8px; min-height: 14px; }
-  #qrisImage { margin: 6px auto 8px; display: block; width: 236px; height: 236px; border-radius: 10px; background: #fff; padding: 8px; box-sizing: border-box; }
-  .deposit-amount { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); margin: 4px 0 2px; }
-  .deposit-status { font-family: var(--mono); font-size: 12px; color: var(--subtext); margin-bottom: 5px; }
-  .deposit-timer { font-family: var(--mono); font-size: 12px; color: var(--text); opacity: 0.7; margin-bottom: 0; }
-  .close-modal-btn { background: none; border: none; color: var(--subtext); font-family: var(--mono); font-size: 12px; cursor: pointer; margin-top: 10px; text-decoration: underline; }
+  .form-row label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 5px; color: var(--text); font-family: var(--mono); }
+  .form-row input { width: 100%; padding: 10px 12px; border: 2.5px solid var(--border); border-radius: var(--radius); font-family: var(--mono); font-size: 13px; box-sizing: border-box; background: var(--surface2); color: var(--text); }
+  .form-row input:focus { outline: none; transform: translate(-2px,-2px); box-shadow: 4px 4px 0 0 var(--border); }
+  .deposit-hint { font-family: var(--mono); font-size: 11px; color: var(--text); opacity: 0.7; margin-top: 6px; text-align: left; }
+  .deposit-error { color: var(--accent); font-size: 12px; font-weight: 700; font-family: var(--mono); margin-top: 8px; min-height: 14px; }
+  #qrisImage { margin: 6px auto 8px; display: block; width: 236px; height: 236px; border-radius: var(--radius); border: 2.5px solid var(--border); background: #fff; padding: 8px; box-sizing: border-box; }
+  .deposit-amount { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent2); margin: 4px 0 2px; }
+  .deposit-status { font-family: var(--mono); font-size: 12px; color: var(--text); opacity: 0.7; margin-bottom: 5px; }
+  .deposit-timer { font-family: var(--mono); font-size: 12px; color: var(--text); opacity: 0.8; margin-bottom: 0; }
+  .close-modal-btn { background: none; border: none; color: var(--text); opacity: 0.7; font-family: var(--mono); font-size: 12px; cursor: pointer; margin-top: 10px; text-decoration: underline; }
   .qris-view { display: none; }
   .qris-view.active { display: block; }
   .deposit-form-view.hidden { display: none; }
-  .qris-footer { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 10px; line-height: 1.5; color: var(--subtext); }
+  .qris-footer { margin-top: 6px; padding-top: 6px; border-top: 2px solid var(--border); font-family: var(--mono); font-size: 10px; line-height: 1.5; color: var(--text); opacity: 0.7; }
 </style>
 </head>
 <body data-page="auth">
@@ -223,11 +227,11 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/auth-helper.js"></script>
 <script>
-  const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDark = document.documentElement.classList.contains('dark');
   const swalTheme = {
-    background: isDark ? '#0f1923' : '#ffffff',
-    color: isDark ? '#e8f4fb' : '#0d1b2a',
-    confirmButtonColor: isDark ? '#00ccff' : '#00aadd',
+    background: isDark ? '#1b1b1e' : '#ffffff',
+    color: isDark ? '#ffffff' : '#000000',
+    confirmButtonColor: isDark ? '#FFD000' : '#FF4E4E',
   };
 
   let currentSession = null;

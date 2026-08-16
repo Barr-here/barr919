@@ -9,48 +9,56 @@
 <link rel="stylesheet" href="css/style.css">
 <style>
   body { padding: 20px; padding-bottom: 100px; max-width: 900px; margin: 0 auto; }
-  .admin-box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow2); }
+  .admin-box { background: var(--surface); border: var(--bw) solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); }
   .admin-title { font-family: var(--mono); font-weight: 700; font-size: 18px; margin-bottom: 14px; color: var(--text); }
   .admin-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-  .admin-tab { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; font-family: var(--mono); font-size: 13px; }
-  .admin-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .admin-tab { padding: 8px 16px; border-radius: var(--radius); border: 2.5px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; font-family: var(--mono); font-weight: 700; font-size: 13px; box-shadow: var(--shadow-sm); transition: transform 0.15s, box-shadow 0.15s; }
+  .admin-tab:hover { transform: translate(-2px,-2px); box-shadow: 4px 4px 0 0 var(--border); }
+  .admin-tab.active { background: var(--accent); color: #000; }
   .admin-panel { display: none; }
   .admin-panel.active { display: block; }
   .form-row { margin-bottom: 12px; }
-  .form-row label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: var(--text); font-family: var(--mono); }
+  .form-row label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 4px; color: var(--text); font-family: var(--mono); }
   .form-row input, .form-row textarea {
-    width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px;
+    width: 100%; padding: 8px 10px; border: 2.5px solid var(--border); border-radius: var(--radius);
     font-family: var(--mono); font-size: 13px; box-sizing: border-box;
-    background: var(--surface2); color: var(--text);
+    background: var(--surface2); color: var(--text); transition: 0.15s;
   }
-  .form-row input:focus, .form-row textarea:focus { outline: none; border-color: var(--accent); }
+  .form-row input:focus, .form-row textarea:focus { outline: none; transform: translate(-2px,-2px); box-shadow: 4px 4px 0 0 var(--border); }
   .form-row textarea { min-height: 90px; resize: vertical; }
 
-  .btn { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-family: var(--mono); font-weight: 600; font-size: 13px; }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-danger { background: #e57373; color: #fff; }
-  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-  .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn { padding: 10px 18px; border-radius: var(--radius); border: 2.5px solid var(--border); cursor: pointer; font-family: var(--mono); font-weight: 700; font-size: 13px; box-shadow: var(--shadow-sm); transition: transform 0.15s, box-shadow 0.15s; }
+  .btn:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 0 var(--border); }
+  .btn:active { transform: translate(0,0); box-shadow: 0 0 0 0 var(--border); }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-danger { background: var(--accent2); color: #fff; }
+  html.dark .btn-danger { color: #000; }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 2.5px solid var(--border); }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: var(--shadow-sm); }
 
-  .item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; gap: 10px; background: var(--surface2); }
-  .item-row .item-title { font-weight: 600; font-size: 14px; color: var(--text); }
+  .item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 2.5px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; gap: 10px; background: var(--surface2); box-shadow: var(--shadow-sm); }
+  .item-row .item-title { font-weight: 700; font-size: 14px; color: var(--text); }
   .item-actions { display: flex; gap: 6px; flex-shrink: 0; }
   .item-actions .btn { padding: 7px 12px; font-size: 12px; }
 
   #loginBox { max-width: 380px; margin: 60px auto; }
   .hidden { display: none !important; }
 
-  #p_list, #b_list, #t_list { color: var(--subtext); font-family: var(--mono); font-size: 13px; }
+  #p_list, #b_list, #t_list { color: var(--text); font-family: var(--mono); font-size: 13px; }
 
   /* Styling popup SweetAlert2 agar sesuai tema website */
   .themed-swal {
     font-family: 'JetBrains Mono', monospace !important;
-    border-radius: 14px !important;
+    border-radius: var(--radius) !important;
+    border: var(--bw) solid var(--border) !important;
+    box-shadow: 8px 8px 0 0 var(--border) !important;
   }
   .themed-swal-btn {
     font-family: 'JetBrains Mono', monospace !important;
-    font-weight: 600 !important;
-    border-radius: 8px !important;
+    font-weight: 700 !important;
+    border-radius: var(--radius) !important;
+    border: 2.5px solid var(--border) !important;
+    box-shadow: var(--shadow-sm) !important;
   }
 </style>
 </head>
