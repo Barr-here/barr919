@@ -32,29 +32,29 @@
       --shadow-sm: 2px 2px 0 0 var(--border);
       --radius: 0px;
     }
-
+    
     html.dark {
       /* NEO-BRUTALISM — THEME GELAP */
       --bg: #111111;
       --surface: #202020;
       --surface2: #292929;
-      --border: #E8E8E8;
-      --border2: #E8E8E8;
+      --border: #8F9BA8;
+      --border2: #8F9BA8;
       --text: #F5F5F5;
       --subtext: #B8B8B8;
-      --accent: #C6FF00;
+      --accent: #00E5FF;
       --accent2: #8B5CF6;
       --accent3: #FF4FD8;
-      --accent-glow: rgba(198,255,0,0.25);
+      --accent-glow: rgba(0,229,255,0.25);
       --get: #8B5CF6;
       --get-bg: #8B5CF6;
       --post: #FF4FD8;
       --post-bg: #FF4FD8;
       --product: #111111;
-      --product-bg: #C6FF00;
-      --shadow: var(--shadow-off) var(--shadow-off) 0 0 #E8E8E8;
-      --shadow2: 3px 3px 0 0 #E8E8E8;
-      --shadow-sm: 2px 2px 0 0 #E8E8E8;
+      --product-bg: #00E5FF;
+      --shadow: var(--shadow-off) var(--shadow-off) 0 0 #8F9BA8;
+      --shadow2: 3px 3px 0 0 #8F9BA8;
+      --shadow-sm: 2px 2px 0 0 #8F9BA8;
     }
 
     body {
