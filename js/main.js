@@ -58,7 +58,7 @@ const bgMusic = document.getElementById('bgMusic');
 
 function getThemeColor() {
   return document.documentElement.classList.contains('dark')
-    ? '#ffffff'
+    ? '#2B2116'
     : '#111111';
 }
 
@@ -85,13 +85,13 @@ function updateThemeIcon() {
   const dark = document.documentElement.classList.contains('dark');
 
   btn.innerHTML = dark
-    ? getSvg('sun', '#ffffff')
+    ? getSvg('sun', '#2B2116')
     : getSvg('moon', '#111111');
 
   // Update warna icon music juga
   musicBtn.innerHTML = getSvg(
     playing ? 'pause' : 'not',
-    dark ? '#ffffff' : '#111111'
+    dark ? '#2B2116' : '#111111'
   );
 }
 
