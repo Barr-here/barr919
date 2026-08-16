@@ -28,8 +28,10 @@ qrisPopup.onclick = (e) => {
 // DONASI POPUP
 // ============================================================
 
+const donateIcon = document.getElementById('donateIcon');
 const donasiPopup = document.getElementById('donasiPopup');
 
+donateIcon.innerHTML = getSvg('donate');
 document.getElementById('openDonasi').onclick = () => {
   donasiPopup.classList.add('show');
   document.body.style.overflow = 'hidden';
@@ -69,7 +71,7 @@ musicBtn.onclick = () => {
     musicBtn.innerHTML = getSvg('not', getThemeColor());
   } else {
     bgMusic.play();
-    musicBtn.innerHTML = getSvg('song', getThemeColor());
+    musicBtn.innerHTML = getSvg('pause', getThemeColor());
   }
 
   playing = !playing;
@@ -86,7 +88,7 @@ function updateThemeIcon() {
 
   // Update warna icon music juga
   musicBtn.innerHTML = getSvg(
-    playing ? 'song' : 'not',
+    playing ? 'pause' : 'not',
     dark ? '#ffffff' : '#111111'
   );
 }
