@@ -38,8 +38,8 @@
       --bg: #2B2116;
       --surface: #3A2E1F;
       --surface2: #453626;
-      --border: #111111;
-      --border2: #111111;
+      --border: #E8DCC8;
+      --border2: #E8DCC8;
       --text: #F5EEE0;
       --subtext: #C9B8A0;
       --accent: #FF8A3D;
@@ -52,9 +52,9 @@
       --post-bg: #FF6FB5;
       --product: #2B2116;
       --product-bg: #FF8A3D;
-      --shadow: var(--shadow-off) var(--shadow-off) 0 0 var(--border);
-      --shadow2: 3px 3px 0 0 var(--border);
-      --shadow-sm: 2px 2px 0 0 var(--border);
+      --shadow: var(--shadow-off) var(--shadow-off) 0 0 #E8DCC8;
+      --shadow2: 3px 3px 0 0 #E8DCC8;
+      --shadow-sm: 2px 2px 0 0 #E8DCC8;
     }
 
     body {
@@ -81,7 +81,6 @@
       background: var(--surface);
       border: var(--bw) solid var(--border);
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
     }
 
     .topbar-left {
@@ -1005,7 +1004,6 @@
   border-radius: var(--radius);
 
   padding: 18px;
-
 }
 
 /* HEADER */
@@ -1496,20 +1494,22 @@
 
     /* Animations */
     .card {
-      animation: fadeUp 0.3s ease both;
+      animation: fadeUpSafe 0.3s ease both;
     }
     .card:nth-child(1) { animation-delay: 0.05s; }
     .card:nth-child(2) { animation-delay: 0.1s; }
     .card:nth-child(3) { animation-delay: 0.15s; }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* Versi aman: pakai margin, bukan transform, supaya tidak bentrok
+       dengan transform interaktif (hover/focus/active) di elemen yang sama */
+    @keyframes fadeUpSafe {
+      from { opacity: 0; margin-top: 12px; }
+      to   { opacity: 1; margin-top: 0; }
     }
 
-    .topbar { animation: fadeUp 0.3s ease both; }
-    .search-wrap { animation: fadeUp 0.3s ease 0.04s both; }
-    .category-header { animation: fadeUp 0.3s ease 0.06s both; }
+    .topbar { animation: fadeUpSafe 0.3s ease both; }
+    .search-wrap { animation: fadeUpSafe 0.3s ease 0.04s both; }
+    .category-header { animation: fadeUpSafe 0.3s ease 0.06s both; }
     
     /* DESKTOP RESPONSIVE */
     @media (min-width: 900px) {
