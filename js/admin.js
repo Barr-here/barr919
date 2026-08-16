@@ -1,12 +1,12 @@
 // ADMIN PANEL — LOGIN & CRUD
 // ----- HELPER: POPUP BERTEMA (menggantikan alert/confirm bawaan browser) -----
-const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+const isDark = document.documentElement.classList.contains('dark');
 
 const swalTheme = {
-  background: isDark ? '#0f1923' : '#ffffff',
-  color: isDark ? '#e8f4fb' : '#0d1b2a',
-  confirmButtonColor: isDark ? '#00ccff' : '#00aadd',
-  cancelButtonColor: isDark ? '#1e3040' : '#e8f4fb',
+  background: isDark ? '#1b1b1e' : '#ffffff',
+  color: isDark ? '#ffffff' : '#000000',
+  confirmButtonColor: isDark ? '#FFD000' : '#FF4E4E',
+  cancelButtonColor: isDark ? '#232326' : '#FFF9DB',
   customClass: {
     popup: 'themed-swal',
     confirmButton: 'themed-swal-btn',
