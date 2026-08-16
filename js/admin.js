@@ -3,10 +3,10 @@
 const isDark = document.documentElement.classList.contains('dark');
 
 const swalTheme = {
-  background: isDark ? '#202020' : '#ffffff',
-  color: isDark ? '#F5F5F5' : '#111111',
-  confirmButtonColor: isDark ? '#C6FF00' : '#FFD43B',
-  cancelButtonColor: isDark ? '#2a2a2a' : '#FFF0D4',
+  background: isDark ? '#3A2E1F' : '#ffffff',
+  color: isDark ? '#F5EEE0' : '#111111',
+  confirmButtonColor: isDark ? '#FF8A3D' : '#FFD43B',
+  cancelButtonColor: isDark ? '#453626' : '#FFF0D4',
   customClass: {
     popup: 'themed-swal',
     confirmButton: 'themed-swal-btn',

@@ -7,9 +7,9 @@
 const isDark = document.documentElement.classList.contains('dark');
 
 const swalTheme = {
-  background: isDark ? '#202020' : '#ffffff',
-  color: isDark ? '#F5F5F5' : '#111111',
-  confirmButtonColor: isDark ? '#C6FF00' : '#FFD43B',
+  background: isDark ? '#3A2E1F' : '#ffffff',
+  color: isDark ? '#F5EEE0' : '#111111',
+  confirmButtonColor: isDark ? '#FF8A3D' : '#FFD43B',
 };
 
 // URL Edge Function — otomatis dibentuk dari SUPABASE_URL yang sudah ada di supabase-config.js
