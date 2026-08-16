@@ -402,18 +402,23 @@
       position: relative;
       margin-bottom: 14px;
     }
-
+    
     .search-icon {
       position: absolute;
       left: 14px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--subtext);
-      font-size: 15px;
       pointer-events: none;
       z-index: 2;
+      display: flex;
+      align-items: center;
     }
-
+    
+    .search-icon svg {
+      color: inherit;
+    }
+  
     .search-input {
       width: 100%;
       padding: 13px 16px 13px 40px;
