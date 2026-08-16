@@ -31,7 +31,7 @@ qrisPopup.onclick = (e) => {
 const donateIcon = document.getElementById('donateIcon');
 const donasiPopup = document.getElementById('donasiPopup');
 
-donateIcon.innerHTML = getSvg('donate');
+document.getElementById('donateIcon').innerHTML = getSvg('donate');
 document.getElementById('openDonasi').onclick = () => {
   donasiPopup.classList.add('show');
   document.body.style.overflow = 'hidden';
