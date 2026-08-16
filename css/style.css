@@ -401,6 +401,7 @@
       max-width: 520px;
       position: relative;
       margin-bottom: 14px;
+      transition: transform 0.15s;
     }
     
     .search-icon {
@@ -434,9 +435,13 @@
     }
 
     .search-input::placeholder { color: var(--subtext); }
-    .search-input:focus {
-      transform: translate(-2px,-2px);
-      box-shadow: 6px 6px 0 0 var(--border);
+
+    /* Fokus: wrap (icon ikut) turun menutupi bayangan, bukan naik menjauhinya */
+    .search-wrap:focus-within {
+      transform: translate(3px, 3px);
+    }
+    .search-wrap:focus-within .search-input {
+      box-shadow: 0 0 0 0 var(--border);
     }
 
     /* CATEGORY HEADER */
@@ -484,7 +489,6 @@
       font-size: 12px;
       color: var(--text);
       font-weight: 700;
-      box-shadow: var(--shadow-sm);
     }
 
     /* ENDPOINT CARDS */
@@ -1060,8 +1064,6 @@
   border-radius: var(--radius);
 
   overflow: hidden;
-
-  box-shadow: var(--shadow2);
 }
 
 /* IMAGE */
