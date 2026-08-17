@@ -1777,7 +1777,7 @@ html.dark .dock-item.indicator-active .dock-icon {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 70%;
+  height: 35%;
   background: linear-gradient(
     to bottom,
     transparent 0%,
