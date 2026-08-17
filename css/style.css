@@ -908,6 +908,30 @@
   color: inherit;
 }
 
+.mini-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 18px;
+  margin-bottom: 4px;
+}
+
+.mini-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 0;
+}
+
+.mini-card-icon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
 .mini-card:hover {
 
   transform: translate(-2px,-2px);
@@ -927,8 +951,8 @@
     font-family: var(--mono);
     font-size: 14px;
     font-weight: 700;
-    margin-bottom: 1px;
-    margin-left: -3px;
+    margin: 0;
+    line-height: 1.2;
   }
 
   .mini-desc {
