@@ -1744,7 +1744,7 @@ html.dark .dock-item.indicator-active .dock-icon {
 
 .product-card {
   position: relative;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 4;
   padding: 0;
   overflow: hidden;
   display: flex;
@@ -1754,7 +1754,7 @@ html.dark .dock-item.indicator-active .dock-icon {
 .product-card-image-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -1777,7 +1777,7 @@ html.dark .dock-item.indicator-active .dock-icon {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 48px;
+  height: 70%;
   background: linear-gradient(
     to bottom,
     transparent 0%,
@@ -1798,9 +1798,11 @@ html.dark .dock-item.indicator-active .dock-icon {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 10px 14px 14px;
+  padding: 8px 14px 14px;
   background: var(--surface);
   min-height: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .product-card-info .endpoint-path {
