@@ -863,6 +863,11 @@
   color: inherit;
 }
 
+.mini-card.copy-card {
+  display: block;
+  text-decoration: none;
+}
+
 .mini-card-head {
   display: flex;
   align-items: center;
