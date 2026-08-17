@@ -459,7 +459,6 @@ supabaseClient
 
     // update search count setelah produk di-render
     countBadge.textContent = document.querySelectorAll('.card').length + ' Kategori';
-    buildTags();
 
   });
 
@@ -548,55 +547,6 @@ document.addEventListener('click', (e) => {
     });
   }
 });
-
-
-// ============================================================
-// TAGS POPUP
-// ============================================================
-
-const openTags = document.getElementById('openTags');
-const tagsPopup = document.getElementById('tagsPopup');
-const tagsOverlay = document.getElementById('tagsOverlay');
-const tagsList = document.getElementById('tagsList');
-
-function buildTags() {
-
-  tagsList.innerHTML = '';
-
-  const allTags = new Set();
-
-  document.querySelectorAll('.method-tag').forEach(tag => {
-    const text = tag.textContent.trim();
-    if (text) allTags.add(text);
-  });
-
-  allTags.forEach(tag => {
-    const btn = document.createElement('button');
-    btn.className = 'tag-btn';
-    btn.textContent = tag;
-    btn.onclick = () => {
-      searchInput.value = tag;
-      searchInput.dispatchEvent(new Event('input'));
-      tagsPopup.classList.remove('show');
-      tagsOverlay.classList.remove('show');
-      document.body.style.overflow = '';
-    };
-    tagsList.appendChild(btn);
-  });
-
-}
-
-openTags.onclick = () => {
-  tagsPopup.classList.add('show');
-  tagsOverlay.classList.add('show');
-  document.body.style.overflow = 'hidden';
-};
-
-tagsOverlay.onclick = () => {
-  tagsPopup.classList.remove('show');
-  tagsOverlay.classList.remove('show');
-  document.body.style.overflow = '';
-};
 
 
 // ============================================================
