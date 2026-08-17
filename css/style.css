@@ -904,24 +904,6 @@
   backdrop-filter: none;
 }
 
-.mini-card-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
-}
-
-.mini-card-title span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.mini-card-title svg {
-  display: block;
-}
-
 .mini-card svg {
   color: inherit;
 }
