@@ -1759,7 +1759,16 @@ html.dark .dock-item.indicator-active .dock-icon {
   aspect-ratio: 4 / 5;
   padding: 0;
   overflow: hidden;
-  display: block;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card-image-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+  overflow: hidden;
 }
 
 .product-card-image {
@@ -1777,46 +1786,50 @@ html.dark .dock-item.indicator-active .dock-icon {
 
 .product-card-fade {
   position: absolute;
-  inset: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 48px;
   background: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0) 40%,
-    rgba(0, 0, 0, 0.55) 75%,
-    rgba(0, 0, 0, 0.85) 100%
+    transparent 0%,
+    var(--surface) 100%
   );
   pointer-events: none;
 }
 
 .product-card-top {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 10px;
+  left: 10px;
   z-index: 2;
 }
 
 .product-card-info {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 14px;
-  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px 14px 14px;
+  background: var(--surface);
+  min-height: 0;
 }
 
 .product-card-info .endpoint-path {
-  color: #ffffff;
+  color: var(--text);
   font-family: var(--mono);
   font-weight: 700;
-  font-size: 15px;
+  font-size: 14px;
   margin-bottom: 4px;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .product-card-info .endpoint-desc {
-  color: rgba(255,255,255,0.85);
+  color: var(--subtext);
   font-family: var(--mono);
   font-size: 11px;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -1860,32 +1873,9 @@ html.dark .dock-item.indicator-active .dock-icon {
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-.product-modal-image {
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  background-color: var(--surface2);
-  background-size: cover;
-  background-position: center;
-  border-bottom: var(--bw) solid var(--border);
-}
-
 .product-modal-body {
-  padding: 18px;
-}
-
-.product-modal-title {
-  font-family: var(--mono);
-  font-weight: 700;
-  font-size: 17px;
-  color: var(--text);
-  margin: 10px 0 6px;
-}
-
-.product-modal-desc {
-  font-family: var(--mono);
-  font-size: 13px;
-  color: var(--subtext);
-  margin-bottom: 14px;
+  padding: 24px 18px 18px;
+  position: relative;
 }
 
 .product-modal-close {
@@ -1893,13 +1883,13 @@ html.dark .dock-item.indicator-active .dock-icon {
   top: 12px;
   right: 12px;
   z-index: 3;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   border: none;
-  background: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  font-size: 16px;
+  background: var(--surface2);
+  color: var(--text);
+  font-size: 15px;
   cursor: pointer;
   display: flex;
   align-items: center;
