@@ -475,7 +475,7 @@
       right: 0;
       bottom: 0;
       z-index: 1;
-      width: auto;
+      width: 150px;
       height: auto;
       object-fit: cover;
       object-position: center center;
@@ -500,6 +500,12 @@
         #000000 82%,
         #000000 100%
       );
+    }
+    
+    @media (min-width: 768px) {
+      .category-gift {
+        width: clamp(190px, 18vw, 300px);
+      }
     }
 
     .category-header .category-label,
