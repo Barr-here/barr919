@@ -669,6 +669,7 @@
     .expand-buttons {
       display: flex;
       gap: 10px;
+      margin-top: 16px;
       margin-bottom: 12px;
     }
     
@@ -717,7 +718,7 @@
       padding: 12px;
       background: var(--surface2);
       border: var(--bw) solid var(--border2);
-      border-radius: 10px;
+      border-radius: 0;
       white-space: pre-line;
     }
     
@@ -1845,9 +1846,17 @@ html.dark .dock-item.indicator-active .dock-icon {
   max-width: 420px;
   width: 100%;
   max-height: 85vh;
-  overflow-y: auto;
+  overflow: visible;
   position: relative;
   animation: productModalIn 0.25s ease;
+}
+
+.product-modal-body {
+  padding: 24px 18px 18px;
+  position: relative;
+  max-height: 85vh;
+  overflow-y: auto;
+  border-radius: var(--radius);
 }
 
 @keyframes productModalIn {
@@ -1855,28 +1864,24 @@ html.dark .dock-item.indicator-active .dock-icon {
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-.product-modal-body {
-  padding: 24px 18px 18px;
-  position: relative;
-}
-
 .product-modal-close {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: -16px;
+  right: -16px;
   z-index: 3;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  border-radius: 0;
   border: var(--bw) solid var(--border);
   background: #e53935;
   color: #fff;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: var(--shadow-sm);
 }
 
 @media (max-width: 480px) {
