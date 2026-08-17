@@ -28,6 +28,7 @@ qrisPopup.onclick = (e) => {
 // DONASI POPUP
 // ============================================================
 
+const testiIcon = document.getElementById('testiIcon');
 const donateIcon = document.getElementById('donateIcon');
 const donasiPopup = document.getElementById('donasiPopup');
 
