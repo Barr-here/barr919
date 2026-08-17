@@ -1516,10 +1516,6 @@
         height: fit-content;
       }
 
-      .product-card {
-        height: auto;
-      }
-
       .category-header {
         padding: 20px 174px 20px 24px;
       }
@@ -1744,18 +1740,17 @@ html.dark .dock-item.indicator-active .dock-icon {
 
 .product-card {
   position: relative;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 1 / 1;
   padding: 0;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  display: block;
 }
 
 .product-card-image-wrap {
-  position: relative;
+  position: absolute;
+  inset: 0;
   width: 100%;
-  aspect-ratio: 4 / 3;
-  flex-shrink: 0;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -1777,11 +1772,11 @@ html.dark .dock-item.indicator-active .dock-icon {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 35%;
+  height: 65%;
   background: linear-gradient(
     to bottom,
-    transparent 0%,
-    var(--surface) 100%
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.75) 100%
   );
   pointer-events: none;
 }
@@ -1794,19 +1789,16 @@ html.dark .dock-item.indicator-active .dock-icon {
 }
 
 .product-card-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 8px 14px 14px;
-  background: var(--surface);
-  min-height: 0;
-  position: relative;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 1;
+  padding: 24px 14px 14px;
 }
 
 .product-card-info .endpoint-path {
-  color: var(--text);
+  color: #fff;
   font-family: var(--mono);
   font-weight: 700;
   font-size: 14px;
@@ -1817,7 +1809,7 @@ html.dark .dock-item.indicator-active .dock-icon {
 }
 
 .product-card-info .endpoint-desc {
-  color: var(--subtext);
+  color: rgba(255, 255, 255, 0.8);
   font-family: var(--mono);
   font-size: 11px;
   display: -webkit-box;
