@@ -394,11 +394,12 @@ supabaseClient
   
       <div class="card product-card" data-name="${item.type.toLowerCase()}" data-product-id="${item.id}">
 
-        <div class="product-card-image" style="background-image:url('${item.image_url || ''}');"></div>
-        <div class="product-card-fade"></div>
-
-        <div class="product-card-top">
-          <span class="method-tag product">${item.type}</span>
+        <div class="product-card-image-wrap">
+          <div class="product-card-image" style="background-image:url('${item.image_url || ''}');"></div>
+          <div class="product-card-fade"></div>
+          <div class="product-card-top">
+            <span class="method-tag product">${item.type}</span>
+          </div>
         </div>
 
         <div class="product-card-info">
@@ -436,13 +437,7 @@ function openProductModal(item) {
   box.innerHTML = `
     <button class="product-modal-close" id="productModalClose">✕</button>
 
-    <div class="product-modal-image" style="background-image:url('${item.image_url || ''}');"></div>
-
     <div class="product-modal-body">
-      <span class="method-tag product">${item.type}</span>
-      <div class="product-modal-title">${item.title}</div>
-      <div class="product-modal-desc">${item.description}</div>
-
       <div class="expand-footer">${item.content || ''}</div>
 
       <div class="expand-buttons">
