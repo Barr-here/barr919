@@ -171,10 +171,33 @@
     
     /* BANNER SLIDER */
     .banner-slider {
+      position: relative;
       width: 100%;
       max-width: 520px;
       overflow: hidden;
       margin-bottom: 18px;
+    }
+
+    /* EDGE FADE — keeps the banner cards unchanged while softening the slider edges */
+    .banner-slider::before,
+    .banner-slider::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 4px;
+      width: 24px;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .banner-slider::before {
+      left: 0;
+      background: linear-gradient(to right, var(--bg), transparent);
+    }
+
+    .banner-slider::after {
+      right: 0;
+      background: linear-gradient(to left, var(--bg), transparent);
     }
     
     .banner-track {
