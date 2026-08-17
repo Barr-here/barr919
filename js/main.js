@@ -457,9 +457,6 @@ supabaseClient
       });
     });
 
-    // update search count setelah produk di-render
-    countBadge.textContent = document.querySelectorAll('.card').length + ' Kategori';
-
   });
 
 // ============================================================
@@ -488,21 +485,17 @@ if (loginHintPopup && !localStorage.getItem('loginHintShown')) {
 // ============================================================
 
 const searchInput = document.getElementById('searchInput');
-const countBadge = document.getElementById('countBadge');
 
 searchInput.addEventListener('input', () => {
   const q = searchInput.value.toLowerCase().trim();
   const cards = document.querySelectorAll('.card');
-  let visible = 0;
   cards.forEach(card => {
     const title = card.querySelector('.endpoint-path')?.textContent || '';
     const tag = card.querySelector('.method-tag')?.textContent || '';
     const text = (title + ' ' + tag).toLowerCase();
     const match = !q || text.includes(q);
     card.classList.toggle('hidden', !match);
-    if (match) visible++;
   });
-  countBadge.textContent = visible + ' Kategori' + (visible !== 1 ? 's' : '');
 });
 
 
