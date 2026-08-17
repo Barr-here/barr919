@@ -35,7 +35,7 @@ const donasiPopup = document.getElementById('donasiPopup');
 document.getElementById('testiIcon').innerHTML = getSvg('testi');
 document.getElementById('donateIcon').innerHTML = getSvg('donate');
 document.getElementById('searchIcon').innerHTML = getSvg('search');
-document.getElementById('channelIcon').innerHTML = getSvg('channel');
+document.getElementById('channelIcon').innerHTML = getSvg('community');
 document.getElementById('groupIcon').innerHTML = getSvg('group');
 
 document.getElementById('openDonasi').onclick = () => {
