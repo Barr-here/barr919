@@ -53,10 +53,18 @@
     ? items.find(el => el.dataset.page === savedPage)
     : null;
 
-  window.addEventListener('load', () => {
+  function showIndicator() {
+    indicator.classList.add('ready');
+  }
+
+  // Gunakan DOMContentLoaded (bukan 'load') supaya indikator muncul
+  // secepat mungkin, tidak perlu menunggu gambar/audio/media lain selesai dimuat.
+  // Ini yang membuat navigasi terasa "kedip" sebelumnya.
+  document.addEventListener('DOMContentLoaded', () => {
     if (startItem && startItem !== activeItem) {
       // Mulai dari posisi lama tanpa animasi, lalu animasikan ke posisi baru
       moveIndicatorTo(startItem, false);
+      showIndicator();
       requestAnimationFrame(() => {
         setActive(activeItem);
         moveIndicatorTo(activeItem, true);
@@ -65,6 +73,7 @@
       // Tidak ada histori pindah, langsung ke posisi aktif tanpa animasi
       setActive(activeItem);
       moveIndicatorTo(activeItem, false);
+      showIndicator();
     }
     sessionStorage.removeItem('dock_from_page');
   });
