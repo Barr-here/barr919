@@ -510,17 +510,17 @@
       -webkit-mask-image: linear-gradient(
         to right,
         transparent 0%,
-        rgba(0, 0, 0, 0.45) 10%,
-        rgba(0, 0, 0, 0.9) 25%,
-        #000000 42%,
+        rgba(0, 0, 0, 0.12) 22%,
+        rgba(0, 0, 0, 0.58) 58%,
+        #000000 82%,
         #000000 100%
       );
       mask-image: linear-gradient(
         to right,
         transparent 0%,
-        rgba(0, 0, 0, 0.45) 10%,
-        rgba(0, 0, 0, 0.9) 25%,
-        #000000 42%,
+        rgba(0, 0, 0, 0.12) 22%,
+        rgba(0, 0, 0, 0.58) 58%,
+        #000000 82%,
         #000000 100%
       );
     }
