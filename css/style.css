@@ -478,7 +478,7 @@
       border: var(--bw) solid var(--border);
       border-radius: var(--radius);
       min-height: 76px;
-      padding: 14px 120px 14px 18px;
+      padding: 14px 150px 14px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -494,28 +494,33 @@
 
     .category-gift {
       position: absolute;
-      top: 50%;
+      top: 0;
       right: 0;
+      bottom: 0;
       z-index: 1;
-      width: 128px;
-      height: 74px;
+      width: 150px;
+      height: auto;
       object-fit: cover;
-      transform: translateY(-50%);
+      object-position: center center;
+      opacity: 0.86;
+      filter: saturate(0.82) contrast(0.94);
       pointer-events: none;
       user-select: none;
       -webkit-user-select: none;
       -webkit-mask-image: linear-gradient(
         to right,
         transparent 0%,
-        rgba(0, 0, 0, 0.45) 34%,
-        #000000 68%,
+        rgba(0, 0, 0, 0.12) 22%,
+        rgba(0, 0, 0, 0.58) 58%,
+        #000000 82%,
         #000000 100%
       );
       mask-image: linear-gradient(
         to right,
         transparent 0%,
-        rgba(0, 0, 0, 0.45) 34%,
-        #000000 68%,
+        rgba(0, 0, 0, 0.12) 22%,
+        rgba(0, 0, 0, 0.58) 58%,
+        #000000 82%,
         #000000 100%
       );
     }
@@ -1525,7 +1530,7 @@
       }
 
       .category-header {
-        padding: 20px 150px 20px 24px;
+        padding: 20px 174px 20px 24px;
       }
 
       .category-name {
