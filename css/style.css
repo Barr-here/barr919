@@ -714,24 +714,12 @@
       font-size: 12px;
       color: var(--subtext);
       line-height: 1.5;
-      max-height: 180px;
-      overflow-y: auto;
-      padding-right: 4px;
+      padding: 12px;
+      background: var(--surface2);
+      border: var(--bw) solid var(--border2);
+      border-radius: 10px;
       white-space: pre-line;
     }
-    
-    .expand-footer::-webkit-scrollbar {
-      width: 4px;
-    }
-
-.expand-footer::-webkit-scrollbar-thumb {
-  background: var(--border2);
-  border-radius: 999px;
-}
-
-.expand-footer::-webkit-scrollbar-track {
-  background: transparent;
-}
     
     /* COPY URL */
     .copy-popup {
@@ -1883,13 +1871,14 @@ html.dark .dock-item.indicator-active .dock-icon {
   top: 12px;
   right: 12px;
   z-index: 3;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: none;
-  background: var(--surface2);
-  color: var(--text);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: var(--bw) solid var(--border);
+  background: #e53935;
+  color: #fff;
   font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
