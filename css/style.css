@@ -1584,8 +1584,39 @@
 
 /* Produk / card skeleton */
 .card-skeleton {
-  height: 90px;
+  aspect-ratio: 1 / 1;
   border: var(--bw) solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+  animation: none;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-skeleton::before {
+  content: "";
+  display: block;
+  flex: 1;
+  background: linear-gradient(
+    90deg,
+    var(--surface2) 25%,
+    var(--accent2) 50%,
+    var(--surface2) 75%
+  );
+  background-size: 400px 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+.card-skeleton::after {
+  content: "";
+  display: block;
+  height: 46px;
+  margin: 12px 14px 14px;
+  background:
+    linear-gradient(var(--surface2), var(--surface2)) 0 0 / 60% 14px no-repeat,
+    linear-gradient(var(--surface2), var(--surface2)) 0 22px / 85% 10px no-repeat;
 }
 
 /* Testimoni skeleton */
