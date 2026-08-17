@@ -392,74 +392,81 @@ supabaseClient
     
       endpointList.innerHTML += `
   
-      <div class="card expandable" data-name="${item.type.toLowerCase()}">
+      <div class="card product-card" data-name="${item.type.toLowerCase()}" data-product-id="${item.id}">
 
-        <div class="card-top">
-          <div class="methods">
-            <span class="method-tag product">${item.type}</span>
-          </div>
-          <span class="chevron">›</span>
+        <div class="product-card-image" style="background-image:url('${item.image_url || ''}');"></div>
+        <div class="product-card-fade"></div>
+
+        <div class="product-card-top">
+          <span class="method-tag product">${item.type}</span>
         </div>
 
-        <div class="endpoint-path">${item.title}</div>
-
-        <div class="endpoint-desc">
-          ${item.description}
+        <div class="product-card-info">
+          <div class="endpoint-path">${item.title}</div>
+          <div class="endpoint-desc">${item.description}</div>
         </div>
 
-        <div class="expand-content">
-          <div class="expand-box">
-
-            <div class="expand-buttons">
-
-              <a class="expand-btn wa"
-                 href="${item.wa}"
-                 target="_blank">
-                WhatsApp
-              </a>
-
-              <a class="expand-btn tele"
-                 href="${item.tele}"
-                 target="_blank">
-                Telegram
-              </a>
-
-            </div>
-
-            <div class="expand-footer">
-              ${item.content}
-            </div>
-
-          </div>
-        </div>
       </div>
   
       `;
     });
 
-    // expandable cards (harus setelah render)
-    document.querySelectorAll('.expandable').forEach(card => {
+    // simpan data produk supaya bisa dipakai modal detail
+    window.__productsData = products;
 
-      card.addEventListener('click', (e) => {
-
-        if (e.target.closest('a')) return;
-
-        // tutup product lain
-        document.querySelectorAll('.expandable').forEach(other => {
-  
-          if (other !== card) {
-            other.classList.remove('active');
-          }
-
-        });
-
-        // buka/tutup current
-        card.classList.toggle('active');
-  
+    // klik card produk -> buka modal detail
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = card.dataset.productId;
+        const item = products.find(p => String(p.id) === String(id));
+        if (item) openProductModal(item);
       });
     });
 
   });
+
+// ============================================================
+// MODAL DETAIL PRODUK
+// ============================================================
+
+function openProductModal(item) {
+  const overlay = document.getElementById('productModalOverlay');
+  const box = document.getElementById('productModalBox');
+
+  box.innerHTML = `
+    <button class="product-modal-close" id="productModalClose">✕</button>
+
+    <div class="product-modal-image" style="background-image:url('${item.image_url || ''}');"></div>
+
+    <div class="product-modal-body">
+      <span class="method-tag product">${item.type}</span>
+      <div class="product-modal-title">${item.title}</div>
+      <div class="product-modal-desc">${item.description}</div>
+
+      <div class="expand-footer">${item.content || ''}</div>
+
+      <div class="expand-buttons">
+        <a class="expand-btn wa" href="${item.wa}" target="_blank">WhatsApp</a>
+        <a class="expand-btn tele" href="${item.tele}" target="_blank">Telegram</a>
+      </div>
+    </div>
+  `;
+
+  overlay.classList.add('show');
+  document.body.style.overflow = 'hidden';
+
+  document.getElementById('productModalClose').onclick = closeProductModal;
+}
+
+function closeProductModal() {
+  const overlay = document.getElementById('productModalOverlay');
+  overlay.classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('productModalOverlay')?.addEventListener('click', (e) => {
+  if (e.target.id === 'productModalOverlay') closeProductModal();
+});
 
 // ============================================================
 // LOGIN HINT POPUP (tampil 1x saja)

@@ -162,6 +162,7 @@ async function loadProducts() {
 
 function editProduct(item) {
   document.getElementById('p_type').value = item.type;
+  document.getElementById('p_image').value = item.image_url || '';
   document.getElementById('p_title').value = item.title;
   document.getElementById('p_desc').value = item.description;
   document.getElementById('p_wa').value = item.wa || '';
@@ -182,6 +183,7 @@ document.getElementById('p_add').onclick = async () => {
 
   const payload = {
     type: document.getElementById('p_type').value.trim(),
+    image_url: document.getElementById('p_image').value.trim(),
     title: document.getElementById('p_title').value.trim(),
     description: document.getElementById('p_desc').value.trim(),
     wa: document.getElementById('p_wa').value.trim(),
@@ -208,7 +210,7 @@ document.getElementById('p_add').onclick = async () => {
 
   if (!result.ok) { showError('Gagal simpan: ' + (result.data.error || '')); return; }
 
-  ['p_title','p_desc','p_wa','p_tele','p_content'].forEach(id => document.getElementById(id).value = '');
+  ['p_image','p_title','p_desc','p_wa','p_tele','p_content'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('p_type').value = 'PRODUK';
   document.getElementById('p_sort').value = 0;
   showSuccess('Produk berhasil disimpan');
