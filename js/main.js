@@ -518,8 +518,6 @@ function openBuyConfirmModal(item) {
           <input type="number" id="buyQtyInput" value="1" min="1">
         </div>
 
-        <div class="buy-confirm-row-divider"></div>
-
         <div class="buy-confirm-total" id="buyTotalText">${item.price} coin</div>
       </div>
 
