@@ -491,8 +491,6 @@ function openBuyConfirmModal(item) {
   };
 
   box.innerHTML = `
-    <button class="product-modal-close" id="buyConfirmClose">✕</button>
-
     <div class="product-modal-body">
       <div class="buy-confirm-title">${item.title}</div>
       <div
@@ -525,7 +523,7 @@ function openBuyConfirmModal(item) {
       
       <div class="button-container">
         <button class="expand-btn continue" id="buyConfirmSubmit">Beli</button>
-        <button class="expand-btn cancel" id="productModalClose">Batal</button>
+        <button class="expand-btn cancel" id="buyConfirmClose">Batal</button>
       </div>
     </div>
   `;
