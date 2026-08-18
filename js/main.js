@@ -434,11 +434,19 @@ function openProductModal(item) {
   const overlay = document.getElementById('productModalOverlay');
   const box = document.getElementById('productModalBox');
 
+  const hasPrice = item.price && item.price > 0;
+
   box.innerHTML = `
     <button class="product-modal-close" id="productModalClose">✕</button>
 
     <div class="product-modal-body">
       <div class="expand-footer">${item.content || ''}</div>
+
+      ${hasPrice ? `
+        <button class="expand-btn buy-coin" id="buyWithCoinBtn">
+          🪙 Beli dengan Coin — ${item.price} / pcs
+        </button>
+      ` : ''}
 
       <div class="expand-buttons">
         <a class="expand-btn wa" href="${item.wa}" target="_blank">WhatsApp</a>
@@ -451,6 +459,10 @@ function openProductModal(item) {
   document.body.style.overflow = 'hidden';
 
   document.getElementById('productModalClose').onclick = closeProductModal;
+
+  if (hasPrice) {
+    document.getElementById('buyWithCoinBtn').onclick = () => openBuyConfirmModal(item);
+  }
 }
 
 function closeProductModal() {
@@ -461,6 +473,113 @@ function closeProductModal() {
 
 document.getElementById('productModalOverlay')?.addEventListener('click', (e) => {
   if (e.target.id === 'productModalOverlay') closeProductModal();
+});
+
+// ============================================================
+// MODAL KONFIRMASI BELI (quantity + total)
+// ============================================================
+
+function openBuyConfirmModal(item) {
+  const overlay = document.getElementById('buyConfirmOverlay');
+  const box = document.getElementById('buyConfirmBox');
+
+  box.innerHTML = `
+    <button class="product-modal-close" id="buyConfirmClose">✕</button>
+
+    <div class="product-modal-body">
+      <div class="buy-confirm-title">${item.title}</div>
+      <div class="buy-confirm-price">${item.price} coin / pcs</div>
+
+      <div class="form-row">
+        <label>Jumlah</label>
+        <input type="number" id="buyQtyInput" value="1" min="1">
+      </div>
+
+      <div class="buy-confirm-total" id="buyTotalText">Total: ${item.price} coin</div>
+      <div class="deposit-error" id="buyConfirmError"></div>
+
+      <button class="btn btn-primary" id="buyConfirmSubmit">Konfirmasi Beli</button>
+    </div>
+  `;
+
+  overlay.classList.add('show');
+  document.body.style.overflow = 'hidden';
+
+  const qtyInput = document.getElementById('buyQtyInput');
+  const totalText = document.getElementById('buyTotalText');
+
+  qtyInput.addEventListener('input', () => {
+    const qty = Math.max(1, parseInt(qtyInput.value) || 1);
+    totalText.textContent = `Total: ${item.price * qty} coin`;
+  });
+
+  document.getElementById('buyConfirmClose').onclick = closeBuyConfirmModal;
+
+  document.getElementById('buyConfirmSubmit').onclick = async () => {
+    const btn = document.getElementById('buyConfirmSubmit');
+    const errBox = document.getElementById('buyConfirmError');
+    errBox.textContent = '';
+
+    const qty = Math.max(1, parseInt(qtyInput.value) || 1);
+
+    const session = await verifySession();
+    if (!session) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Memproses...';
+
+    try {
+      const res = await fetch(SUPABASE_URL + '/functions/v1/purchase', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({
+          action: 'create-order',
+          userId: session.userId,
+          sessionToken: session.sessionToken,
+          productId: item.id,
+          quantity: qty,
+        }),
+      });
+      const data = await res.json();
+
+      btn.disabled = false;
+      btn.textContent = 'Konfirmasi Beli';
+
+      if (!res.ok) {
+        errBox.textContent = data.error || 'Gagal memproses pembelian';
+        return;
+      }
+
+      closeBuyConfirmModal();
+      closeProductModal();
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Pesanan Berhasil Dibuat',
+        text: `Pesanan ${item.title} x${qty} sedang diproses. Admin akan segera menghubungi kamu.`,
+      });
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Konfirmasi Beli';
+      errBox.textContent = 'Gagal terhubung ke server';
+    }
+  };
+}
+
+function closeBuyConfirmModal() {
+  const overlay = document.getElementById('buyConfirmOverlay');
+  overlay.classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('buyConfirmOverlay')?.addEventListener('click', (e) => {
+  if (e.target.id === 'buyConfirmOverlay') closeBuyConfirmModal();
 });
 
 // ============================================================
