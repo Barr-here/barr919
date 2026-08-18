@@ -1980,15 +1980,32 @@ html.dark .dock-item.indicator-active .dock-icon {
   margin-bottom: 16px;
 }
 
+.buy-confirm-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.buy-confirm-row .form-row-qty {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.buy-confirm-row-divider {
+  align-self: stretch;
+  width: 2px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
 .buy-confirm-total {
   font-family: var(--mono);
   font-weight: 700;
   font-size: 15px;
   color: var(--accent);
-  margin: 10px 0 6px;
-  padding-top: 10px;
-  border-top: 2px solid var(--border);
-  text-align: right;
+  white-space: nowrap;
+  padding-bottom: 10px;
 }
 
 /* ============================================================
