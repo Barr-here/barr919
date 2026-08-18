@@ -688,20 +688,6 @@
       cursor: pointer;
     }
   
-    .expand-btn.cancel {
-      background: #FF5C5C;
-      color: #000000;
-    }
-
-    .expand-btn.continue {
-      background: var(--accent);
-      color: #000000;
-    }
-
-    html.dark .expand-btn.continue {
-      color: #ffffff;
-    }
-    
     .expand-btn.wa {
       background: var(--get-bg);
       color: #000000;
@@ -2030,18 +2016,57 @@ html.dark .dock-item.indicator-active .dock-icon {
 }
 .form-row input:focus { outline: none; border-color: var(--accent); }
 
+
 .btn {
-  padding: 11px 18px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-family: var(--mono);
-  font-weight: 600;
-  font-size: 13px;
-  width: 100%;
+  padding: 11px 18px; 
+  border-radius: var(--radius); 
+  border: 2.5px solid var(--border); 
+  cursor: pointer; 
+  font-family: var(--mono); 
+  font-weight: 700; 
+  font-size: 13px; 
+  width: 100%; 
+  margin-top: 8px; 
+  box-shadow: var(--shadow-sm); 
+  transition: transform 0.15s, box-shadow 0.15s; 
 }
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn:hover {
+  transform: translate(-2px,-2px); 
+  box-shadow: 5px 5px 0 0 var(--border); 
+}
+
+.btn:active { 
+  transform: translate(2px,2px); 
+  box-shadow: 0 0 0 0 var(--border); 
+}
+
+.btn-primary {
+  background: var(--accent); 
+  color: #000; 
+}
+
+.btn-secondary { 
+  background: var(--surface2); 
+  color: var(--text); 
+  border: 2.5px solid var(--border); 
+}
+
+.btn-danger { 
+  background: #FF5C5C;
+  color: #000; 
+}
+
+html.dark .btn-danger { 
+  color: #000;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed; 
+  transform: none; 
+  box-shadow: var(--shadow-sm); 
+}
   
 .deposit-error {
   color: #d33;
