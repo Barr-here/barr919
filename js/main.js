@@ -529,11 +529,6 @@ function openBuyConfirmModal(item) {
   overlay.classList.add('show');
   document.body.style.overflow = 'hidden';
   
-  document.getElementById('buyConfirmSubmit').onclick = async () => {
-    btn.disabled = true;
-    btn.textContent = 'Memproses...';
-  }
-
   // Ambil stok riil dari edge function (data akun tidak boleh diakses langsung dari frontend)
   fetch(SUPABASE_URL + '/functions/v1/purchase', {
     method: 'POST',
@@ -576,6 +571,10 @@ function openBuyConfirmModal(item) {
   document.getElementById('buyConfirmSubmit').onclick = async () => {
     const btn = document.getElementById('buyConfirmSubmit');
     const errBox = document.getElementById('buyConfirmError');
+    
+    btn.disabled = true;
+    btn.textContent = 'Memproses...';
+    
     errBox.textContent = '';
 
     const qty = Math.max(1, parseInt(qtyInput.value) || 1);
