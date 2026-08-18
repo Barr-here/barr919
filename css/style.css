@@ -1986,7 +1986,9 @@ html.dark .dock-item.indicator-active .dock-icon {
   font-size: 15px;
   color: var(--accent);
   margin: 10px 0 6px;
-  text-align: center;
+  padding-top: 10px;
+  border-top: 2px solid var(--border);
+  text-align: right;
 }
 
 /* ============================================================
