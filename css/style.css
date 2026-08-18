@@ -1956,6 +1956,15 @@ html.dark .dock-item.indicator-active .dock-icon {
   box-shadow: 0 0 0 0 var(--border);
 }
 
+.buy-admin-footer {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--subtext);
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
 .buy-confirm-title {
   font-family: var(--mono);
   font-weight: 700;
