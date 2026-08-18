@@ -504,7 +504,7 @@ function openBuyConfirmModal(item) {
           class="buy-confirm-stock-badge buy-confirm-stock-available"
           id="buyConfirmStockBadge"
           style="display:inline-flex;align-items:center;padding:7px 11px;background:var(--accent);border:3px solid #111;box-shadow:2px 2px 0 #111;color:#111;font-family:var(--mono,monospace);font-size:12px;font-weight:800;line-height:1;letter-spacing:.03em;text-transform:uppercase;"
-        >Memuat...</span>
+        >Memuat stok...</span>
         <span
           class="buy-confirm-stock-badge buy-confirm-stock-sold"
           id="buyConfirmSoldBadge"
@@ -512,12 +512,17 @@ function openBuyConfirmModal(item) {
         >Memuat...</span>
       </div>
 
-      <div class="form-row">
-        <label>Jumlah</label>
-        <input type="number" id="buyQtyInput" value="1" min="1">
+      <div class="buy-confirm-row">
+        <div class="form-row form-row-qty">
+          <label>Jumlah</label>
+          <input type="number" id="buyQtyInput" value="1" min="1">
+        </div>
+
+        <div class="buy-confirm-row-divider"></div>
+
+        <div class="buy-confirm-total" id="buyTotalText">${item.price} coin</div>
       </div>
 
-      <div class="buy-confirm-total" id="buyTotalText">Total: ${item.price} coin</div>
       <div class="deposit-error" id="buyConfirmError"></div>
 
       <button class="btn btn-primary" id="buyConfirmSubmit">Beli</button>
