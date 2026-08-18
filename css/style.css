@@ -1992,20 +1992,17 @@ html.dark .dock-item.indicator-active .dock-icon {
   margin-bottom: 0;
 }
 
-.buy-confirm-row-divider {
-  align-self: stretch;
-  width: 2px;
-  background: var(--border);
-  flex-shrink: 0;
-}
-
 .buy-confirm-total {
   font-family: var(--mono);
   font-weight: 700;
   font-size: 15px;
   color: var(--accent);
   white-space: nowrap;
-  padding-bottom: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface2);
+  box-sizing: border-box;
 }
 
 /* ============================================================
