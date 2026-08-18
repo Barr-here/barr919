@@ -487,7 +487,7 @@ function openBuyConfirmModal(item) {
     const count = Number(value);
     return Number.isFinite(count)
       ? count.toLocaleString('id-ID')
-      : '—';
+      : '-';
   };
 
   box.innerHTML = `
@@ -528,6 +528,9 @@ function openBuyConfirmModal(item) {
 
   overlay.classList.add('show');
   document.body.style.overflow = 'hidden';
+  
+  btn.disabled = true;
+  btn.textContent = 'Memproses...';
 
   // Ambil stok riil dari edge function (data akun tidak boleh diakses langsung dari frontend)
   fetch(SUPABASE_URL + '/functions/v1/purchase', {
@@ -544,8 +547,8 @@ function openBuyConfirmModal(item) {
       const soldBadge = document.getElementById('buyConfirmSoldBadge');
       if (!stockBadge || !soldBadge) return;
       if (data.error) {
-        stockBadge.textContent = '— stok';
-        soldBadge.textContent = '— terjual';
+        stockBadge.textContent = '- stok';
+        soldBadge.textContent = '- terjual';
         return;
       }
       stockBadge.textContent = `${formatCount(data.stock)} stok`;
@@ -554,8 +557,8 @@ function openBuyConfirmModal(item) {
     .catch(() => {
       const stockBadge = document.getElementById('buyConfirmStockBadge');
       const soldBadge = document.getElementById('buyConfirmSoldBadge');
-      if (stockBadge) stockBadge.textContent = '— stok';
-      if (soldBadge) soldBadge.textContent = '— terjual';
+      if (stockBadge) stockBadge.textContent = '- stok';
+      if (soldBadge) soldBadge.textContent = '- terjual';
     });
 
   const qtyInput = document.getElementById('buyQtyInput');
@@ -580,9 +583,6 @@ function openBuyConfirmModal(item) {
       window.location.href = 'login.html';
       return;
     }
-
-    btn.disabled = true;
-    btn.textContent = 'Memproses...';
 
     try {
       const res = await fetch(SUPABASE_URL + '/functions/v1/purchase', {
@@ -780,7 +780,7 @@ updateGreeting();
 setInterval(updateGreeting, 1000);
 
 // ============================================================
-// DOCK BAR — support tap di HP (bukan cuma hover)
+// DOCK BAR - support tap di HP (bukan cuma hover)
 // ============================================================
 
 document.querySelectorAll('.dock-item').forEach(item => {
@@ -812,7 +812,7 @@ document.addEventListener('click', (e) => {
 });
 
 // ============================================================
-// TOP BAR — ganti tampilan kalau user sudah login
+// TOP BAR - ganti tampilan kalau user sudah login
 // (dock bar "Profil" tetap sama, selalu ke profile.html;
 //  profile.html sendiri yang redirect ke login.html kalau belum login)
 // ============================================================
