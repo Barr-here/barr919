@@ -520,7 +520,7 @@ function openBuyConfirmModal(item) {
       <div class="buy-confirm-total" id="buyTotalText">Total: ${item.price} coin</div>
       <div class="deposit-error" id="buyConfirmError"></div>
 
-      <button class="btn btn-primary" id="buyConfirmSubmit">Konfirmasi Beli</button>
+      <button class="btn btn-primary" id="buyConfirmSubmit">Beli</button>
     </div>
   `;
 
@@ -598,7 +598,9 @@ function openBuyConfirmModal(item) {
         }),
       });
       const data = await res.json();
-      btn.textContent = 'Berhasil...';
+      
+      btn.disabled = false;
+      btn.textContent = 'Beli';
 
       if (!res.ok) {
         errBox.textContent = data.error || 'Gagal memproses pembelian';
