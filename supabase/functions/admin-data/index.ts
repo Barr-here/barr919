@@ -18,7 +18,7 @@ const supabaseAdmin = createClient(
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
 );
 
-const ALLOWED_TABLES = ["products", "banners", "testimonials"];
+const ALLOWED_TABLES = ["products", "banners", "testimonials", "product_accounts"];
 
 async function isRequestFromAdmin(userId: string, sessionToken: string): Promise<boolean> {
   if (!userId || !sessionToken) return false;
@@ -54,6 +54,38 @@ serve(async (req) => {
     if (!isAdmin) {
       return new Response(JSON.stringify({ error: "Akses ditolak. Kamu bukan admin atau sesi tidak valid." }), {
         status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // ========================================================
+    // SELECT — baca data (untuk tabel yang tidak punya policy publik,
+    // misal product_accounts yang berisi data sensitif)
+    // ========================================================
+    if (action === "select") {
+      const { filter, orderBy, orderAsc } = body;
+
+      let query = supabaseAdmin.from(table).select("*");
+
+      if (filter && typeof filter === "object") {
+        for (const key in filter) {
+          query = query.eq(key, filter[key]);
+        }
+      }
+
+      if (orderBy) {
+        query = query.order(orderBy, { ascending: orderAsc !== false });
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      return new Response(JSON.stringify({ success: true, data }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
