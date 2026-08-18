@@ -271,10 +271,17 @@ serve(async (req) => {
       // tapi email & password dihapus supaya tidak numpuk di storage Supabase
       // dan tidak ada kredensial lama yang tersisa di server.
       if (emailSent) {
-        await supabaseAdmin
+        const { data: clearedRows, error: clearErr } = await supabaseAdmin
           .from("product_accounts")
           .update({ email: null, password: null })
-          .in("id", accountIds);
+          .in("id", accountIds)
+          .select("id");
+
+        if (clearErr) {
+          console.log("Gagal kosongkan kredensial:", clearErr.message);
+        } else {
+          console.log("Kredensial dikosongkan untuk baris:", clearedRows?.length, "dari", accountIds.length);
+        }
       }
 
       // ----- NOTIF TELEGRAM UNTUK ADMIN (info pesanan, bukan data akun) -----
