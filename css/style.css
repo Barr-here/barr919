@@ -1923,3 +1923,106 @@ html.dark .dock-item.indicator-active .dock-icon {
     font-size: 10px;
   }
 }
+
+/* ============================================================
+   TOMBOL BELI DENGAN COIN + MODAL KONFIRMASI BELI
+   ============================================================ */
+
+.expand-btn.buy-coin {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  border-radius: var(--radius);
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  border: 2.5px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  background: var(--accent);
+  color: #ffffff;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.expand-btn.buy-coin:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 0 var(--border);
+}
+
+.expand-btn.buy-coin:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 0 var(--border);
+}
+
+.buy-confirm-title {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.buy-confirm-price {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--subtext);
+  margin-bottom: 16px;
+}
+
+.buy-confirm-total {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--accent);
+  margin: 10px 0 6px;
+  text-align: center;
+}
+
+/* ============================================================
+   FORM & BUTTON UMUM (dipakai di modal konfirmasi beli, index.html)
+   ============================================================ */
+
+.form-row { margin-bottom: 14px; text-align: left; }
+.form-row label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: var(--text);
+  font-family: var(--mono);
+}
+.form-row input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 13px;
+  box-sizing: border-box;
+  background: var(--surface2);
+  color: var(--text);
+}
+.form-row input:focus { outline: none; border-color: var(--accent); }
+
+.btn {
+  padding: 11px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 13px;
+  width: 100%;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.deposit-error {
+  color: #d33;
+  font-size: 12px;
+  font-family: var(--mono);
+  margin-top: 4px;
+  min-height: 14px;
+}
