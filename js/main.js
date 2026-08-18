@@ -572,9 +572,6 @@ function openBuyConfirmModal(item) {
     const btn = document.getElementById('buyConfirmSubmit');
     const errBox = document.getElementById('buyConfirmError');
     
-    btn.disabled = true;
-    btn.textContent = 'Memproses...';
-    
     errBox.textContent = '';
 
     const qty = Math.max(1, parseInt(qtyInput.value) || 1);
@@ -584,6 +581,9 @@ function openBuyConfirmModal(item) {
       window.location.href = 'login.html';
       return;
     }
+    
+    btn.disabled = true;
+    btn.textContent = 'Memproses...';
 
     try {
       const res = await fetch(SUPABASE_URL + '/functions/v1/purchase', {
