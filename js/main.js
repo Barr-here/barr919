@@ -524,8 +524,8 @@ function openBuyConfirmModal(item) {
       <div class="deposit-error" id="buyConfirmError"></div>
       
       <div class="button-container">
-        <button> class="expand-btn continue" id="buyConfirmSubmit">Beli</button>
-        <button> class="expand-btn cancel" id="productModalClose">Batal</button>
+        <button class="expand-btn continue" id="buyConfirmSubmit">Beli</button>
+        <button class="expand-btn cancel" id="productModalClose">Batal</button>
       </div>
     </div>
   `;
