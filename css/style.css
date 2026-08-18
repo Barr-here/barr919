@@ -685,14 +685,20 @@
       transition: transform 0.15s, box-shadow 0.15s;
       border: 2.5px solid var(--border);
       box-shadow: var(--shadow-sm);
+      cursor: pointer;
     }
-    
-    .expand-btn.buy {
+  
+    .expand-btn.cancel {
+      background: #ff1111;
+      color: #000000;
+    }
+
+    .expand-btn.continue {
       background: var(--accent);
       color: #000000;
     }
-    
-    html.dark .expand-btn.buy {
+
+    html.dark .expand-btn.continue {
       color: #ffffff;
     }
     
@@ -729,6 +735,11 @@
       border: var(--bw) solid var(--border2);
       border-radius: 0;
       white-space: pre-line;
+    }
+    
+    .button-container {
+      display: flex;
+      gap: 8px;
     }
     
     /* COPY URL */
@@ -2024,7 +2035,7 @@ html.dark .dock-item.indicator-active .dock-icon {
 }
 .btn-primary { background: var(--accent); color: #fff; }
 .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-
+  
 .deposit-error {
   color: #d33;
   font-size: 12px;
