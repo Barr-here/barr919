@@ -503,12 +503,12 @@ function openBuyConfirmModal(item) {
         <span
           class="buy-confirm-stock-badge buy-confirm-stock-available"
           id="buyConfirmStockBadge"
-          style="display:inline-flex;align-items:center;padding:7px 11px;background:#FFD83D;border:3px solid #111;box-shadow:4px 4px 0 #111;color:#111;font-family:var(--mono,monospace);font-size:12px;font-weight:800;line-height:1;letter-spacing:.03em;text-transform:uppercase;"
-        >Memuat stok...</span>
+          style="display:inline-flex;align-items:center;padding:7px 11px;background:var(--accent);border:3px solid #111;box-shadow:2px 2px 0 #111;color:#111;font-family:var(--mono,monospace);font-size:12px;font-weight:800;line-height:1;letter-spacing:.03em;text-transform:uppercase;"
+        >Memuat...</span>
         <span
           class="buy-confirm-stock-badge buy-confirm-stock-sold"
           id="buyConfirmSoldBadge"
-          style="display:inline-flex;align-items:center;padding:7px 11px;background:#fff;border:3px solid #111;box-shadow:4px 4px 0 #111;color:#111;font-family:var(--mono,monospace);font-size:12px;font-weight:800;line-height:1;letter-spacing:.03em;text-transform:uppercase;"
+          style="display:inline-flex;align-items:center;padding:7px 11px;background:var(--accent2);border:3px solid #111;box-shadow:2px 2px 0 #111;color:#111;font-family:var(--mono,monospace);font-size:12px;font-weight:800;line-height:1;letter-spacing:.03em;text-transform:uppercase;"
         >Memuat...</span>
       </div>
 
