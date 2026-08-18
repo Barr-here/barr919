@@ -443,7 +443,7 @@ function openProductModal(item) {
       <div class="expand-footer">${item.content || ''}</div>
 
       ${hasPrice ? `
-        <button class="expand-btn buy-coin" id="buyWithCoinBtn">
+        <button class="expand-btn buy" id="buyWithCoinBtn">
           Beli Sekarang
         </button>
         <div class="buy-admin-footer">atau beli langsung ke admin</div>
@@ -523,7 +523,7 @@ function openBuyConfirmModal(item) {
 
       <div class="deposit-error" id="buyConfirmError"></div>
 
-      <button class="btn btn-primary" id="buyConfirmSubmit">Beli</button>
+      <button class="expand-btn buy" id="buyConfirmSubmit">Beli</button>
     </div>
   `;
 
@@ -616,7 +616,7 @@ function openBuyConfirmModal(item) {
       Swal.fire({
         icon: 'success',
         title: 'Pesanan Berhasil Dibuat',
-        html: `Pesanan <b>${item.title} x${qty}</b> berhasil! Data akun sudah dikirim ke email kamu.<br><br>Kalau email belum muncul di kotak masuk, coba cek bagian <b>Spam</b> / <b>Promosi</b> juga ya`,
+        html: `<b>${item.title} x${qty}</b><br>Data akun sudah dikirim ke email kamu<br><br>Kalau email belum muncul di kotak masuk, coba cek bagian <b>Spam</b> juga ya`,
       });
     } catch (err) {
       btn.disabled = false;
