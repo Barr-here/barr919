@@ -444,7 +444,7 @@ function openProductModal(item) {
 
       ${hasPrice ? `
         <button class="expand-btn buy-coin" id="buyWithCoinBtn">
-          Beli Sekarang — ${item.price} coin / pcs
+          Beli Sekarang
         </button>
         <div class="buy-admin-footer">atau beli langsung ke admin</div>
       ` : ''}
@@ -483,13 +483,34 @@ document.getElementById('productModalOverlay')?.addEventListener('click', (e) =>
 function openBuyConfirmModal(item) {
   const overlay = document.getElementById('buyConfirmOverlay');
   const box = document.getElementById('buyConfirmBox');
+  const stockValue = item.stock ?? item.stock_total;
+  const soldValue = item.sold ?? item.sold_count;
+  const formatCount = (value) => {
+    const count = Number(value);
+    return Number.isFinite(count)
+      ? count.toLocaleString('id-ID')
+      : '—';
+  };
 
   box.innerHTML = `
     <button class="product-modal-close" id="buyConfirmClose">✕</button>
 
     <div class="product-modal-body">
       <div class="buy-confirm-title">${item.title}</div>
-      <div class="buy-confirm-price">${item.price} coin / pcs</div>
+      <div
+        class="buy-confirm-stock-badges"
+        aria-label="Informasi stok produk"
+        style="display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 18px;"
+      >
+        <span
+          class="buy-confirm-stock-badge buy-confirm-stock-available"
+          style="display:inline-flex;align-items:center;padding:7px 11px;background:#FFD83D;border:3px solid #111;box-shadow:4px 4px 0 #111;color:#111;font-family:var(--mono,monospace);font-size:12px;font-weight:800;line-height:1;letter-spacing:.03em;text-transform:uppercase;"
+        >${formatCount(stockValue)} stok</span>
+        <span
+          class="buy-confirm-stock-badge buy-confirm-stock-sold"
+          style="display:inline-flex;align-items:center;padding:7px 11px;background:#fff;border:3px solid #111;box-shadow:4px 4px 0 #111;color:#111;font-family:var(--mono,monospace);font-size:12px;font-weight:800;line-height:1;letter-spacing:.03em;text-transform:uppercase;"
+        >${formatCount(soldValue)} terjual</span>
+      </div>
 
       <div class="form-row">
         <label>Jumlah</label>
@@ -511,7 +532,7 @@ function openBuyConfirmModal(item) {
 
   qtyInput.addEventListener('input', () => {
     const qty = Math.max(1, parseInt(qtyInput.value) || 1);
-    totalText.textContent = `Total: ${item.price * qty} coin`;
+    totalText.textContent = `Harga: ${item.price * qty} coin`;
   });
 
   document.getElementById('buyConfirmClose').onclick = closeBuyConfirmModal;
@@ -548,9 +569,7 @@ function openBuyConfirmModal(item) {
         }),
       });
       const data = await res.json();
-
-      btn.disabled = false;
-      btn.textContent = 'Konfirmasi Beli';
+      btn.textContent = 'Berhasil...';
 
       if (!res.ok) {
         errBox.textContent = data.error || 'Gagal memproses pembelian';
@@ -567,7 +586,7 @@ function openBuyConfirmModal(item) {
       });
     } catch (err) {
       btn.disabled = false;
-      btn.textContent = 'Konfirmasi Beli';
+      btn.textContent = 'Beli';
       errBox.textContent = 'Gagal terhubung ke server';
     }
   };
