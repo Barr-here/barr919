@@ -443,9 +443,7 @@ function openProductModal(item) {
       <div class="expand-footer">${item.content || ''}</div>
 
       ${hasPrice ? `
-        <button class="expand-btn buy" id="buyWithCoinBtn">
-          Beli Sekarang
-        </button>
+        <button class="btn btn-primary" id="buyWithCoinBtn">Beli Sekarang</button>
         <div class="buy-admin-footer">atau beli langsung ke admin</div>
       ` : ''}
 
@@ -522,7 +520,7 @@ function openBuyConfirmModal(item) {
       <div class="deposit-error" id="buyConfirmError"></div>
       
       <button class="btn btn-primary" id="buyConfirmSubmit">Beli</button>
-      <button class="btn btn-dange" id="buyConfirmClose">Batal</button>
+      <button class="btn btn-danger" id="buyConfirmClose">Batal</button>
     </div>
   `;
 
@@ -631,10 +629,6 @@ function closeBuyConfirmModal() {
   overlay.classList.remove('show');
   document.body.style.overflow = '';
 }
-
-document.getElementById('buyConfirmOverlay')?.addEventListener('click', (e) => {
-  if (e.target.id === 'buyConfirmOverlay') closeBuyConfirmModal();
-});
 
 // ============================================================
 // LOGIN HINT POPUP (tampil 1x saja)
