@@ -2069,9 +2069,21 @@ html.dark .btn-danger {
 }
   
 .deposit-error {
-  color: #d33;
+  color: #000;
+  background: #FF6B6B;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 7px 10px;
   font-size: 12px;
   font-family: var(--mono);
-  margin-top: 4px;
-  min-height: 14px;
+  font-weight: 700;
+  margin: 8px auto 0;
+  width: fit-content;
+  max-width: 100%;
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+
+.deposit-error:empty {
+  display: none;
 }
