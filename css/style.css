@@ -682,7 +682,7 @@
       font-family: var(--mono);
       font-size: 12px;
       font-weight: 700;
-      transition: transform 0.15s, box-shadow 0.15s;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
       border: 2.5px solid var(--border);
       box-shadow: var(--shadow-sm);
       cursor: pointer;
@@ -738,10 +738,12 @@
     }
     
     .expand-btn:disabled {
+      transform: translate(2px, 2px);
+      box-shadow: 0 0 0 0 var(--border);
       opacity: 0.6;
       cursor: not-allowed;
     }
-
+  
     .button-container {
       display: flex;
       gap: 8px;
