@@ -564,7 +564,7 @@ function openBuyConfirmModal(item) {
 
   qtyInput.addEventListener('input', () => {
     const qty = Math.max(1, parseInt(qtyInput.value) || 1);
-    totalText.textContent = `Harga: ${item.price * qty} coin`;
+    totalText.textContent = `${item.price * qty} coin`;
   });
 
   document.getElementById('buyConfirmClose').onclick = closeBuyConfirmModal;
