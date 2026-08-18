@@ -114,6 +114,35 @@ serve(async (req) => {
     const body = await req.json();
     const { action, userId, sessionToken, productId, quantity } = body;
 
+    // ========================================================
+    // STOCK INFO — publik, tidak perlu login (dipakai badge di modal beli)
+    // ========================================================
+    if (action === "stock-info") {
+      if (!productId) {
+        return new Response(JSON.stringify({ error: "productId wajib diisi" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const { count: available } = await supabaseAdmin
+        .from("product_accounts")
+        .select("id", { count: "exact", head: true })
+        .eq("product_id", productId)
+        .eq("is_used", false);
+
+      const { count: used } = await supabaseAdmin
+        .from("product_accounts")
+        .select("id", { count: "exact", head: true })
+        .eq("product_id", productId)
+        .eq("is_used", true);
+
+      return new Response(
+        JSON.stringify({ success: true, stock: available || 0, sold: used || 0 }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const user = await verifySessionUser(userId, sessionToken);
     if (!user) {
       return new Response(JSON.stringify({ error: "Sesi tidak valid, silakan login ulang" }), {
