@@ -255,12 +255,26 @@ serve(async (req) => {
         .in("id", accountIds);
 
       // ----- KIRIM DATA AKUN KE EMAIL USER -----
+      let emailSent = false;
       try {
         await sendAccountEmail(user.email, product.title, availableAccounts);
+        emailSent = true;
       } catch (emailErr) {
         console.log("Gagal kirim email akun:", emailErr.message);
-        // Tidak menggagalkan transaksi kalau email gagal terkirim -- data tetap aman di database,
-        // admin bisa follow up manual lewat notif Telegram di bawah ini.
+        // Tidak menggagalkan transaksi kalau email gagal terkirim -- data akun
+        // SENGAJA dibiarkan tersimpan di database supaya admin bisa follow up
+        // manual lewat notif Telegram di bawah ini.
+      }
+
+      // ----- KOSONGKAN KREDENSIAL DARI DATABASE SETELAH TERKIRIM -----
+      // Baris tetap disimpan (is_used, used_by_order_id) untuk riwayat/audit,
+      // tapi email & password dihapus supaya tidak numpuk di storage Supabase
+      // dan tidak ada kredensial lama yang tersisa di server.
+      if (emailSent) {
+        await supabaseAdmin
+          .from("product_accounts")
+          .update({ email: null, password: null })
+          .in("id", accountIds);
       }
 
       // ----- NOTIF TELEGRAM UNTUK ADMIN (info pesanan, bukan data akun) -----
