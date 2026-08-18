@@ -204,9 +204,12 @@ async function loadStockList(productId) {
   accounts.forEach(acc => {
     const row = document.createElement('div');
     row.className = 'item-row';
+    const credText = acc.email
+      ? acc.email + (acc.password ? ' / ' + acc.password : '')
+      : '(kredensial sudah dihapus setelah terkirim ke buyer)';
     row.innerHTML = `
       <div class="item-title" style="font-size:12px;">
-        ${acc.email}${acc.password ? ' / ' + acc.password : ''}
+        ${credText}
         <span style="color:${acc.is_used ? '#e57373' : 'var(--accent)'}; font-weight:700;">
           ${acc.is_used ? ' (terpakai)' : ' (tersedia)'}
         </span>
