@@ -3,11 +3,15 @@
 // Menangani pembelian produk pakai coin.
 // - Verifikasi sesi user
 // - Cek saldo cukup
-// - Potong coin, catat order, kirim notif Telegram ke admin
+// - Ambil stok akun (email/password) yang belum terpakai
+// - Kalau stok kurang: batalkan SEBELUM potong coin
+// - Potong coin, tandai akun terpakai, catat order
+// - Kirim data akun ke EMAIL USER, kirim notif info pesanan ke Telegram admin
 // ============================================================
 
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -21,6 +25,8 @@ const supabaseAdmin = createClient(
 
 const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN");
 const TELEGRAM_CHAT_ID = Deno.env.get("TELEGRAM_CHAT_ID");
+const GMAIL_USER = Deno.env.get("GMAIL_USER")!;
+const GMAIL_APP_PASSWORD = Deno.env.get("GMAIL_APP_PASSWORD")!;
 
 async function sendTelegramNotif(message: string) {
   if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
@@ -38,6 +44,52 @@ async function sendTelegramNotif(message: string) {
   } catch (err) {
     console.log("Gagal kirim notif Telegram:", err.message);
   }
+}
+
+async function sendAccountEmail(toEmail: string, productTitle: string, accounts: { email: string; password: string | null }[]) {
+  const client = new SMTPClient({
+    connection: {
+      hostname: "smtp.gmail.com",
+      port: 465,
+      tls: true,
+      auth: {
+        username: GMAIL_USER,
+        password: GMAIL_APP_PASSWORD,
+      },
+    },
+  });
+
+  const accountListHtml = accounts
+    .map(
+      (acc, i) => `
+        <div style="padding:10px 0; border-bottom:1px solid #eee;">
+          <b>Akun ${i + 1}</b><br>
+          Email/Username: <code>${acc.email}</code><br>
+          ${acc.password ? `Password: <code>${acc.password}</code>` : "Password: <i>(tidak ada / tidak perlu)</i>"}
+        </div>`
+    )
+    .join("");
+
+  const accountListText = accounts
+    .map((acc, i) => `Akun ${i + 1}\nEmail/Username: ${acc.email}\nPassword: ${acc.password || "(tidak ada)"}`)
+    .join("\n\n");
+
+  await client.send({
+    from: GMAIL_USER,
+    to: toEmail,
+    subject: `Data Akun ${productTitle} — Barr Store`,
+    content: `Terima kasih sudah membeli ${productTitle}!\n\n${accountListText}\n\nSimpan data ini baik-baik.`,
+    html: `
+      <div style="font-family: monospace; padding: 20px; max-width: 480px;">
+        <h2>Barr Store</h2>
+        <p>Terima kasih sudah membeli <b>${productTitle}</b>! Berikut data akun kamu:</p>
+        ${accountListHtml}
+        <p style="color:#666; font-size:13px; margin-top:16px;">Simpan data ini baik-baik. Jangan berikan ke siapa pun.</p>
+      </div>
+    `,
+  });
+
+  await client.close();
 }
 
 async function verifySessionUser(userId: string, sessionToken: string) {
@@ -112,9 +164,24 @@ serve(async (req) => {
         );
       }
 
+      // ----- CEK STOK AKUN SEBELUM POTONG COIN -----
+      const { data: availableAccounts } = await supabaseAdmin
+        .from("product_accounts")
+        .select("id, email, password")
+        .eq("product_id", productId)
+        .eq("is_used", false)
+        .limit(qty);
+
+      if (!availableAccounts || availableAccounts.length < qty) {
+        return new Response(
+          JSON.stringify({ error: "Stok akun untuk produk ini sedang habis. Silakan hubungi admin." }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
       const newCoin = user.coin - totalPrice;
 
-      // Potong coin
+      // ----- POTONG COIN -----
       const { error: updateErr } = await supabaseAdmin
         .from("users")
         .update({ coin: newCoin })
@@ -127,7 +194,7 @@ serve(async (req) => {
         });
       }
 
-      // Catat order
+      // ----- CATAT ORDER -----
       const { data: order, error: orderErr } = await supabaseAdmin
         .from("orders")
         .insert({
@@ -137,7 +204,7 @@ serve(async (req) => {
           quantity: qty,
           price_per_unit: product.price,
           total_price: totalPrice,
-          status: "pending",
+          status: "completed",
         })
         .select()
         .single();
@@ -151,8 +218,25 @@ serve(async (req) => {
         });
       }
 
+      // ----- TANDAI AKUN SEBAGAI TERPAKAI -----
+      const accountIds = availableAccounts.map((a) => a.id);
+      await supabaseAdmin
+        .from("product_accounts")
+        .update({ is_used: true, used_by_order_id: order.id })
+        .in("id", accountIds);
+
+      // ----- KIRIM DATA AKUN KE EMAIL USER -----
+      try {
+        await sendAccountEmail(user.email, product.title, availableAccounts);
+      } catch (emailErr) {
+        console.log("Gagal kirim email akun:", emailErr.message);
+        // Tidak menggagalkan transaksi kalau email gagal terkirim -- data tetap aman di database,
+        // admin bisa follow up manual lewat notif Telegram di bawah ini.
+      }
+
+      // ----- NOTIF TELEGRAM UNTUK ADMIN (info pesanan, bukan data akun) -----
       await sendTelegramNotif(
-        `🛒 <b>Pesanan Baru</b>\n\n` +
+        `🛒 <b>Pesanan Baru (Otomatis Terkirim)</b>\n\n` +
         `📧 Email: <code>${user.email}</code>\n` +
         `📦 Produk: ${product.title}\n` +
         `🔢 Jumlah: ${qty}\n` +
