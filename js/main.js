@@ -616,7 +616,7 @@ function openBuyConfirmModal(item) {
       Swal.fire({
         icon: 'success',
         title: 'Pesanan Berhasil Dibuat',
-        text: `Pesanan ${item.title} x${qty} sedang diproses. Admin akan segera menghubungi kamu.`,
+        html: `Pesanan <b>${item.title} x${qty}</b> berhasil! Data akun sudah dikirim ke email kamu.<br><br>Kalau email belum muncul di kotak masuk, coba cek bagian <b>Spam</b> / <b>Promosi</b> juga ya`,
       });
     } catch (err) {
       btn.disabled = false;
