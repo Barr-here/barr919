@@ -529,8 +529,10 @@ function openBuyConfirmModal(item) {
   overlay.classList.add('show');
   document.body.style.overflow = 'hidden';
   
-  btn.disabled = true;
-  btn.textContent = 'Memproses...';
+  document.getElementById('buyConfirmSubmit').onclick = async () => {
+    btn.disabled = true;
+    btn.textContent = 'Memproses...';
+  }
 
   // Ambil stok riil dari edge function (data akun tidak boleh diakses langsung dari frontend)
   fetch(SUPABASE_URL + '/functions/v1/purchase', {
