@@ -185,22 +185,23 @@ async function loadStockList(productId) {
   const listBox = document.getElementById('stockList');
   listBox.textContent = 'Memuat...';
 
-  const { data, error } = await supabaseClient
-    .from('product_accounts')
-    .select('id, email, password, is_used')
-    .eq('product_id', productId)
-    .order('created_at', { ascending: true });
+  const { ok, data } = await callAdminData('select', 'product_accounts', {
+    filter: { product_id: productId },
+    orderBy: 'created_at',
+    orderAsc: true,
+  });
 
-  if (error) { listBox.textContent = 'Error: ' + error.message; return; }
+  if (!ok) { listBox.textContent = 'Error: ' + (data.error || ''); return; }
 
-  const available = data.filter(a => !a.is_used).length;
-  const used = data.filter(a => a.is_used).length;
+  const accounts = data.data;
+  const available = accounts.filter(a => !a.is_used).length;
+  const used = accounts.filter(a => a.is_used).length;
 
   document.getElementById('stockSummary').textContent =
-    `Tersedia: ${available} | Terpakai: ${used} | Total: ${data.length}`;
+    `Tersedia: ${available} | Terpakai: ${used} | Total: ${accounts.length}`;
 
   listBox.innerHTML = '';
-  data.forEach(acc => {
+  accounts.forEach(acc => {
     const row = document.createElement('div');
     row.className = 'item-row';
     row.innerHTML = `
@@ -220,7 +221,7 @@ async function loadStockList(productId) {
   listBox.querySelectorAll('[data-del-stock]').forEach(btn => {
     btn.onclick = async () => {
       if (!(await askConfirm('Hapus akun ini dari stok?'))) return;
-      await supabaseClient.from('product_accounts').delete().eq('id', btn.dataset.delStock);
+      await callAdminData('delete', 'product_accounts', { id: btn.dataset.delStock });
       loadStockList(productId);
     };
   });
@@ -243,12 +244,12 @@ document.getElementById('stockBulkAdd').onclick = async () => {
   btn.disabled = true;
   btn.textContent = 'Menambahkan...';
 
-  const { error } = await supabaseClient.from('product_accounts').insert(rows);
+  const { ok, data } = await callAdminData('insert', 'product_accounts', { payload: rows });
 
   btn.disabled = false;
   btn.textContent = 'Tambah ke Stok';
 
-  if (error) { showError('Gagal tambah stok: ' + error.message); return; }
+  if (!ok) { showError('Gagal tambah stok: ' + (data.error || '')); return; }
 
   document.getElementById('stockBulkInput').value = '';
   showSuccess(`${rows.length} akun berhasil ditambahkan ke stok`);
