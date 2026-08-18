@@ -1946,7 +1946,7 @@ html.dark .dock-item.indicator-active .dock-icon {
   font-family: var(--mono);
   font-size: 11px;
   color: var(--subtext);
-  margin-top: 8px;
+  margin-top: 10px;
   margin-bottom: 12px;
 }
 
