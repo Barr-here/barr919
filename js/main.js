@@ -483,8 +483,6 @@ document.getElementById('productModalOverlay')?.addEventListener('click', (e) =>
 function openBuyConfirmModal(item) {
   const overlay = document.getElementById('buyConfirmOverlay');
   const box = document.getElementById('buyConfirmBox');
-  const stockValue = item.stock ?? item.stock_total;
-  const soldValue = item.sold ?? item.sold_count;
   const formatCount = (value) => {
     const count = Number(value);
     return Number.isFinite(count)
@@ -504,12 +502,14 @@ function openBuyConfirmModal(item) {
       >
         <span
           class="buy-confirm-stock-badge buy-confirm-stock-available"
+          id="buyConfirmStockBadge"
           style="display:inline-flex;align-items:center;padding:7px 11px;background:#FFD83D;border:3px solid #111;box-shadow:4px 4px 0 #111;color:#111;font-family:var(--mono,monospace);font-size:12px;font-weight:800;line-height:1;letter-spacing:.03em;text-transform:uppercase;"
-        >${formatCount(stockValue)} stok</span>
+        >Memuat stok...</span>
         <span
           class="buy-confirm-stock-badge buy-confirm-stock-sold"
+          id="buyConfirmSoldBadge"
           style="display:inline-flex;align-items:center;padding:7px 11px;background:#fff;border:3px solid #111;box-shadow:4px 4px 0 #111;color:#111;font-family:var(--mono,monospace);font-size:12px;font-weight:800;line-height:1;letter-spacing:.03em;text-transform:uppercase;"
-        >${formatCount(soldValue)} terjual</span>
+        >Memuat...</span>
       </div>
 
       <div class="form-row">
@@ -526,6 +526,35 @@ function openBuyConfirmModal(item) {
 
   overlay.classList.add('show');
   document.body.style.overflow = 'hidden';
+
+  // Ambil stok riil dari edge function (data akun tidak boleh diakses langsung dari frontend)
+  fetch(SUPABASE_URL + '/functions/v1/purchase', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+    },
+    body: JSON.stringify({ action: 'stock-info', productId: item.id }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      const stockBadge = document.getElementById('buyConfirmStockBadge');
+      const soldBadge = document.getElementById('buyConfirmSoldBadge');
+      if (!stockBadge || !soldBadge) return;
+      if (data.error) {
+        stockBadge.textContent = '— stok';
+        soldBadge.textContent = '— terjual';
+        return;
+      }
+      stockBadge.textContent = `${formatCount(data.stock)} stok`;
+      soldBadge.textContent = `${formatCount(data.sold)} terjual`;
+    })
+    .catch(() => {
+      const stockBadge = document.getElementById('buyConfirmStockBadge');
+      const soldBadge = document.getElementById('buyConfirmSoldBadge');
+      if (stockBadge) stockBadge.textContent = '— stok';
+      if (soldBadge) soldBadge.textContent = '— terjual';
+    });
 
   const qtyInput = document.getElementById('buyQtyInput');
   const totalText = document.getElementById('buyTotalText');
