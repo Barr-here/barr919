@@ -138,6 +138,7 @@ async function loadProducts() {
     row.innerHTML = `
       <div class="item-title">${item.title}</div>
       <div class="item-actions">
+        <button class="btn btn-secondary" data-stock="${item.id}" data-stock-title="${item.title}">Stok</button>
         <button class="btn btn-secondary" data-edit="${item.id}">Edit</button>
         <button class="btn btn-danger" data-del="${item.id}">Hapus</button>
       </div>
@@ -158,7 +159,103 @@ async function loadProducts() {
   list.querySelectorAll('[data-edit]').forEach(btn => {
     btn.onclick = () => editProduct(data.find(d => d.id === btn.dataset.edit));
   });
+
+  list.querySelectorAll('[data-stock]').forEach(btn => {
+    btn.onclick = () => openStockModal(btn.dataset.stock, btn.dataset.stockTitle);
+  });
 }
+
+// ============================================================
+// KELOLA STOK AKUN PRODUK
+// ============================================================
+
+async function openStockModal(productId, productTitle) {
+  document.getElementById('stockModalTitle').textContent = 'Stok: ' + productTitle;
+  document.getElementById('stockModal').dataset.productId = productId;
+  document.getElementById('stockBulkInput').value = '';
+  document.getElementById('stockModal').classList.remove('hidden');
+  loadStockList(productId);
+}
+
+function closeStockModal() {
+  document.getElementById('stockModal').classList.add('hidden');
+}
+
+async function loadStockList(productId) {
+  const listBox = document.getElementById('stockList');
+  listBox.textContent = 'Memuat...';
+
+  const { data, error } = await supabaseClient
+    .from('product_accounts')
+    .select('id, email, password, is_used')
+    .eq('product_id', productId)
+    .order('created_at', { ascending: true });
+
+  if (error) { listBox.textContent = 'Error: ' + error.message; return; }
+
+  const available = data.filter(a => !a.is_used).length;
+  const used = data.filter(a => a.is_used).length;
+
+  document.getElementById('stockSummary').textContent =
+    `Tersedia: ${available} | Terpakai: ${used} | Total: ${data.length}`;
+
+  listBox.innerHTML = '';
+  data.forEach(acc => {
+    const row = document.createElement('div');
+    row.className = 'item-row';
+    row.innerHTML = `
+      <div class="item-title" style="font-size:12px;">
+        ${acc.email}${acc.password ? ' / ' + acc.password : ''}
+        <span style="color:${acc.is_used ? '#e57373' : 'var(--accent)'}; font-weight:700;">
+          ${acc.is_used ? ' (terpakai)' : ' (tersedia)'}
+        </span>
+      </div>
+      <div class="item-actions">
+        <button class="btn btn-danger" data-del-stock="${acc.id}">Hapus</button>
+      </div>
+    `;
+    listBox.appendChild(row);
+  });
+
+  listBox.querySelectorAll('[data-del-stock]').forEach(btn => {
+    btn.onclick = async () => {
+      if (!(await askConfirm('Hapus akun ini dari stok?'))) return;
+      await supabaseClient.from('product_accounts').delete().eq('id', btn.dataset.delStock);
+      loadStockList(productId);
+    };
+  });
+}
+
+document.getElementById('stockBulkAdd').onclick = async () => {
+  const productId = document.getElementById('stockModal').dataset.productId;
+  const raw = document.getElementById('stockBulkInput').value.trim();
+
+  if (!raw) { showError('Isi minimal 1 akun'); return; }
+
+  // Format per baris: email|password (password opsional)
+  const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+  const rows = lines.map(line => {
+    const [email, password] = line.split('|').map(s => s?.trim());
+    return { product_id: productId, email, password: password || null };
+  });
+
+  const btn = document.getElementById('stockBulkAdd');
+  btn.disabled = true;
+  btn.textContent = 'Menambahkan...';
+
+  const { error } = await supabaseClient.from('product_accounts').insert(rows);
+
+  btn.disabled = false;
+  btn.textContent = 'Tambah ke Stok';
+
+  if (error) { showError('Gagal tambah stok: ' + error.message); return; }
+
+  document.getElementById('stockBulkInput').value = '';
+  showSuccess(`${rows.length} akun berhasil ditambahkan ke stok`);
+  loadStockList(productId);
+};
+
+document.getElementById('closeStockModal').onclick = closeStockModal;
 
 function editProduct(item) {
   document.getElementById('p_type').value = item.type;

@@ -444,8 +444,9 @@ function openProductModal(item) {
 
       ${hasPrice ? `
         <button class="expand-btn buy-coin" id="buyWithCoinBtn">
-          🪙 Beli dengan Coin — ${item.price} / pcs
+          Beli Sekarang — ${item.price} coin / pcs
         </button>
+        <div class="buy-admin-footer">atau beli langsung ke admin</div>
       ` : ''}
 
       <div class="expand-buttons">
