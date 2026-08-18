@@ -62,11 +62,27 @@ async function sendAccountEmail(toEmail: string, productTitle: string, accounts:
   const accountListHtml = accounts
     .map(
       (acc, i) => `
-        <div style="padding:10px 0; border-bottom:1px solid #eee;">
-          <b>Akun ${i + 1}</b><br>
-          Email/Username: <code>${acc.email}</code><br>
-          ${acc.password ? `Password: <code>${acc.password}</code>` : "Password: <i>(tidak ada / tidak perlu)</i>"}
-        </div>`
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:14px;">
+          <tr>
+            <td style="background:#fff;border:3px solid #111;box-shadow:4px 4px 0 #111;padding:14px 16px;">
+              <span style="display:inline-block;background:#FFD83D;border:2px solid #111;padding:3px 9px;font-family:monospace;font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:#111;margin-bottom:10px;">Akun ${i + 1}</span>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:10px;">
+                <tr>
+                  <td style="font-family:monospace;font-size:12px;color:#555;padding-bottom:2px;">Email/Username</td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace;font-size:14px;font-weight:700;color:#111;padding-bottom:8px;word-break:break-all;">${acc.email}</td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace;font-size:12px;color:#555;padding-bottom:2px;">Password</td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace;font-size:14px;font-weight:700;color:#111;">${acc.password ? acc.password : "(tidak ada / tidak perlu)"}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>`
     )
     .join("");
 
@@ -80,11 +96,40 @@ async function sendAccountEmail(toEmail: string, productTitle: string, accounts:
     subject: `Data Akun ${productTitle} — Barr Store`,
     content: `Terima kasih sudah membeli ${productTitle}!\n\n${accountListText}\n\nSimpan data ini baik-baik.`,
     html: `
-      <div style="font-family: monospace; padding: 20px; max-width: 480px;">
-        <h2>Barr Store</h2>
-        <p>Terima kasih sudah membeli <b>${productTitle}</b>! Berikut data akun kamu:</p>
-        ${accountListHtml}
-        <p style="color:#666; font-size:13px; margin-top:16px;">Simpan data ini baik-baik. Jangan berikan ke siapa pun.</p>
+      <div style="background:#F3EEE3;padding:24px 16px;font-family:monospace;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;margin:0 auto;">
+
+          <tr>
+            <td style="background:#FFD83D;border:3px solid #111;box-shadow:5px 5px 0 #111;padding:16px 18px;margin-bottom:20px;">
+              <span style="font-family:monospace;font-size:20px;font-weight:800;color:#111;letter-spacing:.02em;">BARR STORE</span>
+            </td>
+          </tr>
+
+          <tr><td style="height:20px;line-height:20px;font-size:0;">&nbsp;</td></tr>
+
+          <tr>
+            <td style="background:#fff;border:3px solid #111;box-shadow:5px 5px 0 #111;padding:16px 18px;">
+              <span style="font-family:monospace;font-size:13px;color:#111;">
+                Terima kasih sudah membeli <b>${productTitle}</b>! Berikut data akun kamu:
+              </span>
+            </td>
+          </tr>
+
+          <tr><td style="height:20px;line-height:20px;font-size:0;">&nbsp;</td></tr>
+
+          <tr>
+            <td>${accountListHtml}</td>
+          </tr>
+
+          <tr>
+            <td style="background:#111;border:3px solid #111;box-shadow:5px 5px 0 #111;padding:14px 16px;">
+              <span style="font-family:monospace;font-size:11px;color:#FFD83D;font-weight:700;letter-spacing:.02em;">
+                ⚠ SIMPAN DATA INI BAIK-BAIK. JANGAN BERIKAN KE SIAPA PUN.
+              </span>
+            </td>
+          </tr>
+
+        </table>
       </div>
     `,
   });
@@ -286,13 +331,16 @@ serve(async (req) => {
 
       // ----- NOTIF TELEGRAM UNTUK ADMIN (info pesanan, bukan data akun) -----
       await sendTelegramNotif(
-        `🛒 <b>Pesanan Baru (Otomatis Terkirim)</b>\n\n` +
-        `📧 Email: <code>${user.email}</code>\n` +
-        `📦 Produk: ${product.title}\n` +
-        `🔢 Jumlah: ${qty}\n` +
-        `🪙 Total: ${totalPrice} coin\n` +
-        `🧾 Order ID: <code>${order.id}</code>\n` +
-        `🕐 Waktu: ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })} WIB`
+        `<b>┌─────────────────────┐</b>\n` +
+        `<b>│   🛒 PESANAN BARU   │</b>\n` +
+        `<b>└─────────────────────┘</b>\n\n` +
+        `<b>BARR STORE</b> · otomatis terkirim\n\n` +
+        `• <b>Produk</b>\n<code>${product.title}</code>\n\n` +
+        `• <b>Email</b>\n<code>${user.email}</code>\n\n` +
+        `• <b>Jumlah</b>   ${qty}\n` +
+        `• <b>Total</b>     ${totalPrice} coin\n\n` +
+        `• <b>Order ID</b>\n<code>${order.id}</code>\n\n` +
+        `🕐 ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })} WIB`
       );
 
       return new Response(
