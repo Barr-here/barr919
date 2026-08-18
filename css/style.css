@@ -2081,22 +2081,9 @@ html.dark .btn-danger {
   width: fit-content;
   max-width: 100%;
   box-shadow: var(--shadow-sm);
-  animation: errorTooltip 3s forwards;
   text-align: center;
 }
 
 .deposit-error:empty {
   display: none;
-}
-
-@keyframes errorTooltip {
-  0%, 85% {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  100% {
-    opacity: 0;
-    visibility: hidden;
-  }
 }
