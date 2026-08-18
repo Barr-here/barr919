@@ -686,7 +686,16 @@
       border: 2.5px solid var(--border);
       box-shadow: var(--shadow-sm);
     }
-   
+    
+    .expand-btn.buy {
+      background: var(--accent);
+      color: #000000;
+    }
+    
+    html.dark .expand-btn.buy {
+      color: #ffffff;
+    }
+    
     .expand-btn.wa {
       background: var(--get-bg);
       color: #000000;
@@ -1927,34 +1936,6 @@ html.dark .dock-item.indicator-active .dock-icon {
 /* ============================================================
    TOMBOL BELI DENGAN COIN + MODAL KONFIRMASI BELI
    ============================================================ */
-
-.expand-btn.buy-coin {
-  display: block;
-  width: 100%;
-  text-align: center;
-  padding: 12px;
-  border-radius: var(--radius);
-  font-family: var(--mono);
-  font-size: 13px;
-  font-weight: 700;
-  border: 2.5px solid var(--border);
-  box-shadow: var(--shadow-sm);
-  background: var(--accent);
-  color: #ffffff;
-  cursor: pointer;
-  margin-top: 4px;
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-
-.expand-btn.buy-coin:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 4px 4px 0 0 var(--border);
-}
-
-.expand-btn.buy-coin:active {
-  transform: translate(2px, 2px);
-  box-shadow: 0 0 0 0 var(--border);
-}
 
 .buy-admin-footer {
   text-align: center;
