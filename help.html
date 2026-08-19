@@ -9,10 +9,35 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <style>
-  body { padding: 20px; padding-bottom: 100px; max-width: 620px; margin: 0 auto; }
+  /*
+   * Keep every help page element inside the viewport.
+   * The global stylesheet uses content-box sizing, so the 20px body
+   * padding could make the page wider than a mobile viewport.
+   */
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    padding: 20px;
+    padding-bottom: 100px;
+    max-width: 620px;
+    margin: 0 auto;
+  }
 
   .help-container {
     position: relative;
+    width: 100%;
+    max-width: 100%;
     border: var(--bw) solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
@@ -91,7 +116,12 @@
   }
   html.dark .help-topic-btn.active { color: #000; }
 
-  .help-panel { display: none; }
+  .help-panel {
+    display: none;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
   .help-panel.active { display: block; animation: helpFadeIn 0.25s ease; }
 
   @keyframes helpFadeIn {
@@ -100,6 +130,9 @@
   }
 
   .help-step {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     background: var(--surface);
     border: var(--bw) solid var(--border);
     border-radius: var(--radius);
@@ -151,6 +184,8 @@
   .help-media img,
   .help-media video {
     width: 100%;
+    max-width: 100%;
+    height: auto;
     display: block;
   }
 
@@ -171,6 +206,29 @@
     margin-bottom: 8px;
   }
   .help-media-placeholder svg { width: 28px; height: 28px; opacity: 0.5; }
+
+  @media (max-width: 480px) {
+    body {
+      padding: 12px 10px 100px;
+    }
+
+    .help-container {
+      margin: 12px 0 18px;
+    }
+
+    .help-header {
+      padding: 90px 12px 4px;
+    }
+
+    .help-topics {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    .help-step {
+      padding: 14px;
+    }
+  }
 </style>
 </head>
 <body data-page="bantuan">
