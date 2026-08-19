@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <script src="js/theme.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bantuan — Barr Store</title>
+<link rel="icon" type="image/png" href="media/icon.png">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body { padding: 20px; padding-bottom: 100px; max-width: 620px; margin: 0 auto; }
+
+  .help-header { margin: 20px 0 24px; text-align: center; }
+  .help-title { font-family: var(--mono); font-weight: 700; font-size: 22px; color: var(--text); }
+  .help-sub { font-family: var(--mono); font-size: 12px; color: var(--subtext); margin-top: 4px; }
+
+  .help-topics {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-bottom: 20px;
+    scrollbar-width: none;
+  }
+  .help-topics::-webkit-scrollbar { display: none; }
+
+  .help-topic-btn {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border-radius: var(--radius);
+    border: 2.5px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .help-topic-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .help-topic-btn:hover { transform: translate(-2px,-2px); box-shadow: 4px 4px 0 0 var(--border); }
+  .help-topic-btn.active {
+    background: var(--accent);
+    color: #000;
+  }
+  html.dark .help-topic-btn.active { color: #000; }
+
+  .help-panel { display: none; }
+  .help-panel.active { display: block; animation: helpFadeIn 0.25s ease; }
+
+  @keyframes helpFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .help-step {
+    background: var(--surface);
+    border: var(--bw) solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow2);
+    padding: 18px;
+    margin-bottom: 16px;
+  }
+
+  .help-step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #000;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+
+  .help-step-title {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .help-step-text {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--subtext);
+    line-height: 1.6;
+    margin-bottom: 12px;
+    white-space: pre-line;
+  }
+
+  .help-media {
+    width: 100%;
+    border-radius: calc(var(--radius) - 4px);
+    border: 2px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .help-media img,
+  .help-media video {
+    width: 100%;
+    display: block;
+  }
+
+  .help-media-placeholder {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--surface2);
+    border: 2px dashed var(--border);
+    border-radius: calc(var(--radius) - 4px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--subtext);
+    margin-bottom: 8px;
+  }
+  .help-media-placeholder svg { width: 28px; height: 28px; opacity: 0.5; }
+</style>
+</head>
+<body data-page="bantuan">
+
+  <div class="help-header">
+    <div class="help-title">📖 Pusat Bantuan</div>
+    <div class="help-sub">Tutorial lengkap step-by-step</div>
+  </div>
+
+  <div class="help-topics" id="helpTopics">
+    <button class="help-topic-btn active" data-topic="daftar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line></svg>
+      Cara Daftar
+    </button>
+    <button class="help-topic-btn" data-topic="deposit">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+      Cara Deposit
+    </button>
+    <button class="help-topic-btn" data-topic="order">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      Cara Order
+    </button>
+  </div>
+
+  <!-- TOPIK: CARA DAFTAR -->
+  <div class="help-panel active" id="panel-daftar">
+
+    <div class="help-step">
+      <div class="help-step-number">1</div>
+      <div class="help-step-title">Buka Halaman Login</div>
+      <div class="help-step-text">Tap ikon Profil di bagian bawah layar, atau tap bagian atas beranda yang bertuliskan "Login".</div>
+      <div class="help-media-placeholder">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+        Gambar/video menyusul
+      </div>
+    </div>
+
+    <div class="help-step">
+      <div class="help-step-number">2</div>
+      <div class="help-step-title">Isi Form Daftar</div>
+      <div class="help-step-text">Pilih tab "Daftar", masukkan email aktif dan sandi minimal 6 karakter, lalu tap tombol Daftar.</div>
+      <div class="help-media-placeholder">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+        Gambar/video menyusul
+      </div>
+    </div>
+
+    <div class="help-step">
+      <div class="help-step-number">3</div>
+      <div class="help-step-title">Verifikasi Kode OTP</div>
+      <div class="help-step-text">Cek email kamu (termasuk folder spam), salin kode 6 digit yang dikirim, lalu masukkan ke halaman verifikasi.</div>
+      <div class="help-media-placeholder">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+        Gambar/video menyusul
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TOPIK: CARA DEPOSIT -->
+  <div class="help-panel" id="panel-deposit">
+
+    <div class="help-step">
+      <div class="help-step-number">1</div>
+      <div class="help-step-title">Buka Halaman Profil</div>
+      <div class="help-step-text">Pastikan kamu sudah login, lalu buka halaman Profil lewat dock navigasi di bawah.</div>
+      <div class="help-media-placeholder">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+        Gambar/video menyusul
+      </div>
+    </div>
+
+    <div class="help-step">
+      <div class="help-step-number">2</div>
+      <div class="help-step-title">Tap "Deposit Coin"</div>
+      <div class="help-step-text">Masukkan jumlah coin yang ingin dibeli (1 coin = Rp1.000, maksimal 50 coin per transaksi), lalu tap "Buat QRIS".</div>
+      <div class="help-media-placeholder">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+        Gambar/video menyusul
+      </div>
+    </div>
+
+    <div class="help-step">
+      <div class="help-step-number">3</div>
+      <div class="help-step-title">Scan & Bayar QRIS</div>
+      <div class="help-step-text">Buka aplikasi e-wallet atau mobile banking, scan kode QR yang muncul, selesaikan pembayaran dalam 10 menit. Coin otomatis masuk setelah pembayaran terkonfirmasi.</div>
+      <div class="help-media-placeholder">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+        Gambar/video menyusul
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TOPIK: CARA ORDER -->
+  <div class="help-panel" id="panel-order">
+
+    <div class="help-step">
+      <div class="help-step-number">1</div>
+      <div class="help-step-title">Pilih Produk</div>
+      <div class="help-step-text">Di halaman beranda, tap salah satu card produk yang ingin dibeli untuk melihat detailnya.</div>
+      <div class="help-media-placeholder">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+        Gambar/video menyusul
+      </div>
+    </div>
+
+    <div class="help-step">
+      <div class="help-step-number">2</div>
+      <div class="help-step-title">Tap "Beli Sekarang"</div>
+      <div class="help-step-text">Pastikan coin kamu cukup. Kalau belum, isi dulu lewat menu Deposit di halaman Profil.</div>
+      <div class="help-media-placeholder">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+        Gambar/video menyusul
+      </div>
+    </div>
+
+    <div class="help-step">
+      <div class="help-step-number">3</div>
+      <div class="help-step-title">Isi Jumlah & Konfirmasi</div>
+      <div class="help-step-text">Masukkan jumlah yang ingin dibeli, cek total coin yang dipotong, lalu tap "Konfirmasi Beli".</div>
+      <div class="help-media-placeholder">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+        Gambar/video menyusul
+      </div>
+    </div>
+
+    <div class="help-step">
+      <div class="help-step-number">4</div>
+      <div class="help-step-title">Cek Email</div>
+      <div class="help-step-text">Data akun/produk otomatis dikirim ke email yang kamu pakai daftar. Cek folder spam kalau tidak masuk ke inbox utama.</div>
+      <div class="help-media-placeholder">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+        Gambar/video menyusul
+      </div>
+    </div>
+
+  </div>
+
+  <nav class="dock-bar" id="dockBar">
+    <div class="dock-indicator" id="dockIndicator"></div>
+
+    <a href="index.html" class="dock-item" id="dockHome" data-page="beranda">
+      <div class="dock-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7"></path>
+          <path d="M9 22V12h6v10"></path>
+          <path d="M5 10v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10"></path>
+        </svg>
+      </div>
+      <span class="dock-label">Beranda</span>
+    </a>
+
+    <div class="dock-item" id="dockProfil" data-page="auth">
+      <div class="dock-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </div>
+      <span class="dock-label">Profil</span>
+    </div>
+
+    <a href="help.html" class="dock-item" id="dockBantuan" data-page="bantuan">
+      <div class="dock-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+      </div>
+      <span class="dock-label">Bantuan</span>
+    </a>
+  </nav>
+
+<script>
+  // ----- KLIK DOCK PROFIL: arahkan ke halaman profil -----
+  document.getElementById('dockProfil').addEventListener('click', () => {
+    window.location.href = 'profile.html';
+  });
+
+  // ----- TAB TOPIK BANTUAN -----
+  document.querySelectorAll('.help-topic-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.help-topic-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.help-panel').forEach(p => p.classList.remove('active'));
+
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.dataset.topic).classList.add('active');
+    });
+  });
+</script>
+<script src="js/dock.js"></script>
+</body>
+</html>
