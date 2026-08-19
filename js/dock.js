@@ -111,20 +111,4 @@
       }
     });
   });
-
-  // ----- HANDLER KHUSUS "BANTUAN" (berlaku di semua halaman, taruh di sini biar gak duplikat) -----
-  const dockBantuan = document.getElementById('dockBantuan');
-  if (dockBantuan) {
-    dockBantuan.addEventListener('click', () => {
-      if (typeof Swal !== 'undefined') {
-        Swal.fire({
-          icon: 'info',
-          title: 'Segera Hadir',
-          text: 'Tutorial auto order akan tersedia di sini.',
-        });
-      } else {
-        alert('Segera Hadir: Tutorial auto order akan tersedia di sini.');
-      }
-    });
-  }
 })();
