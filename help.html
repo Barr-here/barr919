@@ -456,6 +456,29 @@
       document.getElementById('panel-' + btn.dataset.topic).classList.add('active');
     });
   });
+  
+  // ----- PANAH SCROLL TOPIK -----
+  const helpTopics = document.getElementById('helpTopics');
+  const topicsPrev = document.getElementById('topicsPrev');
+  const topicsNext = document.getElementById('topicsNext');
+
+  function updateTopicsArrows() {
+    const maxScroll = helpTopics.scrollWidth - helpTopics.clientWidth;
+    topicsPrev.disabled = helpTopics.scrollLeft <= 1;
+    topicsNext.disabled = helpTopics.scrollLeft >= maxScroll - 1;
+  }
+
+  topicsPrev.addEventListener('click', () => {
+    helpTopics.scrollBy({ left: -180, behavior: 'smooth' });
+  });
+
+  topicsNext.addEventListener('click', () => {
+    helpTopics.scrollBy({ left: 180, behavior: 'smooth' });
+  });
+
+  helpTopics.addEventListener('scroll', updateTopicsArrows);
+  window.addEventListener('resize', updateTopicsArrows);
+  updateTopicsArrows();
 </script>
 <script src="js/dock.js"></script>
 </body>
