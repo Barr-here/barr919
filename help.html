@@ -166,6 +166,22 @@
     margin-bottom: 12px;
     white-space: pre-line;
   }
+  
+  .help-step-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .help-step-number {
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+
+  .help-step-title {
+    margin-bottom: 0;
+  }
 
   .help-media {
     width: 100%;
@@ -257,8 +273,10 @@
   <div class="help-panel active" id="panel-daftar">
 
     <div class="help-step">
-      <div class="help-step-number">1</div>
-      <div class="help-step-title">Buka Halaman Login</div>
+      <div class="help-step-heading">
+        <div class="help-step-number">1</div>
+        <div class="help-step-title">Buka Halaman Login</div>
+      </div>
       <div class="help-step-text">Tap ikon Profil di bagian bawah layar, atau tap bagian atas beranda yang bertuliskan "Login"</div>
       <div class="help-media">
         <img src="media/help/daftar1.png" alt="Daftar">
@@ -266,8 +284,10 @@
     </div>
 
     <div class="help-step">
-      <div class="help-step-number">2</div>
-      <div class="help-step-title">Isi Form Daftar</div>
+      <div class="help-step-heading">
+        <div class="help-step-number">2</div>
+        <div class="help-step-title">Isi Form Daftar</div>
+      </div>
       <div class="help-step-text">Pilih tab "register" jika belum daftar sebelumnya, masukkan email aktif dan sandi minimal 6 karakter, lalu tap tombol Daftar</div>
       <div class="help-media">
         <img src="media/help/daftar2.png" alt="Daftar">
@@ -275,8 +295,10 @@
     </div>
 
     <div class="help-step">
-      <div class="help-step-number">3</div>
-      <div class="help-step-title">Verifikasi Kode OTP</div>
+      <div class="help-step-heading">
+        <div class="help-step-number">3</div>
+        <div class="help-step-title">Verifikasi Kode OTP</div>
+      </div>
       <div class="help-step-text">Cek email kamu (termasuk folder spam), salin kode 6 digit yang dikirim, lalu masukkan ke halaman verifikasi</div>
       <div class="help-media">
         <img src="media/help/daftar3.png" alt="Daftar">
@@ -289,8 +311,10 @@
   <div class="help-panel" id="panel-deposit">
 
     <div class="help-step">
-      <div class="help-step-number">1</div>
-      <div class="help-step-title">Buka Halaman Profil</div>
+      <div class="help-step-heading">
+        <div class="help-step-number">1</div>
+        <div class="help-step-title">Buka Halaman Profil</div>
+      </div>
       <div class="help-step-text">Pastikan kamu sudah login, lalu buka halaman Profil lewat dock navigasi di bawah.</div>
       <div class="help-media">
         <img src="media/help/deposit1.png" alt="Deposit">
@@ -298,8 +322,10 @@
     </div>
 
     <div class="help-step">
-      <div class="help-step-number">2</div>
-      <div class="help-step-title">Tap "Deposit Coin"</div>
+      <div class="help-step-heading">
+        <div class="help-step-number">2</div>
+        <div class="help-step-title">Tap "Deposit Coin"</div>
+      </div>
       <div class="help-step-text">Masukkan jumlah coin yang ingin dibeli (1 coin = Rp1.000, maksimal 50 coin per transaksi), lalu tap "Buat QRIS".</div>
       <div class="help-media">
         <img src="media/help/deposit2.png" alt="Deposit">
@@ -307,8 +333,10 @@
     </div>
 
     <div class="help-step">
-      <div class="help-step-number">3</div>
-      <div class="help-step-title">Scan & Bayar QRIS</div>
+      <div class="help-step-heading">
+        <div class="help-step-number">3</div>
+        <div class="help-step-title">Scan & Bayar Qris</div>
+      </div>
       <div class="help-step-text">Buka aplikasi e-wallet atau mobile banking, scan kode QR yang muncul, selesaikan pembayaran dalam 10 menit. Coin otomatis masuk setelah pembayaran terkonfirmasi.</div>
       <div class="help-media">
         <img src="media/help/deposit3.png" alt="Deposit">
@@ -321,8 +349,10 @@
   <div class="help-panel" id="panel-order">
 
     <div class="help-step">
-      <div class="help-step-number">1</div>
-      <div class="help-step-title">Pilih Produk</div>
+      <div class="help-step-heading">
+        <div class="help-step-number">1</div>
+        <div class="help-step-title">Pilih Produk</div>
+      </div>
       <div class="help-step-text">Di halaman beranda, klik salah satu produk yang ingin dibeli untuk melihat detailnya</div>
       <div class="help-media">
         <img src="media/help/order1.png" alt="Order">
@@ -330,8 +360,10 @@
     </div>
 
     <div class="help-step">
-      <div class="help-step-number">2</div>
-      <div class="help-step-title">Tap "Beli Sekarang"</div>
+      <div class="help-step-heading">
+        <div class="help-step-number">2</div>
+        <div class="help-step-title">Tap "Beli Sekarang"</div>
+      </div>
       <div class="help-step-text">Pastikan coin kamu cukup. Kalau belum, isi dulu lewat menu Deposit di halaman Profil<br><br>Jika tombol "Beli Sekarang" tidak muncul itu berati produk tersebut cuma bisa dibeli langsung ke admin</div>
       <div class="help-media">
         <img src="media/help/order2.png" alt="Order">
@@ -339,8 +371,10 @@
     </div>
 
     <div class="help-step">
-      <div class="help-step-number">3</div>
-      <div class="help-step-title">Isi Jumlah Produk</div>
+      <div class="help-step-heading">
+        <div class="help-step-number">3</div>
+        <div class="help-step-title">Isi Jumlah Produk</div>
+      </div>
       <div class="help-step-text">Masukkan jumlah yang ingin dibeli, cek total coin yang dipotong, lalu klik "Beli"</div>
       <div class="help-media">
         <img src="media/help/order3.png" alt="Order">
@@ -348,8 +382,10 @@
     </div>
 
     <div class="help-step">
-      <div class="help-step-number">4</div>
-      <div class="help-step-title">Cek Email</div>
+      <div class="help-step-heading">
+        <div class="help-step-number">4</div>
+        <div class="help-step-title">Cek Email</div>
+      </div>
       <div class="help-step-text">Data akun/produk otomatis dikirim ke email yang kamu pakai daftar. Cek folder spam kalau tidak masuk ke inbox utama</div>
       <div class="help-media">
         <img src="media/help/order4.png" alt="Order">
@@ -360,8 +396,10 @@
   <!-- TOPIK: CARA LOGIN AM -->
   <div class="help-panel" id="panel-am">
     <div class="help-step">
-      <div class="help-step-number">1</div>
-      <div class="help-step-title">Buka Gmail</div>
+      <div class="help-step-heading">
+        <div class="help-step-number">1</div>
+        <div class="help-step-title">Buka Gmail</div>
+      </div>
       <div class="help-step-text">Salin email yang di kirim ke alamat email kamu</div>
       <div class="help-media">
         <img src="media/help/am1.png" alt="LoginApp">
@@ -369,8 +407,10 @@
     </div>
 
     <div class="help-step">
-      <div class="help-step-number">2</div>
-      <div class="help-step-title">Buka Alight Motion</div>
+      <div class="help-step-heading">
+        <div class="help-step-number">2</div>
+        <div class="help-step-title">Buka Alight Motion</div> 
+      </div>
       <div class="help-step-text">Klik profil di pojok kanan atas, klik masuk dan pilih opsi "login dengan email" (tombol yang warna merah)</div>
       <div class="help-media">
         <img src="media/help/am2.png" alt="LoginApp">
@@ -378,8 +418,10 @@
     </div>
 
     <div class="help-step">
-      <div class="help-step-number">3</div>
-      <div class="help-step-title">Tempel Email</div>
+      <div class="help-step-heading">
+        <div class="help-step-number">3</div>
+        <div class="help-step-title">Tempel Email</div>
+      </div>
       <div class="help-step-text">Masukkan email yang di salin dari aplikasi gmail ke aplikasi alight motion</div>
       <div class="help-media">
         <img src="media/help/am3.png" alt="LoginApp">
@@ -387,17 +429,21 @@
     </div>
 
     <div class="help-step">
-      <div class="help-step-number">4</div>
-      <div class="help-step-title">Buka Chrome</div>
-      <div class="help-step-text">Ketik dikolom pencarian "generator.email/" di kolom pencarian. Setelah itu, tempel email yang sudah disalin sebelumnya. Tampilannya akan seperti ini: "generator.email/emailyangtadi@gmail.custom"</div>
+      <div class="help-step-heading">
+        <div class="help-step-number">4</div>
+        <div class="help-step-title">Buka Chrome</div>
+      </div>
+      <div class="help-step-text">Ketik dikolom pencarian "<b>generator.email/</b>". Setelah itu, tempel email yang sudah disalin sebelumnya. Tampilannya akan seperti ini: "generator.email/emailyangtadi@gmail.custom"</div>
       <div class="help-media">
         <img src="media/help/am4.png" alt="LoginApp">
       </div>
     </div>
     
     <div class="help-step">
-      <div class="help-step-number">5</div>
-      <div class="help-step-title">Cari Link Login</div>
+      <div class="help-step-heading">
+        <div class="help-step-number">5</div>
+        <div class="help-step-title">Cari Link Login</div>
+      </div>
       <div class="help-step-text">Setelah itu scroll kebawah dan cari tulisan "Login ke Alight Creative" biasanya warna biru, jangan lupa di klik nanti akan otomatis login ke alight motion</div>
       <div class="help-media">
         <img src="media/help/am5.png" alt="LoginApp">
@@ -405,8 +451,10 @@
     </div>
     
     <div class="help-step">
-      <div class="help-step-number">6</div>
-      <div class="help-step-title">INFORMASI</div>
+      <div class="help-step-heading">
+        <div class="help-step-number">6</div>
+        <div class="help-step-title">INFORMASI</div>
+      </div>
       <div class="help-step-text">Jika tampilan profile alight motion kalian seperti contoh dibawah, harap hubungi admin🙏</div>
       <div class="help-media">
         <img src="media/help/am6.png" alt="LoginApp">
