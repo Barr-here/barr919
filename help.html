@@ -10,8 +10,7 @@
 <link rel="stylesheet" href="css/style.css">
 <style>
 
-  html,
-  body {
+  html, body {
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
@@ -84,43 +83,6 @@
     scrollbar-width: none;
   }
   .help-topics::-webkit-scrollbar { display: none; }
-  
-  .help-topics-wrap {
-    position: relative;
-    min-width: 0;
-  }
-  
-  .help-topics-arrow {
-    position: absolute;
-    top: 50%;
-    z-index: 3;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    border: 2px solid var(--border);
-    border-radius: 50%;
-    background: var(--accent);
-    color: var(--text);
-    box-shadow: var(--shadow-sm);
-    cursor: pointer;
-    transform: translateY(-50%);
-  }
-
-  .help-topics-arrow svg {
-    width: 17px;
-    height: 17px;
-  }
-
-  .help-topics-arrow.left { left: 2px; }
-  .help-topics-arrow.right { right: 2px; }
-
-  .help-topics-arrow:disabled {
-    opacity: 0;
-    pointer-events: none;
-  }
 
   .help-topic-btn {
     flex-shrink: 0;
@@ -272,12 +234,6 @@
     </div>
 
     <div class="help-topics" id="helpTopics">
-      <button class="help-topics-arrow left" id="topicsPrev" type="button" aria-label="Topik sebelumnya">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m15 18-6-6 6-6"></path>
-        </svg>
-      </button>
-      
       <button class="help-topic-btn active" data-topic="daftar">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line></svg>
         Cara Daftar
@@ -289,12 +245,6 @@
       <button class="help-topic-btn" data-topic="order">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
         Cara Order
-      </button>
-      
-      <button class="help-topics-arrow right" id="topicsNext" type="button" aria-label="Topik berikutnya">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m9 18 6-6-6-6"></path>
-        </svg>
       </button>
     </div>
   </div>
@@ -447,6 +397,8 @@
   });
 
   // ----- TAB TOPIK BANTUAN -----
+  const helpTopics = document.getElementById('helpTopics');
+
   document.querySelectorAll('.help-topic-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.help-topic-btn').forEach(b => b.classList.remove('active'));
@@ -454,31 +406,15 @@
 
       btn.classList.add('active');
       document.getElementById('panel-' + btn.dataset.topic).classList.add('active');
+
+       // Posisikan tombol yang dipilih di tengah daftar topik.
+       const targetScroll = btn.offsetLeft - (helpTopics.clientWidth - btn.offsetWidth) / 2;
+       helpTopics.scrollTo({
+         left: Math.max(0, Math.min(targetScroll, helpTopics.scrollWidth - helpTopics.clientWidth)),
+         behavior: 'smooth'
+       });
     });
   });
-  
-  // ----- PANAH SCROLL TOPIK -----
-  const helpTopics = document.getElementById('helpTopics');
-  const topicsPrev = document.getElementById('topicsPrev');
-  const topicsNext = document.getElementById('topicsNext');
-
-  function updateTopicsArrows() {
-    const maxScroll = helpTopics.scrollWidth - helpTopics.clientWidth;
-    topicsPrev.disabled = helpTopics.scrollLeft <= 1;
-    topicsNext.disabled = helpTopics.scrollLeft >= maxScroll - 1;
-  }
-
-  topicsPrev.addEventListener('click', () => {
-    helpTopics.scrollBy({ left: -180, behavior: 'smooth' });
-  });
-
-  topicsNext.addEventListener('click', () => {
-    helpTopics.scrollBy({ left: 180, behavior: 'smooth' });
-  });
-
-  helpTopics.addEventListener('scroll', updateTopicsArrows);
-  window.addEventListener('resize', updateTopicsArrows);
-  updateTopicsArrows();
 </script>
 <script src="js/dock.js"></script>
 </body>
