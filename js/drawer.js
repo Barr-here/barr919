@@ -130,6 +130,13 @@
         btn.className = 'drawer-auth-btn is-logout';
         btn.innerHTML = `${ICON_LOGOUT}<span>Logout</span>`;
         btn.addEventListener('click', async () => {
+          const isDark = document.documentElement.classList.contains('dark');
+          const swalTheme = {
+            background: isDark ? '#3A2E1F' : '#ffffff',
+            color: isDark ? '#F5EEE0' : '#111111',
+            confirmButtonColor: isDark ? '#FF8A3D' : '#FFD43B',
+          };
+          
           const confirmOpts = {
             icon: 'warning',
             title: 'Logout?',
@@ -140,14 +147,17 @@
           };
 
           if (typeof window.Swal !== 'undefined') {
-            const isDark = document.documentElement.classList.contains('dark');
+            
             const result = await window.Swal.fire({
-              ...confirmOpts,
-              background: isDark ? '#3A2E1F' : '#ffffff',
-              color: isDark ? '#F5EEE0' : '#111111',
-              confirmButtonColor: isDark ? '#FF8A3D' : '#FFD43B',
-              cancelButtonColor: isDark ? '#453626' : '#FFF0D4',
+              icon: 'warning',
+              title: 'Logout?',
+              text: 'Kamu akan keluar dari akun ini',
+              showCancelButton: true,
+              confirmButtonText: 'Iya',
+              cancelButtonText: 'Batal',
+              ...swalTheme,
             });
+            
             if (result.isConfirmed) doLogout();
           } else {
             if (window.confirm('Logout? Kamu akan keluar dari akun ini.')) doLogout();
