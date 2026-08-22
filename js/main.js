@@ -775,40 +775,8 @@ updateGreeting();
 setInterval(updateGreeting, 1000);
 
 // ============================================================
-// DOCK BAR - support tap di HP (bukan cuma hover)
-// ============================================================
-
-document.querySelectorAll('.dock-item').forEach(item => {
-  item.addEventListener('click', (e) => {
-    const isAlreadyActive = item.classList.contains('dock-active');
-
-    // Tutup dock lain yang mungkin lagi terbuka
-    document.querySelectorAll('.dock-item').forEach(el => el.classList.remove('dock-active'));
-
-    if (!isAlreadyActive) {
-      item.classList.add('dock-active');
-    } else if (item.tagName === 'A') {
-      // Kalau ini link (Admin) dan sudah aktif, biarkan link jalan normal
-      return;
-    }
-
-    // Kalau elemen ini bukan link (misal "Bantuan"), cegah reload & hanya toggle
-    if (item.tagName !== 'A') {
-      e.preventDefault();
-    }
-  });
-});
-
-// Tutup dock item aktif kalau tap di luar dock
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('.dock-bar')) {
-    document.querySelectorAll('.dock-item').forEach(el => el.classList.remove('dock-active'));
-  }
-});
-
-// ============================================================
 // TOP BAR - ganti tampilan kalau user sudah login
-// (dock bar "Profil" tetap sama, selalu ke profile.html;
+// (menu "Profil" di side drawer tetap sama, selalu ke profile.html;
 //  profile.html sendiri yang redirect ke login.html kalau belum login)
 // ============================================================
 
