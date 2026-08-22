@@ -76,6 +76,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 10px;
       margin-bottom: 16px;
       padding: 10px 16px;
       background: var(--surface);
@@ -87,6 +88,13 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .topbar-left > div {
+      min-width: 0;
     }
 
     .avatar {
@@ -95,6 +103,7 @@
       border-radius: 50%;
       object-fit: cover;
       border: 2.5px solid var(--border);
+      flex-shrink: 0;
     }
 
     .avatar-initial {
@@ -107,6 +116,7 @@
       font-size: 16px;
       font-weight: 700;
       border: 2.5px solid var(--border);
+      flex-shrink: 0;
     }
 
     .brand-name {
@@ -114,6 +124,10 @@
       font-size: 14px;
       font-weight: 700;
       color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
     }
 
     .brand-tag {
@@ -121,12 +135,17 @@
       font-size: 10px;
       color: var(--subtext);
       margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
     }
 
     .topbar-right {
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-shrink: 0;
     }
 
     .status-dot {
@@ -135,6 +154,7 @@
       border-radius: 50%;
       box-shadow: 0 0 6px var(--get);
       animation: pulse 2s infinite;
+      flex-shrink: 0;
     }
 
     @keyframes pulse {
@@ -146,6 +166,15 @@
       font-family: var(--mono);
       font-size: 11px;
       color: var(--subtext);
+      white-space: nowrap;
+    }
+
+    /* Di layar sempit, "online" text disembunyikan duluan supaya
+       tombol aksi (music/theme/menu) tetap aman gak kegencet */
+    @media (max-width: 380px) {
+      .status-text {
+        display: none;
+      }
     }
 
     /* THEME BTN */
@@ -159,6 +188,7 @@
       color: #000000;
       box-shadow: var(--shadow-sm);
       transition: transform 0.15s, box-shadow 0.15s;
+      flex-shrink: 0;
     }
     .theme-btn:hover {
       transform: translate(-2px,-2px);
@@ -1680,6 +1710,7 @@
   transition: transform 0.15s, box-shadow 0.15s;
   color: #000000;
   padding: 0;
+  flex-shrink: 0;
 }
 
 .hamburger-btn:hover {
