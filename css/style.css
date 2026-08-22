@@ -1881,10 +1881,6 @@
   border-radius: var(--radius);
 }
 
-.drawer-item:nth-child(1) { border-left-color: var(--accent2); }
-.drawer-item:nth-child(2) { border-left-color: var(--accent3); }
-.drawer-item:nth-child(3) { border-left-color: var(--accent); }
-
 .drawer-item:hover {
   transform: translate(-3px, -3px);
   box-shadow: 6px 6px 0 0 var(--border);
