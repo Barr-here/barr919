@@ -48,6 +48,7 @@
           </button>
         </div>
         <div class="drawer-nav" id="drawerNav"></div>
+        <div class="drawer-footer">Barr Store &copy; 2026</div>
       </nav>
     `;
   }
