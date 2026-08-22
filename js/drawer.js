@@ -136,15 +136,6 @@
             color: isDark ? '#F5EEE0' : '#111111',
             confirmButtonColor: isDark ? '#FF8A3D' : '#FFD43B',
           };
-          
-          const confirmOpts = {
-            icon: 'warning',
-            title: 'Logout?',
-            text: 'Kamu akan keluar dari akun ini.',
-            showCancelButton: true,
-            confirmButtonText: 'Iya',
-            cancelButtonText: 'Batal',
-          };
 
           if (typeof window.Swal !== 'undefined') {
             
