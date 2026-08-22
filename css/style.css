@@ -1856,7 +1856,6 @@
   padding: 13px 14px 13px 16px;
   background: var(--surface2);
   border: 2px solid var(--border);
-  border-left: 6px solid var(--border);
   border-radius: var(--radius);
   box-shadow: 3px 3px 0 0 var(--border);
   color: var(--text);
