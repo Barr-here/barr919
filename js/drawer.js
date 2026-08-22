@@ -27,6 +27,39 @@
     { page: 'bantuan', label: 'Bantuan', href: 'help.html', icon: ICONS.bantuan }
   ];
 
+  const ICON_LOGIN = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+    <polyline points="10 17 15 12 10 7"></polyline>
+    <line x1="15" y1="12" x2="3" y2="12"></line>
+  </svg>`;
+
+  const ICON_LOGOUT = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+    <polyline points="16 17 21 12 16 7"></polyline>
+    <line x1="21" y1="12" x2="9" y2="12"></line>
+  </svg>`;
+
+  function isLoggedIn() {
+    try {
+      const raw = localStorage.getItem('barr_user_session');
+      if (!raw) return false;
+      const parsed = JSON.parse(raw);
+      return !!(parsed && parsed.userId);
+    } catch {
+      return false;
+    }
+  }
+
+  function doLogout() {
+    // Pakai logoutUser() dari auth-helper.js kalau ada; kalau tidak, fallback manual
+    if (typeof window.logoutUser === 'function') {
+      window.logoutUser();
+    } else {
+      localStorage.removeItem('barr_user_session');
+      window.location.href = 'index.html';
+    }
+  }
+
   function buildDrawerMarkup() {
     const itemsHtml = MENU_ITEMS.map(item => `
       <a href="${item.href}" class="drawer-item" data-page="${item.page}">
@@ -48,6 +81,7 @@
           </button>
         </div>
         <div class="drawer-nav" id="drawerNav"></div>
+        <div class="drawer-auth-wrap" id="drawerAuthWrap"></div>
         <div class="drawer-footer">Barr Store &copy; 2026</div>
       </nav>
     `;
@@ -83,6 +117,51 @@
 
       nav.appendChild(el);
     });
+
+    // ----- TOMBOL LOGIN / LOGOUT (di atas footer) -----
+    const authWrap = document.getElementById('drawerAuthWrap');
+    if (authWrap) {
+      authWrap.innerHTML = '';
+      const loggedIn = isLoggedIn();
+
+      if (loggedIn) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'drawer-auth-btn is-logout';
+        btn.innerHTML = `${ICON_LOGOUT}<span>Logout</span>`;
+        btn.addEventListener('click', async () => {
+          const confirmOpts = {
+            icon: 'warning',
+            title: 'Logout?',
+            text: 'Kamu akan keluar dari akun ini.',
+            showCancelButton: true,
+            confirmButtonText: 'Iya',
+            cancelButtonText: 'Batal',
+          };
+
+          if (typeof window.Swal !== 'undefined') {
+            const isDark = document.documentElement.classList.contains('dark');
+            const result = await window.Swal.fire({
+              ...confirmOpts,
+              background: isDark ? '#3A2E1F' : '#ffffff',
+              color: isDark ? '#F5EEE0' : '#111111',
+              confirmButtonColor: isDark ? '#FF8A3D' : '#FFD43B',
+              cancelButtonColor: isDark ? '#453626' : '#FFF0D4',
+            });
+            if (result.isConfirmed) doLogout();
+          } else {
+            if (window.confirm('Logout? Kamu akan keluar dari akun ini.')) doLogout();
+          }
+        });
+        authWrap.appendChild(btn);
+      } else {
+        const btn = document.createElement('a');
+        btn.href = 'login.html';
+        btn.className = 'drawer-auth-btn is-login';
+        btn.innerHTML = `${ICON_LOGIN}<span>Login</span>`;
+        authWrap.appendChild(btn);
+      }
+    }
 
     function openDrawer() {
       overlay.classList.add('open');
