@@ -460,7 +460,9 @@ function openProductModal(item) {
   document.getElementById('productModalClose').onclick = closeProductModal;
 
   if (hasPrice) {
-    document.getElementById('buyWithCoinBtn').onclick = () => openBuyConfirmModal(item);
+    document.getElementById('buyWithCoinBtn').onclick = () => {
+      window.location.href = 'kasir.html?product=' + encodeURIComponent(item.id);
+    };
   }
 }
 
@@ -477,158 +479,6 @@ document.getElementById('productModalOverlay')?.addEventListener('click', (e) =>
 // ============================================================
 // MODAL KONFIRMASI BELI (quantity + total)
 // ============================================================
-
-function openBuyConfirmModal(item) {
-  const overlay = document.getElementById('buyConfirmOverlay');
-  const box = document.getElementById('buyConfirmBox');
-  const formatCount = (value) => {
-    const count = Number(value);
-    return Number.isFinite(count)
-      ? count.toLocaleString('id-ID')
-      : '-';
-  };
-
-  box.innerHTML = `
-    <div class="product-modal-body">
-      <div class="buy-confirm-title">${item.title}</div>
-      <div
-        class="buy-confirm-stock-badges"
-        aria-label="Informasi stok produk"
-        style="display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 18px;"
-      >
-        <span
-          class="buy-confirm-stock-badge buy-confirm-stock-available"
-          id="buyConfirmStockBadge"
-          style="display:inline-flex;align-items:center;padding:7px 11px;background:var(--accent);border:3px solid #111;box-shadow:2px 2px 0 #111;color:#111;font-family:var(--mono,monospace);font-size:12px;font-weight:800;line-height:1;letter-spacing:.03em;text-transform:uppercase;"
-        >Memuat stok...</span>
-        <span
-          class="buy-confirm-stock-badge buy-confirm-stock-sold"
-          id="buyConfirmSoldBadge"
-          style="display:inline-flex;align-items:center;padding:7px 11px;background:var(--accent2);border:3px solid #111;box-shadow:2px 2px 0 #111;color:#111;font-family:var(--mono,monospace);font-size:12px;font-weight:800;line-height:1;letter-spacing:.03em;text-transform:uppercase;"
-        >Memuat...</span>
-      </div>
-
-      <div class="buy-confirm-row">
-        <div class="form-row form-row-qty">
-          <label>Jumlah</label>
-          <input type="number" id="buyQtyInput" value="1" min="1">
-        </div>
-
-        <div class="buy-confirm-total" id="buyTotalText">${item.price} coin</div>
-      </div>
-
-      <div class="deposit-error" id="buyConfirmError"></div>
-      
-      <button class="btn btn-primary" id="buyConfirmSubmit">Beli</button>
-      <button class="btn btn-danger" id="buyConfirmClose">Batal</button>
-    </div>
-  `;
-
-  overlay.classList.add('show');
-  document.body.style.overflow = 'hidden';
-  
-  // Ambil stok riil dari edge function (data akun tidak boleh diakses langsung dari frontend)
-  fetch(SUPABASE_URL + '/functions/v1/purchase', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-    },
-    body: JSON.stringify({ action: 'stock-info', productId: item.id }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      const stockBadge = document.getElementById('buyConfirmStockBadge');
-      const soldBadge = document.getElementById('buyConfirmSoldBadge');
-      if (!stockBadge || !soldBadge) return;
-      if (data.error) {
-        stockBadge.textContent = '- stok';
-        soldBadge.textContent = '- terjual';
-        return;
-      }
-      stockBadge.textContent = `${formatCount(data.stock)} stok`;
-      soldBadge.textContent = `${formatCount(data.sold)} terjual`;
-    })
-    .catch(() => {
-      const stockBadge = document.getElementById('buyConfirmStockBadge');
-      const soldBadge = document.getElementById('buyConfirmSoldBadge');
-      if (stockBadge) stockBadge.textContent = '- stok';
-      if (soldBadge) soldBadge.textContent = '- terjual';
-    });
-
-  const qtyInput = document.getElementById('buyQtyInput');
-  const totalText = document.getElementById('buyTotalText');
-
-  qtyInput.addEventListener('input', () => {
-    const qty = Math.max(1, parseInt(qtyInput.value) || 1);
-    totalText.textContent = `${item.price * qty} coin`;
-  });
-
-  document.getElementById('buyConfirmClose').onclick = closeBuyConfirmModal;
-
-  document.getElementById('buyConfirmSubmit').onclick = async () => {
-    const btn = document.getElementById('buyConfirmSubmit');
-    const errBox = document.getElementById('buyConfirmError');
-    
-    errBox.textContent = '';
-
-    const qty = Math.max(1, parseInt(qtyInput.value) || 1);
-
-    const session = await verifySession();
-    if (!session) {
-      window.location.href = 'login.html';
-      return;
-    }
-    
-    btn.disabled = true;
-    btn.textContent = 'Memproses...';
-
-    try {
-      const res = await fetch(SUPABASE_URL + '/functions/v1/purchase', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-        },
-        body: JSON.stringify({
-          action: 'create-order',
-          userId: session.userId,
-          sessionToken: session.sessionToken,
-          productId: item.id,
-          quantity: qty,
-        }),
-      });
-      const data = await res.json();
-      
-      btn.disabled = false;
-      btn.textContent = 'Beli';
-
-      if (!res.ok) {
-        errBox.textContent = data.error || 'Gagal memproses pembelian';
-        return;
-      }
-
-      closeBuyConfirmModal();
-      closeProductModal();
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Pesanan Berhasil Dibuat',
-        html: `<b>${item.title} x${qty}</b><br>Data akun sudah dikirim ke email kamu<br><br>Kalau email belum muncul di kotak masuk, coba cek bagian <b>Spam</b> juga ya`,
-      });
-    } catch (err) {
-      btn.disabled = false;
-      btn.textContent = 'Beli';
-      errBox.textContent = 'Gagal terhubung ke server';
-    }
-  };
-}
-
-function closeBuyConfirmModal() {
-  const overlay = document.getElementById('buyConfirmOverlay');
-  overlay.classList.remove('show');
-  document.body.style.overflow = '';
-}
 
 // ============================================================
 // LOGIN HINT POPUP (tampil 1x saja)
