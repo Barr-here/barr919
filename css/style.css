@@ -104,6 +104,7 @@
       border-radius: 50%;
       object-fit: cover;
       border: 2.5px solid var(--border);
+      box-shadow: 2px 2px 0 0 var(--border);
       flex-shrink: 0;
     }
 
@@ -117,6 +118,7 @@
       font-size: 16px;
       font-weight: 700;
       border: 2.5px solid var(--border);
+      box-shadow: 2px 2px 0 0 var(--border);
       flex-shrink: 0;
     }
 
@@ -1843,8 +1845,8 @@
 .drawer-nav {
   display: flex;
   flex-direction: column;
-  padding: 18px 16px;
-  gap: 12px;
+  padding: 16px 14px;
+  gap: 9px;
   flex: 1;
 }
 
@@ -1852,17 +1854,17 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 13px 14px 13px 16px;
+  gap: 10px;
+  padding: 9px 12px 9px 12px;
   background: var(--surface2);
   border: 2px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: 3px 3px 0 0 var(--border);
+  box-shadow: 2px 2px 0 0 var(--border);
   color: var(--text);
   text-decoration: none;
   cursor: pointer;
   font-family: var(--mono);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.2px;
   transition: transform 0.15s, box-shadow 0.15s, background 0.15s, border-color 0.15s;
@@ -1872,8 +1874,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
   flex-shrink: 0;
   background: var(--surface);
   border: 2px solid var(--border);
@@ -1881,8 +1883,8 @@
 }
 
 .drawer-item:hover {
-  transform: translate(-3px, -3px);
-  box-shadow: 6px 6px 0 0 var(--border);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 0 var(--border);
 }
 
 .drawer-item:active {
@@ -1903,8 +1905,57 @@
 }
 
 .drawer-item .dock-icon svg {
-  width: 18px;
-  height: 18px;
+  width: 15px;
+  height: 15px;
+}
+
+.drawer-auth-wrap {
+  padding: 0 14px 14px;
+  flex-shrink: 0;
+}
+
+.drawer-auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 12px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 2px 2px 0 0 var(--border);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.drawer-auth-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 0 var(--border);
+}
+
+.drawer-auth-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 0 var(--border);
+}
+
+.drawer-auth-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.drawer-auth-btn.is-login {
+  background: #4ADE80;
+  color: #000000;
+}
+
+.drawer-auth-btn.is-logout {
+  background: #FF6B6B;
+  color: #000000;
 }
 
 .drawer-footer {
