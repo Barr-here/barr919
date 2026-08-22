@@ -95,6 +95,14 @@
 </head>
 <body data-page="auth">
 
+  <button class="hamburger-btn floating" id="hamburgerBtn" aria-label="Buka menu">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
   <div class="auth-box">
     <div class="auth-title">BARR STORE</div>
     <div class="auth-sub">Silahkan login/register terlebih dahulu yah</div>
@@ -162,47 +170,11 @@
     </div>
   </div>
 
-  <nav class="dock-bar" id="dockBar">
-    <div class="dock-indicator" id="dockIndicator"></div>
-
-    <a href="index.html" class="dock-item" id="dockHome" data-page="beranda">
-      <div class="dock-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 9l9-7 9 7"></path>
-          <path d="M9 22V12h6v10"></path>
-          <path d="M5 10v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10"></path>
-        </svg>
-      </div>
-      <span class="dock-label">Beranda</span>
-    </a>
-
-    <div class="dock-item" id="dockAuthCurrent" data-page="auth">
-      <div class="dock-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-          <polyline points="10 17 15 12 10 7"></polyline>
-          <line x1="15" y1="12" x2="3" y2="12"></line>
-        </svg>
-      </div>
-      <span class="dock-label">Login</span>
-    </div>
-
-    <a href="help.html" class="dock-item" id="dockBantuan" data-page="bantuan">
-      <div class="dock-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-          <line x1="12" y1="17" x2="12.01" y2="17"></line>
-        </svg>
-      </div>
-      <span class="dock-label">Bantuan</span>
-    </a>
-  </nav>
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/login.js"></script>
+<script src="js/drawer.js"></script>
 <script>
   // ----- TOGGLE SHOW/HIDE PASSWORD -----
   document.querySelectorAll('.toggle-password').forEach(btn => {
@@ -225,6 +197,5 @@
     });
   });
 </script>
-<script src="js/dock.js"></script>
 </body>
 </html>

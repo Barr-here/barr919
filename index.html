@@ -32,6 +32,13 @@
       <div class="status-text">online</div>
       <button class="theme-btn" id="musicBtn"></button>
       <button class="theme-btn" id="themeBtn"></button>
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Buka menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
     </div>
   </div>
 
@@ -267,43 +274,6 @@
   
   <audio id="bgMusic" src="media/audio.mp3" loop></audio>
 
-  <!-- DOCK BAR (pill navbar dengan sliding indicator) -->
-  <nav class="dock-bar" id="dockBar">
-    <div class="dock-indicator" id="dockIndicator"></div>
-
-    <a href="index.html" class="dock-item" id="dockHome" data-page="beranda">
-      <div class="dock-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 9l9-7 9 7"></path>
-          <path d="M9 22V12h6v10"></path>
-          <path d="M5 10v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10"></path>
-        </svg>
-      </div>
-      <span class="dock-label">Beranda</span>
-    </a>
-
-    <a href="profile.html" class="dock-item" id="dockAuth" data-page="auth">
-      <div class="dock-icon" id="dockAuthIcon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </svg>
-      </div>
-      <span class="dock-label" id="dockAuthLabel">Profil</span>
-    </a>
-
-    <a href="help.html" class="dock-item" id="dockBantuan" data-page="bantuan">
-      <div class="dock-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-          <line x1="12" y1="17" x2="12.01" y2="17"></line>
-        </svg>
-      </div>
-      <span class="dock-label">Bantuan</span>
-    </a>
-  </nav>
-
   <div class="login-hint-popup" id="loginHintPopup">^⁠_⁠^ Login dulu yuk...</div>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -311,6 +281,6 @@
   <script src="js/supabase-config.js"></script>
   <script src="js/auth-helper.js"></script>
   <script src="js/main.js"></script>
-  <script src="js/dock.js"></script>
+  <script src="js/drawer.js"></script>
 </body>
 </html>
